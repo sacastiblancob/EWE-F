@@ -1,0 +1,32 @@
+ecopath-f (requires statevartypesecopath)
+|
+|--> readEcopathScenario_io
+|    |
+|    |--> setEcopathScenarioParameters
+|
+|--> readDetritusFate_io
+|
+|--> readHDF5 (in readHDF5Database)
+|
+|--> calculateMultistanzaParameters
+|
+|--> readDietComposition_io
+|
+|--> calculateSolvingOrderOfLinearEquations
+|
+|--> calculatePredation
+|
+|--> calculateDetritalFlows
+|
+|--> calculateDetritusFate
+|
+|--> calculateBAofDetritus
+|
+|--> calculateEEofDetritus
+|
+|--> calculateEnergyBalance
+|
+|--> writeHDF5ResultsFile
+|
+|--> warnSanityChecks   
+    

@@ -1,0 +1,64 @@
+ecosim-f (requires statevartypesecopath & statevartypesecosim)
+|
+|--> readEcosimScenario_io
+|    |
+|    |--> setEcosimScenarioParameters
+|
+#ifdef _Ecospace_
+|--> readGridFile_io
+|
+|--> readSpatialDistribution_io
+|
+|--> readAdvectionFile_io
+#endif
+|
+|--> readHDF5
+|
+|--> readVulnerability_io
+|
+|--> readForcingFunctions_io
+|   
+|--> readNutrientForcingFunction_io
+|
+|--> readPrimaryProdForcingFunction_io
+|
+|--> calculateMaximumPoBRelatedValues
+|
+|--> calculateNutrientConcentrations
+|
+|--> removeImportFromDiet
+|
+|--> initialiseSplitGroups
+|    |
+|    |--> setSplitPred
+|        
+|--> calculateLotkaVolterraEffectiveSearchRates
+|
+|--> initialiseRelativeSwitchingParameters
+|
+|--> setArenaVulnerabilityandSearchRates
+|
+|--> calculateFishingMortalities
+|
+|--> rk4
+|    |
+|    |--> derivs
+|    |    |
+|    |    |--> setRelativeSwitchingParameters
+|    |    |
+|    |    |--> calculateVulnerableBiomasses
+|    |    |
+|    |    |--> calculateDetritalFlows
+|    |
+|    |--> multistanza
+|    |    |
+|    |    |--> setSplitPred
+|    |
+|    |--> updateForagingTimes
+|
+#ifdef _Ecospace_
+|--> ecospace-f (requires statevartypesecospace)
+|
+|--> writenetCDFfile
+#endif
+    

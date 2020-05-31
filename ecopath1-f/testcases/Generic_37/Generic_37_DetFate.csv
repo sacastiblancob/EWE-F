@@ -1,0 +1,41 @@
+"Number of groups",37,
+"Number of detrital groups incl. export",2,
+"Number of detrital groups",1,
+Groups,Detritus1,Export
+"Baleen whales",1,0
+"Toothed whales",1,0
+Seals,1,0
+Birds,1,0
+"Sharks, large",1,0
+"Sharks, small medium",1,0
+"Rays, large",1,0
+"Rays, small medium",1,0
+"Pelagics, large",1,0
+"Pelagics, medium",1,0
+"Pelagics, small, carniv.",1,0
+"Pelagics, small, herbiv.",1,0
+"Benthopelagics, large",0,1
+"Benthopelagics, small medium",0,1
+"Demersals, large",1,0
+"Demersals, medium",1,0
+"Demersals, small",1,0
+"Reeffish, large",1,0
+"Reeffish, medium",1,0
+"Flatfish, large",1,0
+"Flatfish, small medium",1,0
+"Reeffish, small",1,0
+Bathypelagics,1,0
+Bathydemersals,1,0
+Jellyfish,1,0
+Cephalopods,1,0
+Shrimps,1,0
+"Lobsters, crabs",1,0
+Macrobenthos,1,0
+Meiobenthos,1,0
+Corals,1,0
+"Softcorals, sponges, etc",1,0
+Krill,1,0
+"Zooplankton, other",1,0
+Phytoplankton,1,0
+"Benthic plants",1,0
+Detritus,0,1
