@@ -5,17 +5,17 @@
 ! Istituto Nazionale di Oceanografia e di Geofisica Sperimentale (OGS),
 ! Trieste/Italy.
 !
-! This program is free software; you can redistribute it and/or modify 
-! it under the terms of the GNU General Public License version 2 as 
+! This program is free software; you can redistribute it and/or modify
+! it under the terms of the GNU General Public License version 2 as
 ! published by the Free Software Foundation.
 !
-! This program is distributed in the hope that it will be useful, but 
-! WITHOUT ANY WARRANTY; without even the implied warranty of 
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+! This program is distributed in the hope that it will be useful, but
+! WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ! General Public License for more details.
 !
-! You should have received a copy of the GNU General Public License 
-! along with  this program; if not, 
+! You should have received a copy of the GNU General Public License
+! along with  this program; if not,
 ! see <http://www.gnu.org/licenses/gpl-2.0.html>.
 !========================================================================
 
@@ -30,18 +30,22 @@ module statevartypesecopath
 
 implicit none
 
-#ifndef isWithBFM
-#ifndef _isDP_
-  integer, parameter :: RLEN = 4
-#endif
-#ifdef _isDP_
-  integer, parameter :: RLEN = 8
-#endif
-#endif
+!integer, parameter :: RLEN = selected_real_kind(6,37)
+!integer, parameter :: RLEN = selected_real_kind(8,60)
+integer, parameter :: RLEN = selected_real_kind(15,307)
+!integer, parameter :: RLEN = selected_real_kind(33,4931)
+!#ifndef isWithBFM
+!#ifndef _isDP_
+!  integer, parameter :: RLEN = 4
+!#endif
+!#ifdef _isDP_
+!  integer, parameter :: RLEN = 8
+!#endif
+!#endif
 
 type ecopath_data
 
- real(RLEN) :: biomass   
+ real(RLEN) :: biomass
  real(RLEN) :: PoB                  ! production/biomass (P/B)
  real(RLEN) :: QoB                  ! consumption/biomass (Q/B)
  real(RLEN) :: EE                   ! ecotrophic efficiency (EE)
@@ -51,16 +55,16 @@ type ecopath_data
  real(RLEN) :: landings             ! landed amount of catch
  real(RLEN) :: discards             ! discarded amount of catch
 
- integer :: org_type             ! organism type: (1) producer; 
+ integer :: org_type             ! organism type: (1) producer;
                                  ! (2) consumer; (0) detritus
 
- integer :: isstanza             ! multistanza group or not, 
+ integer :: isstanza             ! multistanza group or not,
                                  ! (1) multistanza; (0) no stanzas
 
  integer :: stanza_no            ! multistanza group number
  integer :: age_start            ! age to start stanza (in months)
 
- integer :: isleading            ! leading stanza or not, 
+ integer :: isleading            ! leading stanza or not,
                                  ! (1) leading; (0) substanza
 
  real(RLEN) :: production           ! B * P/B

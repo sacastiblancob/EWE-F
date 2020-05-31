@@ -5,17 +5,17 @@
 ! Istituto Nazionale di Oceanografia e di Geofisica Sperimentale (OGS),
 ! Trieste/Italy.
 !
-! This program is free software; you can redistribute it and/or modify 
-! it under the terms of the GNU General Public License version 2 as 
+! This program is free software; you can redistribute it and/or modify
+! it under the terms of the GNU General Public License version 2 as
 ! published by the Free Software Foundation.
 !
-! This program is distributed in the hope that it will be useful, but 
-! WITHOUT ANY WARRANTY; without even the implied warranty of 
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+! This program is distributed in the hope that it will be useful, but
+! WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ! General Public License for more details.
 !
-! You should have received a copy of the GNU General Public License 
-! along with  this program; if not, 
+! You should have received a copy of the GNU General Public License
+! along with  this program; if not,
 ! see <http://www.gnu.org/licenses/gpl-2.0.html>.
 !========================================================================
 
@@ -145,6 +145,11 @@ program ecosim
   read(1010, nml = filenames)
   close(1010)
 
+!!!!!!!!!! PRINTING RLEN JUST IN CASE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  write(*,*) "RLEN"
+  write(*,*) RLEN
+
 !!!!!!!!!! INPUT/OUTPUT OF DATA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   ! read group info file containing Ecosim parameters
@@ -159,7 +164,7 @@ program ecosim
 #ifdef _Ecospace_
   ! read Spatial Grid
   call readGridFile_io ()
-  
+
   ! read Ecospace Habitat Area Fraction (HAF) file
   call readSpatialDistribution_io ()
 
@@ -435,7 +440,7 @@ program ecosim
   write(FMT0, '( "("I4, "(A35,"",""))" )') (nvars + 1)
   write(1111, FMT0) "Time " , groupnames
   write(2222, FMT0) "Time " , groupnames
-  
+
   write(FMT2, '( "("I4, "(f21.7,"",""))" )') (nvars + 1)
 
 #ifdef _Ecospace_
@@ -501,7 +506,7 @@ program ecosim
   write(3333, FMT0) "Time " , groupnames
   write(4444, FMT0) "Time " , groupnames
   write(5555, FMT0) "Time " , groupnames
-  
+
 #ifdef _Ecospace_
   ! Write absolute and relative model results in files
   write(3333, FMT2) 0.0, ep_data(:)%biomass
@@ -541,7 +546,7 @@ program ecosim
       end do
   end do
 #endif
-  
+
 #ifdef isWithBFM
   allocate(ruHTLc(1,nvars,iiHigherTrophicLevels))
   allocate(ruHTLn(1,nvars,iiHigherTrophicLevels))
@@ -572,8 +577,8 @@ program ecosim
 
 #ifdef _Ecospace_
 !!!!! run model over the specified time frame
-  do i = 0, (tf - 1)  
-      do m = 1, 12        
+  do i = 0, (tf - 1)
+      do m = 1, 12
 
           ! Clean monthly stanza variables
           BBAvg(:)   = 0
@@ -626,10 +631,10 @@ program ecosim
                   else
                       mat_out(lat, lon, step + 2, :) = BB_spatial(lat, lon, :)
                   end if
-              
+
               end do
           end do
-          
+
           step = step + 1
           time = time + tstep
 
@@ -644,8 +649,8 @@ program ecosim
 #else
 
 !!!!! run model over the specified time frame
-  do i = 0, (tf - 1)  
-      do m = 1, 12        
+  do i = 0, (tf - 1)
+      do m = 1, 12
 
           ! Clean monthly stanza variables
           BBAvg(:)   = 0

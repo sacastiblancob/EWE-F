@@ -48,6 +48,7 @@ integer              :: nproducer, ndetritus
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+
 ! get file names from namelist (nml) file
 namelist /filenames/ InputData_fname, DietComp_fname, DetFate_fname, &
   GrowthParam_fname, Results_fname, HDF5_fname, isASCIIinputFile
@@ -57,6 +58,7 @@ read(1010, nml = filenames)
 
 !!!!!!!!!! SECTION: READING INPUT DATA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+ write(*,*) RLEN
  call readEcopathScenario_io ()
 
 !!!!!!!!!! END SECTION: READING INPUT DATA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

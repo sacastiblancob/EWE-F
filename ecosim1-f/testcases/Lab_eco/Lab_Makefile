@@ -34,7 +34,7 @@ FC = gfortran
 # CPPDEFS += -D_ForcePrimaryProd_
 
 # Uncomment below if there is geospatial simulation
-# CPPDEFS += -D_Ecospace_
+CPPDEFS += -D_Ecospace_
 
 # Path to the HDF5 installation
 # The HDF5 should have been compiled by the same compiler

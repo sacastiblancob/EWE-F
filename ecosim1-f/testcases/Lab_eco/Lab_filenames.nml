@@ -18,20 +18,26 @@
 
 &filenames
 
-HDF5_fname            = "testcases/Lab/Lab.h5"
-GroupInfo_fname       = "testcases/Lab/Lab_Scenario.csv"
-Vulnerability_fname   = "testcases/Lab/Lab_vul.csv"
-Forcing_fname         = "testcases/Lab/Lab_F.csv"
-! NutrientForcing_fname = "testcases/Lab/Lab_NutForce.csv"
+HDF5_fname            = "testcases/Lab_eco/Lab.h5"
+GroupInfo_fname       = "testcases/Lab_eco/Lab_Scenario.csv"
+Vulnerability_fname   = "testcases/Lab_eco/Lab_vul.csv"
+Forcing_fname         = "testcases/Lab_eco/Lab_F.csv"
+
+! NutrientForcing_fname = "testcases/Lab_eco/Lab_NutForce.csv"
 NutrientForcing_fname = ""
-! PrimaryProdForcing_fname = "testcases/Lab/Lab_PrimaryProdForce.csv"
+! PrimaryProdForcing_fname = "testcases/Lab_eco/Lab_PrimaryProdForce.csv"
 PrimaryProdForcing_fname = ""
 
+! Ecospace files reffer to geographical grid, distribution and advection
+SpatialGrid_fname     = "testcases/Lab_eco/Lab_grid.csv"
+SpatialDistribution_dirname = "testcases/Lab_eco/"
+Advection_fname       = "testcases/Lab_eco/Lab_advection.csv"
+
 ! number of years to simulate
-tf              = 2
+tf              = 1
 
 ! time steps per month
-StepsPerMonth   = 10
+StepsPerMonth   = 1
 
 ! base proportion of free nutrients
 NutBaseFreeProp = 0.9

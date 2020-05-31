@@ -1,0 +1,12 @@
+"Number of groups",8
+"Number of detrital groups incl. export",3
+"Number of detrital groups",2
+Groups,GD_A,GD_B,Export
+GC_D_0_3,0.5,0.5,0
+GC_D_3_6,0.5,0.5,0
+GC_C,0.5,0.5,0
+GC_B,0.5,0.5,0
+GC_A,0.4,0.3,0.3
+GP_A,0.3,0.4,0.3
+GD_B,0,0.5,0.5
+GD_A,0.5,0,0.55
