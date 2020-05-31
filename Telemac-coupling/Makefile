@@ -93,13 +93,24 @@ LFLAGS += -I$(HDF5DIR)/include -L$(HDF5DIR)/lib -lhdf5_fortran -lhdf5
 #endif
 
 # Source files
-SRCECOSIM     = $(SRCDIR)/ecosim.F90
+#SRCECOSIM     = $(SRCDIR)/ecosim.F90
+#
+SRCMAIN       = $(SRCDIR)/main.F90
+#
+
 SRCMODECOPATH = $(SRCDIR)/statevartypesecopath.F90
 SRCMODECOSIM  = $(SRCDIR)/statevartypesecosim.F90
 #ifdef ecospace
  SRCMODECOSPACE= $(SRCDIR)/statevartypesecospace.F90
 #endif
 SRCMODHDF5    = $(SRCDIR)/readHDF5Database.F90
+
+#
+SRCINIT       = $(SRCDIR)/init_ecosim.F90
+SRCTIME       = $(SRCDIR)/time_ecosim.F90
+SRCCAK        = $(SRCDIR)/closing_and_killing.F90
+#
+
 SRCGROUP      = $(SRCDIR)/readEcosimScenario_io.F90
 SRCVUL        = $(SRCDIR)/readVulnerability_io.F90
 SRCFORCE      = $(SRCDIR)/readForcingFunctions_io.F90
@@ -133,13 +144,24 @@ SRCRK4        = $(SRCDIR)/rk4.F90
 SRCFREE      = $(SRCDIR)/freeMemory.F90
 
 # Object files
-OBJECOSIM     = $(OBJDIR)/ecosim.o
+#OBJECOSIM     = $(OBJDIR)/ecosim.o
+#
+OBJMAIN       = $(OBJDIR)/main.o
+#
+
 OBJMODECOPATH = $(OBJDIR)/statevartypesecopath.o
 OBJMODECOSIM  = $(OBJDIR)/statevartypesecosim.o
 #ifdef ecospace
  OBJMODECOSPACE  = $(OBJDIR)/statevartypesecospace.o
 #endif
 OBJMODHDF5    = $(OBJDIR)/readHDF5Database.o
+
+#
+OBJINIT       = $(OBJDIR)/init_ecosim.o
+OBJTIME       = $(OBJDIR)/time_ecosim.o
+OBJCAK        = $(OBJDIR)/closing_and_killing.o
+#
+
 OBJGROUP      = $(OBJDIR)/readEcosimScenario_io.o
 OBJVUL        = $(OBJDIR)/readVulnerability_io.o
 OBJFORCE      = $(OBJDIR)/readForcingFunctions_io.o
@@ -178,7 +200,8 @@ OBJFREE      = $(OBJDIR)/freeMemory.o
   $(OBJDET) $(OBJNUT) $(OBJDIET) $(OBJPOBREL) $(OBJSWITCH) $(OBJSETSWITCH) \
   $(OBJVULSEARCH) $(OBJVULCALC) $(OBJEFFSEARCH) $(OBJFISHMORT) $(OBJFORAGE) \
   $(OBJDERIVS) $(OBJSETSPLIT) $(OBJSPLITINIT) $(OBJSTANZA) $(OBJRK4) $(OBJREADSPAT)\
-  $(OBJREADGRID) $(OBJREADADVEC) $(OBJECOSPACE) $(OBJPRIMPRODFORCE) $(OBJWRITENC) $(OBJFREE) $(OBJECOSIM)
+  $(OBJREADGRID) $(OBJREADADVEC) $(OBJECOSPACE) $(OBJPRIMPRODFORCE) \
+  $(OBJINIT) $(OBJTIME) $(OBJWRITENC) $(OBJFREE) $(OBJCAK) $(OBJMAIN)
 #else
 # OBJECTS = $(OBJMODECOPATH) $(OBJMODECOSIM) $(OBJMODHDF5) \
 #  $(OBJGROUP) $(OBJVUL) $(OBJFORCE) $(OBJNUTFORCE) $(OBJALLOC) $(OBJALLOCA) \
@@ -312,8 +335,24 @@ $(OBJRK4): $(SRCRK4)
 $(OBJFREE): $(SRCFREE)
 	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCFREE) -o $(OBJFREE)
 
-$(OBJECOSIM): $(MODULES) $(SRCECOSIM)
-	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCECOSIM) -o $(OBJECOSIM)
+#$(OBJECOSIM): $(MODULES) $(SRCECOSIM)
+#	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCECOSIM) -o $(OBJECOSIM)
+
+#
+$(OBJINIT): $(SRCINIT)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCINIT) -o $(OBJINIT)
+
+$(OBJTIME): $(SRCTIME)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCTIME) -o $(OBJTIME)
+
+$(OBJCAK): $(SRCCAK)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCCAK) -o $(OBJCAK)
+
+$(OBJMAIN): $(SRCMAIN)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCMAIN) -o $(OBJMAIN)
+
+#
+
 
 clean:
 	rm -f $(OBJECTS)

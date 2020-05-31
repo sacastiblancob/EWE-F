@@ -43,6 +43,23 @@ module statevartypesecospace
   character(len = 250) :: SpatialDistribution_dirname
   character(len = 250) :: Advection_fname
 
+  !Coordinate variables
+  integer              :: lat, lon
+
+  !!!!!!OUTPUT VARIABLES!!!!!!!!!!!!!!!!!
+  ! matrix of biomass results absolute
+  real(RLEN), allocatable :: mat_out(:, :, :, :)
+
+  ! matrix of biomass results relative
+  real(RLEN), allocatable :: rel_out(:, :, :, :)
+
+  ! matrix of monthly biomass and catch results absolute
+  real(RLEN), allocatable :: mat_out_monthly (:, :, :, :)
+  real(RLEN), allocatable :: catch_out_monthly (:, :, :, :)
+
+  ! matrix of monthly biomass results relative
+  real(RLEN), allocatable :: rel_out_monthly (:, :, :, :)
+
 end module statevartypesecospace
 
 

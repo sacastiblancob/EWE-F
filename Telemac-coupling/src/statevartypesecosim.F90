@@ -231,6 +231,42 @@ real(RLEN), allocatable :: PredAvg(:)
 
 integer              :: nvars, nstanzas
 
+! logicals for know if compute Primary Production Forcing and Nutrient Forcing
+  logical    :: boolFN = .true.
+  logical    :: boolFPP = .true.
+
+!!!!ALL NEXT VARIABLES COMES FROM ECOSIM.F90 ORIGINAL FILE, DEFINED DOWN IMPLICIT NONE
+
+! loops vars
+  integer              :: i, j, m, n, var  ! loop vars; i prey & j predator
+
+! initial time, number of time steps, size of one step, time step and time
+  integer              :: t0               ! simulation start time
+  integer              :: noftsteps, step  ! number of time steps
+  real(RLEN)           :: tstep            ! time step
+  real(RLEN)           :: time
+
+!  ! (1) integrate, (0) do not integrate
+  integer, allocatable :: integrate(:)
+
+  ! intital biomass values
+  real(RLEN), allocatable :: B(:), b_pred(:)  ! initial biomass values
+
+  ! array of changes in biomass values calculated by derivs()
+  real(RLEN), allocatable :: xdot(:)
+
+  ! array of changes in non-integrated biomass values calculated by derivs
+  real(RLEN), allocatable :: biomeq(:)
+
+  ! array of sinks for state variables calculated by derivs
+  real(RLEN), allocatable :: loss(:)
+
+  ! array of integrated biomass values calculated by rk4 in each time step
+  real(RLEN), allocatable :: b_out(:)
+
+  ! rate of change in state variables within the time step
+  real(RLEN), allocatable :: rrate(:)
+
 !#ifdef isWithBFM
 !  real(RLEN)              ::  multistanza_update
 !  real(RLEN), allocatable ::  ruHTLc(:,:,:),ruHTLn(:,:,:),ruHTLp(:,:,:)

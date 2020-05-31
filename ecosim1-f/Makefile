@@ -28,10 +28,11 @@ FC = gfortran
 # FCFLAGS = -m64
 
 # Uncomment below if there is nutrient forcing
-# CPPDEFS += -D_ForceNutrient_
+ CPPDEFS += -D_ForceNutrient_
 
 # Uncomment below if there is primary production forcing
-# CPPDEFS += -D_ForcePrimaryProd_
+
+ CPPDEFS += -D_ForcePrimaryProd_
 
 # Uncomment below if there is geospatial simulation
 # CPPDEFS += -D_Ecospace_

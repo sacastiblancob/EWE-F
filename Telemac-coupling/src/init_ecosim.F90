@@ -1,25 +1,21 @@
-!========================================================================
-! This file is part of EwE-F
+!                    **********************
+                     SUBROUTINE INIT_ECOSIM
+!                    **********************
+!
+!***********************************************************************
+! MAIN FOR CALL ECOSIM-ECOSPACE PROGRAM TROUGH JUST FEW SUBROUTINES
+!***********************************************************************
+!
+!brief    SOLVES ECOSPACE PROGRAM
+!
+! Original files are part of EwE-F
 ! Copyright (C) 2011-2019 Middle East Technical University
 ! Institute of Marine Sciences (IMS-METU), Erdemli/Turkey and
 ! Istituto Nazionale di Oceanografia e di Geofisica Sperimentale (OGS),
 ! Trieste/Italy.
 !
-! This program is free software; you can redistribute it and/or modify
-! it under the terms of the GNU General Public License version 2 as
-! published by the Free Software Foundation.
-!
-! This program is distributed in the hope that it will be useful, but
-! WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-! General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License
-! along with  this program; if not,
-! see <http://www.gnu.org/licenses/gpl-2.0.html>.
-!========================================================================
-
-program ecosim
+!history
+! Created 31-05-2020 - Sergio Castiblanco
 
 !#ifdef isWithBFM
 !  use global_mem
@@ -62,57 +58,58 @@ program ecosim
        detritus_no, BBAvg, &
        EatenOfAvg, EatenByAvg, PredAvg, LossAvg, &
        es_ms_data, imonth, FirstTime, UpdateStanzas, BB, groupnames, &
-       boolFN, boolFPP
+       boolFN, boolFPP, i, j, var, &
+       t0, noftsteps, step, tstep, time, integrate, &
+       B, b_pred, xdot, biomeq, loss, b_out, rrate
   use readHDF5Database
 
   implicit none
 
   character(len = 2000):: FMT0, FMT1, FMT2
   integer              :: vrows, vcols     ! rows & columns of vul. matrix
-  integer              :: i, j, m, n, var  ! loop vars; i prey & j predator
 
 !#ifdef _Ecospace_
-  integer              :: lat, lon         ! coordinate variables
+!  integer              :: lat, lon         ! coordinate variables, read from MODULE ecospace
 !#endif
 
-  integer              :: t0               ! simulation start time
-  integer              :: noftsteps, step  ! number of time steps
-  real(RLEN)           :: tstep            ! time step
-  real(RLEN)           :: time
+!  integer              :: t0               ! simulation start time, read from MODULE ecosim
+!  integer              :: noftsteps, step  ! number of time steps, read from MODULE ecosim
+!  real(RLEN)           :: tstep            ! time step, read from MODULE ecosim
+!  real(RLEN)           :: time             ! read from MODULE ecosim
 
-  real(RLEN), allocatable :: B(:), b_pred(:)  ! initial biomass values
-
-  ! array of changes in biomass values calculated by derivs()
-  real(RLEN), allocatable :: xdot(:)
-
-  ! array of changes in non-integrated biomass values calculated by derivs
-  real(RLEN), allocatable :: biomeq(:)
-
-  ! array of sinks for state variables calculated by derivs
-  real(RLEN), allocatable :: loss(:)
-
-  ! array of integrated biomass values calculated by rk4 in each time step
-  real(RLEN), allocatable :: b_out(:)
-
-  ! rate of change in state variables within the time step
-  real(RLEN), allocatable :: rrate(:)
-
-  ! (1) integrate, (0) do not integrate
-  integer, allocatable :: integrate(:)
+!  real(RLEN), allocatable :: B(:), b_pred(:)  ! initial biomass values       !read from MODULE ecosim
+!
+!  ! array of changes in biomass values calculated by derivs()
+!  real(RLEN), allocatable :: xdot(:)       !read from MODULE ecosim
+!!
+!  ! array of changes in non-integrated biomass values calculated by derivs
+!  real(RLEN), allocatable :: biomeq(:)       !read from MODULE ecosim
+!
+!  ! array of sinks for state variables calculated by derivs
+!  real(RLEN), allocatable :: loss(:)       !read from MODULE ecosim
+!
+!  ! array of integrated biomass values calculated by rk4 in each time step
+!  real(RLEN), allocatable :: b_out(:)       !read from MODULE ecosim
+!
+!  ! rate of change in state variables within the time step
+!  real(RLEN), allocatable :: rrate(:)       !read from MODULE ecosim
+!
+!  ! (1) integrate, (0) do not integrate
+!  integer, allocatable :: integrate(:)       !read from MODULE ecosim
 
 !#ifdef _Ecospace_
-  ! matrix of biomass results absolute
-  real(RLEN), allocatable :: mat_out(:, :, :, :)
-
-  ! matrix of biomass results relative
-  real(RLEN), allocatable :: rel_out(:, :, :, :)
-
-  ! matrix of monthly biomass and catch results absolute
-  real(RLEN), allocatable :: mat_out_monthly (:, :, :, :)
-  real(RLEN), allocatable :: catch_out_monthly (:, :, :, :)
-
-  ! matrix of monthly biomass results relative
-  real(RLEN), allocatable :: rel_out_monthly (:, :, :, :)
+!  ! matrix of biomass results absolute
+!  real(RLEN), allocatable :: mat_out(:, :, :, :)      !read from MODULE ecospace
+!
+!  ! matrix of biomass results relative
+!  real(RLEN), allocatable :: rel_out(:, :, :, :)      !read from MODULE ecospace
+!
+!  ! matrix of monthly biomass and catch results absolute
+!  real(RLEN), allocatable :: mat_out_monthly (:, :, :, :)      !read from MODULE ecospace
+!  real(RLEN), allocatable :: catch_out_monthly (:, :, :, :)      !read from MODULE ecospace
+!
+!  ! matrix of monthly biomass results relative
+!  real(RLEN), allocatable :: rel_out_monthly (:, :, :, :)      !read from MODULE ecospace
 !#else
 !  ! matrix of biomass results absolute
 !  real(RLEN), allocatable :: mat_out(:, :)
@@ -543,6 +540,7 @@ program ecosim
 
 !  write(*,*) 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 
+
   allocate(BBAvg(nvars))
   allocate(LossAvg(nvars))
   allocate(EatenByAvg(nvars))
@@ -597,172 +595,10 @@ program ecosim
 !#ifndef isWithBFM
 
 !  WRITE(*,*) 'DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD'
-WRITE(*,*) "Final time", tf
 
-!#ifdef _Ecospace_
-!!!!! run model over the specified time frame
-  do i = 0, (tf - 1)
-      do m = 1, 12
+WRITE(*,*) "FINAL TIME", tf
+WRITE(*,*) "ECOSPACE INITIALISATION DONE"
 
-          ! Clean monthly stanza variables
-          BBAvg(:)   = 0
-          LossAvg(:) = 0
-          EatenByAvg(:) = 0
-          EatenOfAvg(:) = 0
-          PredAvg(:)    = 0
 
-          imonth  = (i * 12) + m
-          do lon = 1, nlon
-              do lat = 1, nlat
-                  if (grid(lat, lon) == 1) then
-                          ! print instantaneous results to stdout
-                          write(*, '(A6, f9.3)' ) " Time: ", time
-                          write(*, '(A12, I4)' ) " Latitude: ", lat
-                          write(*, '(A12, I4)' ) " Longitude: ", lon
 
-                      BB = BB_spatial(lat, lon, :)
-
-                      call calculateFishingMortalities (BB)
-
-                      do n = 1, StepsPerMonth
-
-                          if (n == StepsPerMonth) then
-                              UpdateStanzas = .true.
-                          else
-                              UpdateStanzas = .false.
-                          end if
-
-                          ! call the Runge-Kutta 4th order numeric ode solver
-                          call rk4 (BB, time, tstep, integrate, lat, lon)
-
-                          ! calculate geospatial dynamics
-                          call ecospace (time, BB, lat, lon)
-
-                          ! Update BB_spatial with new biomasses in grid
-                          BB_spatial(lat, lon, :) = BB
-
-                          mat_out(lat, lon, step + 2, :) = BB
-
-                          ! calculate relative change
-                          ! with respect to initial biomasses
-                          do j = 1, nvars
-                              rel_out(lat, lon, step + 2, j) &
-                                   = mat_out(lat, lon, step + 2, j) &
-                                   / ep_data(j)%biomass * spatialhafs(lat, lon, j)
-                          end do
-
-                      end do
-                  else
-                      mat_out(lat, lon, step + 2, :) = BB_spatial(lat, lon, :)
-                  end if
-
-              end do
-          end do
-
-          step = step + 1
-          time = time + tstep
-
-      end do
-
-  end do
-
-  print *, "Simulation ended successfully."
-  print *, "Writing netCDF file..."
-  call writenetCDFfile (noftsteps, mat_out)
-
-!#else
-!
-!!!!!! run model over the specified time frame
-!  do i = 0, (tf - 1)
-!      do m = 1, 12
-!
-!          ! Clean monthly stanza variables
-!          BBAvg(:)   = 0
-!          LossAvg(:) = 0
-!          EatenByAvg(:) = 0
-!          EatenOfAvg(:) = 0
-!          PredAvg(:)    = 0
-!
-!          imonth  = (i * 12) + m
-!
-!          call calculateFishingMortalities (BB)
-!          do n = 1, StepsPerMonth
-!              if (n == StepsPerMonth) then
-!                  UpdateStanzas = .true.
-!              else
-!                  UpdateStanzas = .false.
-!              end if
-!
-!              ! call the Runge-Kutta 4th order numeric ode solver
-!              call rk4 (BB, time, tstep, integrate)
-!              mat_out(step + 2, :) = BB
-!
-!              ! print instantaneous results to stdout
-!              write(*, '(A6, f9.3)' ) " Time: ", time
-!              write(FMT1,  '( "(A6,", I4, "(f21.7))" )') nvars
-!              write(*, FMT1) "Vars: ", mat_out(step + 2, :)
-!
-!              ! calculate relative change
-!              ! with respect to initial biomasses
-!              do j = 1, nvars
-!                  rel_out(step + 2, j) = mat_out(step + 2, j) &
-!                       / ep_data(j)%biomass
-!              end do
-!
-!              ! Write absolute and relative model results in files
-!              write (1111, FMT2) time, mat_out(step + 2, :)
-!              write (2222, FMT2) time, rel_out(step + 2, :)
-!
-!              step = step + 1
-!              time = time + tstep
-!          end do
-!
-!          mat_out_monthly(imonth + 1, :) = BB
-!
-!          do var = 1, nvars
-!              catch_out_monthly(imonth + 1, var) = BB(var) &
-!                   * es_data(var)%fishmort
-!          end do
-!
-!          ! calculate relative change with respect to initial biomasses
-!          do j = 1, nvars
-!              rel_out_monthly(imonth + 1, j) &
-!                   = mat_out_monthly(imonth + 1, j) / ep_data(j)%biomass
-!          end do
-!
-!          ! Write absolute and relative model results in files
-!          write(FMT2, '( "("I4, "(f27.9,"",""))" )') (nvars + 1)
-!          write(3333, FMT2) (time - tstep), mat_out_monthly(imonth + 1, :)
-!          write(4444, FMT2) (time - tstep), rel_out_monthly(imonth + 1, :)
-!          write(5555, FMT2) (time - tstep), catch_out_monthly(imonth + 1, :)
-!
-!      end do
-!
-!  end do
-!#endif
-
-!#endif
-print *, "Simulation ended successfully."
-
-close(1111)
-close(2222)
-close(3333)
-close(4444)
-close(5555)
-
-deallocate(rrate)
-deallocate(integrate)
-deallocate(b_pred)
-deallocate(xdot)
-deallocate(biomeq)
-deallocate(loss)
-deallocate(b_out)
-deallocate(mat_out)
-deallocate(rel_out)
-deallocate(mat_out_monthly)
-deallocate(catch_out_monthly)
-deallocate(rel_out_monthly)
-
-call freeMemory ()
-
-end program
+END SUBROUTINE INIT_ECOSIM

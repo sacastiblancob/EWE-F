@@ -31,10 +31,13 @@ subroutine derivs (time, biomass, xdot, biomeq, loss, integrate, lat, lon)
 use statevartypesecopath, only: ep_data, flow2detritus, det_export_rate
 use statevartypesecosim, only: es_data, es_vul, arena, nvars, imonth, &
                          NutFree, NutTot, NutBiom, NutFreeBase, NutMin, &
-                         NutrientForce, detritus_no
-#ifdef _ForcePrimaryProd_
-use statevartypesecosim, only: PrimaryProdForce
-#endif
+                         NutrientForce, detritus_no, boolFN, boolFPP
+
+!#ifdef _ForcePrimaryProd_
+!if (boolFPP) then
+  use statevartypesecosim, only: PrimaryProdForce
+!end if
+!#endif
 
 !#ifdef _Ecospace_
 use statevartypesecospace, only: QperB, M2
@@ -92,16 +95,19 @@ end do
 if (time == 0. .and. imonth == 0) then
     NutFree = NutTot - NutBiom
 else
-#ifdef _ForceNutrient_
+!#ifdef _ForceNutrient_
+  if (boolFN) then
     if (time == 1.0) then
         NutFree = NutTot - NutBiom
     else
         NutFree = NutTot * NutrientForce(imonth) - NutBiom
     end if
-#endif
-#ifndef _ForceNutrient_
+  else
+!#endif
+!#ifndef _ForceNutrient_
     NutFree = NutTot - NutBiom
-#endif
+!#endif
+  end if
 end if
 
 ! amount of free nutrients (NutFree) must not be less than
@@ -122,15 +128,18 @@ do var = 1, nvars
                 es_data(var)%PoB_biomass = 0
             end if
         else
-#ifdef _ForcePrimaryProd_
+!#ifdef _ForcePrimaryProd_
+          if (boolFPP) then
             if (ep_data(var)%org_type == 1 .and. time /= 1.0) then
                 j = j + 1
                 Pmult = PrimaryProdForce(imonth, j)
             end if
-#endif
-#ifndef _ForcePrimaryProd_
-    Pmult = 1.0
-#endif
+          else
+!#endif
+!#ifndef _ForcePrimaryProd_
+            Pmult = 1.0
+          end if
+!#endif
         end if
         es_data(var)%PoB_base = 2 * NutFree &
           / (NutFree + NutFreeBase(var)) * Pmult &

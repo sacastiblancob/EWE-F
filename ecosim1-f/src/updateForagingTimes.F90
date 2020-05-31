@@ -5,23 +5,23 @@
 ! Istituto Nazionale di Oceanografia e di Geofisica Sperimentale (OGS),
 ! Trieste/Italy.
 !
-! This program is free software; you can redistribute it and/or modify 
-! it under the terms of the GNU General Public License version 2 as 
+! This program is free software; you can redistribute it and/or modify
+! it under the terms of the GNU General Public License version 2 as
 ! published by the Free Software Foundation.
 !
-! This program is distributed in the hope that it will be useful, but 
-! WITHOUT ANY WARRANTY; without even the implied warranty of 
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+! This program is distributed in the hope that it will be useful, but
+! WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ! General Public License for more details.
 !
-! You should have received a copy of the GNU General Public License 
-! along with  this program; if not, 
+! You should have received a copy of the GNU General Public License
+! along with  this program; if not,
 ! see <http://www.gnu.org/licenses/gpl-2.0.html>.
 !========================================================================
 
 subroutine updateForagingTimes (integrate)
 
-use statevartypesecopath, only: ep_data
+use statevartypesecopath, only: ep_data, RLEN
 use statevartypesecosim, only: es_data, nvars, EatenByAvg, &
                          EatenOfAvg, BBAvg, PredAvg
 
@@ -43,12 +43,13 @@ do var = 1, nvars
 #else
             es_data(var)%risk_rate = real(EatenOfAvg(var) / BBAvg(var) &
               + ((1 - ep_data(var)%EE) * ep_data(var)%PoB) + 0.0000000001D0, 4)
-#endif 
+#endif
         else
 #ifdef isWithBFM
             es_data(var)%risk_rate = 0.0000000001D0
 #else
-            es_data(var)%risk_rate = real(0.0000000001D0, 4)
+!            es_data(var)%risk_rate = real(0.0000000001D0, 4)
+            es_data(var)%risk_rate = real(0.0000000001D0, RLEN)
 #endif
         end if
 

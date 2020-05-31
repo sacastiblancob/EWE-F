@@ -5,17 +5,17 @@
 ! Istituto Nazionale di Oceanografia e di Geofisica Sperimentale (OGS),
 ! Trieste/Italy.
 !
-! This program is free software; you can redistribute it and/or modify 
-! it under the terms of the GNU General Public License version 2 as 
+! This program is free software; you can redistribute it and/or modify
+! it under the terms of the GNU General Public License version 2 as
 ! published by the Free Software Foundation.
 !
-! This program is distributed in the hope that it will be useful, but 
-! WITHOUT ANY WARRANTY; without even the implied warranty of 
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+! This program is distributed in the hope that it will be useful, but
+! WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ! General Public License for more details.
 !
-! You should have received a copy of the GNU General Public License 
-! along with  this program; if not, 
+! You should have received a copy of the GNU General Public License
+! along with  this program; if not,
 ! see <http://www.gnu.org/licenses/gpl-2.0.html>.
 !========================================================================
 
@@ -68,20 +68,22 @@ real(RLEN), intent(out) :: loss(nvars)     ! sinks for state variables
 call HTLGlobalDynamics()
 #endif
 
+
 vrows = size(es_vul, 1)
 vcols = size(es_vul, 2)
 
-! set predator abundance measure 
+! set predator abundance measure
 ! for predation rate calculations (setpred)
 b_derivs = biomass
 do var = 1, nvars
     if (biomass(var) < 1.0e-20) then
         b_derivs(var) = 1.0e-20
-    end if  
+    end if
     if (integrate(var) >= 0) then
         es_data(var)%pred = b_derivs(var)
     end if
 end do
+
 
 ! nutrient biomass
 NutBiom = 0
@@ -97,14 +99,14 @@ else
         NutFree = NutTot - NutBiom
     else
         NutFree = NutTot * NutrientForce(imonth) - NutBiom
-    end if 
+    end if
 #endif
 #ifndef _ForceNutrient_
     NutFree = NutTot - NutBiom
 #endif
 end if
 
-! amount of free nutrients (NutFree) must not be less than 
+! amount of free nutrients (NutFree) must not be less than
 ! the background nutrient concentration (NutMin)
 if (NutFree < NutMin) then
     NutFree = NutMin
@@ -120,7 +122,7 @@ do var = 1, nvars
                 es_data(var)%abs_PoB_max = es_data(var)%rel_PoB_max &
                   * ep_data(var)%PoB
                 es_data(var)%PoB_biomass = 0
-            end if            
+            end if
         else
 #ifdef _ForcePrimaryProd_
             if (ep_data(var)%org_type == 1 .and. time /= 1.0) then
@@ -200,7 +202,7 @@ do var = 1, nvars
     else if (ep_data(var)%org_type == 2) then
         es_data(var)%M0 = ((1 - ep_data(var)%EE) * ep_data(var)%PoB) &
           * (1 - es_data(var)%M0_pred + es_data(var)%M0_pred &
-          * es_data(var)%Ftime) * biomass(var) 
+          * es_data(var)%Ftime) * biomass(var)
     else
         es_data(var)%M0 = 0
     end if

@@ -155,6 +155,8 @@ program ecosim
   ! read group info file containing Ecosim parameters
   call readEcosimScenario_io ()
 
+!  write(*,*) "1", time
+
   ! allocate ecopath data derived type
   allocate(ep_data(nvars))
 
@@ -190,11 +192,13 @@ program ecosim
 #ifdef _ForceNutrient_
   ! read nutrient forcing time series data from file
   call readNutrientForcingFunction_io ()
+
 #endif
 
 #ifdef _ForcePrimaryProd_
   ! read primary production forcing time series data from file
   call readPrimaryProdForcingFunction_io ()
+
 #endif
 
 #ifdef isWithBFM
@@ -209,9 +213,11 @@ program ecosim
   multistanza_update = 0.
   imonth    = 1
 #else
-  tstep     = real(1.0D0 / (12.0D0 * StepsPerMonth), 4)
+  tstep     = real(1.0D0 / (12.0D0 * StepsPerMonth), RLEN)
 #endif
   noftsteps = nint(tf / tstep)
+
+  write(*,*) "8", time
 
 !!!!!!!!!! END SECTION: SET SIMULATION PERIOD PARAMETERS !!!!!!!!!!!!!!!!
 
@@ -339,12 +345,15 @@ program ecosim
 
 !!!!!!!!!!!!!!!!!!!!!! This is the first initalisation of Ecosim !!!!!!!!!!!!!!
   imonth = 0
+
 #ifdef _Ecospace_
   lat = 0
   lon = 0
-  call derivs (0., ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon)
+!  call derivs (0., ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon) !Original, 0. was taken weird
+  call derivs (0D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon)
 #else
-  call derivs (0., ep_data(:)%biomass, xdot, biomeq, loss, integrate)
+!  call derivs (0., ep_data(:)%biomass, xdot, biomeq, loss, integrate) !Original, 0. was taken weird
+  call derivs (0D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate)
 #endif
 
   FirstTime = .true.
@@ -376,9 +385,11 @@ program ecosim
 #ifdef _Ecospace_
   lat = 0
   lon = 0
-  call derivs (1., ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon)
+!  call derivs (1., ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon) !Original, 1. was taken weird
+  call derivs (1D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon)
 #else
-  call derivs (1., ep_data(:)%biomass, xdot, biomeq, loss, integrate)
+!  call derivs (1., ep_data(:)%biomass, xdot, biomeq, loss, integrate) !Original, 1. was taken weird
+  call derivs (1D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate)
 #endif
 
   FirstTime = .true.

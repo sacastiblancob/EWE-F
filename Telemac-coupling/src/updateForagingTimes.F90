@@ -21,7 +21,7 @@
 
 subroutine updateForagingTimes (integrate)
 
-use statevartypesecopath, only: ep_data
+use statevartypesecopath, only: ep_data, RLEN
 use statevartypesecosim, only: es_data, nvars, EatenByAvg, &
                          EatenOfAvg, BBAvg, PredAvg
 
@@ -48,7 +48,8 @@ do var = 1, nvars
 !#ifdef isWithBFM
 !            es_data(var)%risk_rate = 0.0000000001D0
 !#else
-            es_data(var)%risk_rate = real(0.0000000001D0, 4)
+!            es_data(var)%risk_rate = real(0.0000000001D0, 4)
+             es_data(var)%risk_rate = real(0.0000000001D0, RLEN)
 !#endif
         end if
 

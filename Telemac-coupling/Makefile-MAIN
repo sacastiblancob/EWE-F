@@ -106,8 +106,7 @@ SRCMODECOSIM  = $(SRCDIR)/statevartypesecosim.F90
 SRCMODHDF5    = $(SRCDIR)/readHDF5Database.F90
 
 #
-SRCDECECO     = $(SRCDIR)/declarations_ecopath.F90
-SRCINIT       = $(SRCDIR)/initialise_ecopath.F90
+SRCINIT       = $(SRCDIR)/init_ecosim.F90
 #
 
 SRCGROUP      = $(SRCDIR)/readEcosimScenario_io.F90
@@ -156,8 +155,7 @@ OBJMODECOSIM  = $(OBJDIR)/statevartypesecosim.o
 OBJMODHDF5    = $(OBJDIR)/readHDF5Database.o
 
 #
-OBJDECECO     = $(OBJDIR)/declarations_ecopath.o
-OBJINIT       = $(OBJDIR)/initialise_ecopath.o
+OBJINIT       = $(OBJDIR)/init_ecosim.o
 #
 
 OBJGROUP      = $(OBJDIR)/readEcosimScenario_io.o
@@ -193,7 +191,7 @@ OBJRK4        = $(OBJDIR)/rk4.o
 OBJFREE      = $(OBJDIR)/freeMemory.o
 
 #ifdef ecospace
- OBJECTS = $(OBJMODECOPATH) $(OBJMODECOSIM) $(OBJMODECOSPACE) $(OBJMODHDF5) $(OBJDECECO) \
+ OBJECTS = $(OBJMODECOPATH) $(OBJMODECOSIM) $(OBJMODECOSPACE) $(OBJMODHDF5) \
   $(OBJGROUP) $(OBJVUL) $(OBJFORCE) $(OBJNUTFORCE) $(OBJALLOC) $(OBJALLOCA) \
   $(OBJDET) $(OBJNUT) $(OBJDIET) $(OBJPOBREL) $(OBJSWITCH) $(OBJSETSWITCH) \
   $(OBJVULSEARCH) $(OBJVULCALC) $(OBJEFFSEARCH) $(OBJFISHMORT) $(OBJFORAGE) \
@@ -215,10 +213,9 @@ MODECOSIM  = $(MODDIR)/statevartypesecosim.mod
  MODECOSPACE = $(MODDIR)/statevartypesecospace.mod
 #endif
 MODHDF5    = $(MODDIR)/readhdf5database.mod
-DECECO  = $(MODDIR)/declarations_ecopath.mod
 
 #ifdef ecospace
- MODULES = $(MODECOPATH) $(MODECOSIM) $(MODECOSPACE) $(MODHDF5) $(DECECO)
+ MODULES = $(MODECOPATH) $(MODECOSIM) $(MODECOSPACE) $(MODHDF5)
 #else
 # MODULES = $(MODECOPATH) $(MODECOSIM) $(MODHDF5)
 #endif
@@ -243,11 +240,6 @@ $(OBJMODECOSPACE): $(SRCMODECOSPACE)
 
 $(OBJMODHDF5): $(SRCMODHDF5)
 	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCMODHDF5) -o $(OBJMODHDF5)
-
-#
-$(OBJDECECO): $(SRCDECECO)
-	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCDECECO) -o $(OBJDECECO)
-#
 
 $(OBJGROUP): $(SRCGROUP)
 	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCGROUP) -o $(OBJGROUP)
