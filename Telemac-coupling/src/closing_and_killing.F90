@@ -26,11 +26,11 @@
 
   IMPLICIT NONE
 
-  close(1111)
-  close(2222)
-  close(3333)
-  close(4444)
-  close(5555)
+!  close(1111)
+!  close(2222)
+!  close(3333)
+!  close(4444)
+!  close(5555)
 
   deallocate(rrate)
   deallocate(integrate)

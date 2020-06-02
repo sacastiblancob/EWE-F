@@ -42,6 +42,7 @@ module statevartypesecospace
   character(len = 250) :: SpatialGrid_fname
   character(len = 250) :: SpatialDistribution_dirname
   character(len = 250) :: Advection_fname
+  character(len = 250) :: ncdfout_fname
 
   !Coordinate variables
   integer              :: lat, lon

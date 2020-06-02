@@ -17,9 +17,9 @@
 !history
 ! Created 31-05-2020 - Sergio Castiblanco
 
-  use statevartypesecosim, only: tf, i, m, noftsteps
+  use statevartypesecosim, only: tf, iec, m, noftsteps
 
-  use statevartypesecospace, only: mat_out
+  use statevartypesecospace, only: mat_out, ncdfout_fname
 
   IMPLICIT NONE
 
@@ -29,15 +29,14 @@
 
   WRITE(*,*) "FINAL TIME", tf
 
-  do i = 0, (tf - 1)
+  do iec = 0, (tf - 1)
     do m = 1, 12
-      CALL TIME_ECOSIM(i,m)
+      CALL TIME_ECOSIM(iec,m)
     end do
   end do
 
-  print *, "Simulation ended successfully."
-  print *, "Writing netCDF file..."
-  call writenetCDFfile (noftsteps, mat_out)
+  print *, "Writing netCDF file in ", ncdfout_fname
+  call writenetCDFfile (noftsteps, mat_out, ncdfout_fname)
 
   print *, "Simulation ended successfully."
 

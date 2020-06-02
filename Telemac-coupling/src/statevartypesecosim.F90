@@ -238,7 +238,7 @@ integer              :: nvars, nstanzas
 !!!!ALL NEXT VARIABLES COMES FROM ECOSIM.F90 ORIGINAL FILE, DEFINED DOWN IMPLICIT NONE
 
 ! loops vars
-  integer              :: i, j, m, n, var  ! loop vars; i prey & j predator
+  integer              :: iec, j, m, n, var  ! loop vars; i prey & j predator
 
 ! initial time, number of time steps, size of one step, time step and time
   integer              :: t0               ! simulation start time

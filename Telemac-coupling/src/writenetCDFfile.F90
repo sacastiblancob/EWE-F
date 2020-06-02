@@ -5,28 +5,28 @@
 ! Istituto Nazionale di Oceanografia e di Geofisica Sperimentale (OGS),
 ! Trieste/Italy.
 !
-! This program is free software; you can redistribute it and/or modify 
-! it under the terms of the GNU General Public License version 2 as 
+! This program is free software; you can redistribute it and/or modify
+! it under the terms of the GNU General Public License version 2 as
 ! published by the Free Software Foundation.
 !
-! This program is distributed in the hope that it will be useful, but 
-! WITHOUT ANY WARRANTY; without even the implied warranty of 
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+! This program is distributed in the hope that it will be useful, but
+! WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ! General Public License for more details.
 !
-! You should have received a copy of the GNU General Public License 
-! along with  this program; if not, 
+! You should have received a copy of the GNU General Public License
+! along with  this program; if not,
 ! see <http://www.gnu.org/licenses/gpl-2.0.html>.
 !========================================================================
 
-subroutine writenetCDFfile (noftsteps, mat_out)
+subroutine writenetCDFfile (noftsteps, mat_out, ncdfout_fname)
   use netcdf
   use statevartypesecosim, only: nvars, RLEN
   use statevartypesecospace, only: nlat, nlon
   implicit none
 
   ! This is the name of the data file we will create.
-  character (len = *), parameter :: FILE_NAME = "ecospace_4D.nc"
+  character (len = *), intent(in)          :: ncdfout_fname
   integer                        :: ncid
   integer, intent(in)            :: noftsteps
 
@@ -39,6 +39,7 @@ subroutine writenetCDFfile (noftsteps, mat_out)
   character (len = *), parameter :: REC_NAME = "time"
   integer :: lvl_dimid, lon_dimid, lat_dimid, rec_dimid
   integer :: NRECS, NLVLS, NLATS, NLONS
+
 
   ! These program variables hold the latitudes and longitudes.
   integer :: mat_varid
@@ -56,8 +57,12 @@ subroutine writenetCDFfile (noftsteps, mat_out)
   NLATS = nlat
   NLONS = nlon
 
-  ! Create the file. 
-  call check( nf90_create(FILE_NAME, nf90_clobber, ncid) )
+  WRITE(*,*) ncdfout_fname
+
+  ! Create the file.
+  call check( nf90_create(ncdfout_fname, nf90_clobber, ncid) )
+
+  WRITE(*,*) ncdfout_fname
 
   ! Define the dimensions. The record dimension is defined to have
   ! unlimited length - it can grow as needed. In this example it is
@@ -72,36 +77,36 @@ subroutine writenetCDFfile (noftsteps, mat_out)
   ! share the same four dimensions. In Fortran, the unlimited
   ! dimension must come last on the list of dimids.
   dimids = (/ 1,2,3,4 /)
-  
+
   ! Define the variable
   call check(nf90_def_var(ncid, "Biomass", NF90_FLOAT, dimids, mat_varid))
   call check(nf90_put_att(ncid, mat_varid, "_FillValue", real(-999)))
-  
+
   ! End define mode.
   call check( nf90_enddef(ncid) )
-  
+
   ! Write the pretend data. This will write our surface pressure and
   ! surface temperature data. The arrays only hold one timestep worth
   ! of data. We will just rewrite the same data for each timestep. In
   ! a real :: application, the data would change between timesteps.
 
-  
+
   call check( nf90_put_var(ncid, mat_varid, mat_out) )
-  
+
   ! Close the file. This causes netCDF to flush all buffers and make
   ! sure your data are really written to disk.
   call check( nf90_close(ncid) )
-  
-  print *,"*** SUCCESS writing example file ", FILE_NAME, "!"
+
+  print *,"*** SUCCESS writing example file ", ncdfout_fname, "!"
 
 contains
   subroutine check(status)
     integer, intent ( in) :: status
-    
-    if(status /= nf90_noerr) then 
+
+    if(status /= nf90_noerr) then
       print *, trim(nf90_strerror(status))
       stop "Stopped"
     end if
   end subroutine check
-  
+
 end subroutine writenetCDFfile

@@ -43,22 +43,22 @@ integer, intent(in) :: nrows, ncols
 real(RLEN), intent(in) :: m_data(nrows, ncols)
 
 ! in-subroutine variables
-integer             :: i      ! loop variable
+integer             :: iec      ! loop variable
 
 allocate(es_data(nvars))
 
-do i = 1, nrows
-    ! populate fields of es_data(i) from scenario parameters
-    es_data(i)%rel_PoB_max  = m_data(i, 1)
-    es_data(i)%Ftime        = m_data(i, 2)
-    es_data(i)%Ftime_max    = m_data(i, 3)
-    es_data(i)%Ftime_adjust = m_data(i, 4)
-    es_data(i)%M0_pred      = m_data(i, 5)
-    es_data(i)%risk_time    = m_data(i, 6)
-    es_data(i)%Q_maxoQ_0    = m_data(i, 7)
-    es_data(i)%QB_maxoQB_0  = m_data(i, 8)
-    es_data(i)%switch_power = m_data(i, 9)
-    es_data(i)%isAdvected   = m_data(i, 10)
+do iec = 1, nrows
+    ! populate fields of es_data(iec) from scenario parameters
+    es_data(iec)%rel_PoB_max  = m_data(iec, 1)
+    es_data(iec)%Ftime        = m_data(iec, 2)
+    es_data(iec)%Ftime_max    = m_data(iec, 3)
+    es_data(iec)%Ftime_adjust = m_data(iec, 4)
+    es_data(iec)%M0_pred      = m_data(iec, 5)
+    es_data(iec)%risk_time    = m_data(iec, 6)
+    es_data(iec)%Q_maxoQ_0    = m_data(iec, 7)
+    es_data(iec)%QB_maxoQB_0  = m_data(iec, 8)
+    es_data(iec)%switch_power = m_data(iec, 9)
+    es_data(iec)%isAdvected   = m_data(iec, 10)
 end do
 
 end subroutine setEcosimScenarioParameters

@@ -44,3 +44,6 @@ Modified EWE-F for Telemac coupling purposes
 - Se crea el archivo Makefile-MAIN-TIME, que es el makefile que se debe usar para ejectar el programa ecospace desde el programa main.f90 y no desde el programa ecosim.f90
 
 - El programa main.f90 y sus subrutinas y modulos ya pueden usarse para acoples sincronicos con telemac2D o con cualquier otro software de modelación dinámica.
+
+- MAKEFILE-LIB contiene la instruccion para compilar la libreria ecospace.a con "make all" que contiene los objetos necesarios para poder llamar las funciones de ecospace desde cualquier otro programa,
+  en nuestro caso de interes, Telemac

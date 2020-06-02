@@ -1,5 +1,5 @@
 !                    ***************************
-                     SUBROUTINE TIME_ECOSIM(i,m)
+                     SUBROUTINE TIME_ECOSIM(iec,m)
 !                    ***************************
 !
 !***********************************************************************
@@ -30,7 +30,7 @@
   IMPLICIT NONE
 
 ! main loop variables
-  INTEGER, INTENT(IN)    :: i, m
+  INTEGER, INTENT(IN)    :: iec, m
 
 !========================================================================
 !#ifdef _Ecospace_
@@ -45,7 +45,7 @@
           EatenOfAvg(:) = 0
           PredAvg(:)    = 0
 
-          imonth  = (i * 12) + m
+          imonth  = (iec * 12) + m
           do lon = 1, nlon
               do lat = 1, nlat
                   if (grid(lat, lon) == 1) then

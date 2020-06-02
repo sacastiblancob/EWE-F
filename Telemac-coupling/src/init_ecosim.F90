@@ -58,7 +58,7 @@
        detritus_no, BBAvg, &
        EatenOfAvg, EatenByAvg, PredAvg, LossAvg, &
        es_ms_data, imonth, FirstTime, UpdateStanzas, BB, groupnames, &
-       boolFN, boolFPP, i, j, var, &
+       boolFN, boolFPP, iec, j, var, &
        t0, noftsteps, step, tstep, time, integrate, &
        B, b_pred, xdot, biomeq, loss, b_out, rrate
   use readHDF5Database
@@ -133,13 +133,13 @@
   namelist /filenames/ HDF5_fname, GroupInfo_fname, Vulnerability_fname, &
        Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
        SpatialGrid_fname, SpatialDistribution_dirname, Advection_fname, &
-       tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, relax
+       ncdfout_fname, tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, relax
 !#else
 !  namelist /filenames/ HDF5_fname, GroupInfo_fname, Vulnerability_fname, &
 !       Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
 !       tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, relax
 !#endif
-  open(1010, file = "filenames.nml", status = 'OLD')
+  open(1010, file = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/filenames.nml", status = 'OLD')
   read(1010, nml = filenames)
   close(1010)
 
@@ -221,10 +221,10 @@
   allocate(flow2detritus(ndetritus))
 
   j = 0
-  do i = 1, nvars
-      if (ep_data(i)%org_type == 0) then
+  do iec = 1, nvars
+      if (ep_data(iec)%org_type == 0) then
           j = j + 1
-          detritus_no(j) = i
+          detritus_no(j) = iec
       end if
   end do
 
@@ -234,28 +234,28 @@
 
   call removeImportFromDiet ()
 
-  do i = 1, nvars
-      if (ep_data(i)%org_type == 2) then
-          es_data(i)%Ftime = 1
-          es_data(i)%hden  = es_data(i)%QB_maxoQB_0 &
-               / (es_data(i)%QB_maxoQB_0 + 1)
+  do iec = 1, nvars
+      if (ep_data(iec)%org_type == 2) then
+          es_data(iec)%Ftime = 1
+          es_data(iec)%hden  = es_data(iec)%QB_maxoQB_0 &
+               / (es_data(iec)%QB_maxoQB_0 + 1)
       end if
-!      write(*,*) es_data(i)%QB_maxoQB_0
-!      write(*,*) es_data(i)%hden
+!      write(*,*) es_data(iec)%QB_maxoQB_0
+!      write(*,*) es_data(iec)%hden
   end do
 
-  do i = 1, nvars
-      es_data(i)%CB_base = ep_data(i)%EatenBy / ep_data(i)%biomass
-      if (es_data(i)%CB_base == 0) then
-          es_data(i)%CB_base = 1
-          es_data(i)%Ftime_max = 1
+  do iec = 1, nvars
+      es_data(iec)%CB_base = ep_data(iec)%EatenBy / ep_data(iec)%biomass
+      if (es_data(iec)%CB_base == 0) then
+          es_data(iec)%CB_base = 1
+          es_data(iec)%Ftime_max = 1
       end if
-      es_data(i)%CB_last = es_data(i)%CB_base
-!      write(*,*) i, es_data(i)%CB_base
-!      write(*,*) es_data(i)%Ftime_max
-!      write(*,*) es_data(i)%CB_last
-!      write(*,*) ep_data(i)%EatenBy
-!      write(*,*) ep_data(i)%biomass
+      es_data(iec)%CB_last = es_data(iec)%CB_base
+!      write(*,*) i, es_data(iec)%CB_base
+!      write(*,*) es_data(iec)%Ftime_max
+!      write(*,*) es_data(iec)%CB_last
+!      write(*,*) ep_data(iec)%EatenBy
+!      write(*,*) ep_data(iec)%biomass
 !      write(*,*)
   end do
 
@@ -269,51 +269,51 @@
   deallocate(B)
 
   allocate(integrate(nvars))
-  do i = 1, nvars
-      if (ep_data(i)%isstanza == 1) then
-          integrate(i) = -i
+  do iec = 1, nvars
+      if (ep_data(iec)%isstanza == 1) then
+          integrate(iec) = -iec
       else
-          integrate(i) = i
+          integrate(iec) = iec
       end if
-!      write(*,*) i,ep_data(i)%isstanza
+!      write(*,*) i,ep_data(iec)%isstanza
   end do
 
   ! setpred()
   allocate(b_pred(nvars))
   b_pred = ep_data(:)%biomass
-  do i = 1, nvars
-!      write(*,*) i,es_data(i)%pred
-      if (ep_data(i)%biomass < 1.0e-20) then
-          b_pred(i) = 1.0e-20
+  do iec = 1, nvars
+!      write(*,*) i,es_data(iec)%pred
+      if (ep_data(iec)%biomass < 1.0e-20) then
+          b_pred(iec) = 1.0e-20
       end if
-      if (integrate(i) >= 0) then
-          es_data(i)%pred = b_pred(i)
+      if (integrate(iec) >= 0) then
+          es_data(iec)%pred = b_pred(iec)
       end if
-!      write(*,*) i,es_data(i)%pred
+!      write(*,*) i,es_data(iec)%pred
   end do
 
-  do i = 1, nvars
-!      write(*,*) es_data(i)%risk_time
-      if (es_data(i)%risk_time == -999) then
-          es_data(i)%risk_time = 0
+  do iec = 1, nvars
+!      write(*,*) es_data(iec)%risk_time
+      if (es_data(iec)%risk_time == -999) then
+          es_data(iec)%risk_time = 0
       end if
   end do
 
 !!!!! calculate risk time for consumers
-  do i = 1, nvars
-      if (ep_data(i)%org_type == 2) then
-          es_data(i)%CB_base = ep_data(i)%EatenBy / es_data(i)%pred
-          es_data(i)%CB_last = es_data(i)%CB_base
-          es_data(i)%Q_main = (1 - es_data(i)%risk_time) &
-               * es_data(i)%CB_base
+  do iec = 1, nvars
+      if (ep_data(iec)%org_type == 2) then
+          es_data(iec)%CB_base = ep_data(iec)%EatenBy / es_data(iec)%pred
+          es_data(iec)%CB_last = es_data(iec)%CB_base
+          es_data(iec)%Q_main = (1 - es_data(iec)%risk_time) &
+               * es_data(iec)%CB_base
 !#ifdef isWithBFM
-!          es_data(i)%Q_risk = es_data(i)%risk_time * es_data(i)%CB_base &
-!               * (ep_data(i)%EatenOf / ep_data(i)%biomass + &
-!               ((1 - ep_data(i)%EE) * ep_data(i)%PoB) + 0.0000000001D0)
+!          es_data(iec)%Q_risk = es_data(iec)%risk_time * es_data(iec)%CB_base &
+!               * (ep_data(iec)%EatenOf / ep_data(iec)%biomass + &
+!               ((1 - ep_data(iec)%EE) * ep_data(iec)%PoB) + 0.0000000001D0)
 !#else
-          es_data(i)%Q_risk = real(es_data(i)%risk_time * es_data(i)%CB_base &
-               * (ep_data(i)%EatenOf / ep_data(i)%biomass + &
-               ((1 - ep_data(i)%EE) * ep_data(i)%PoB) + 0.0000000001D0), 4)
+          es_data(iec)%Q_risk = real(es_data(iec)%risk_time * es_data(iec)%CB_base &
+               * (ep_data(iec)%EatenOf / ep_data(iec)%biomass + &
+               ((1 - ep_data(iec)%EE) * ep_data(iec)%PoB) + 0.0000000001D0), 4)
 !#endif
       end if
   end do
@@ -361,19 +361,19 @@
 
 !!!!! this is the rate of sinks in each state variable in the derivs()
   allocate (rrate(nvars))
-  do i = 1, nvars
-      rrate(i) = abs(loss(i)) / ep_data(i)%biomass
+  do iec = 1, nvars
+      rrate(iec) = abs(loss(iec)) / ep_data(iec)%biomass
   end do
 
 !!!!! determine whether to integrate or not each state variable
 !!!!! depending on the rate of change in one time step
-  do i = 1, nvars
-      if (rrate(i) > 24 .and. integrate(i) == i) then
-          integrate(i) = 0
-          ! else if (ep_data(i)%org_type == 0) then
-          !     integrate(i) = 0
-      else if (ep_data(i)%isstanza == 1) then
-          integrate(i) = -i
+  do iec = 1, nvars
+      if (rrate(iec) > 24 .and. integrate(iec) == iec) then
+          integrate(iec) = 0
+          ! else if (ep_data(iec)%org_type == 0) then
+          !     integrate(iec) = 0
+      else if (ep_data(iec)%isstanza == 1) then
+          integrate(iec) = -iec
       else
 
       end if
@@ -396,19 +396,19 @@
   FirstTime = .true.
 
 !!!!! this is the rate of sinks in each state variable in the derivs()
-  do i = 1, nvars
-      rrate(i) = abs(loss(i)) / ep_data(i)%biomass
+  do iec = 1, nvars
+      rrate(iec) = abs(loss(iec)) / ep_data(iec)%biomass
   end do
 
 !!!!! determine whether to integrate or not each state variable
 !!!!! depending on the rate of change in one time step
-  do i = 1, nvars
-      if (rrate(i) > 24 .and. integrate(i) == i) then
-          integrate(i) = 0
-          ! else if (ep_data(i)%org_type == 0) then
-          !     integrate(i) = 0
-      else if (ep_data(i)%isstanza == 1) then
-          integrate(i) = -i
+  do iec = 1, nvars
+      if (rrate(iec) > 24 .and. integrate(iec) == iec) then
+          integrate(iec) = 0
+          ! else if (ep_data(iec)%org_type == 0) then
+          !     integrate(iec) = 0
+      else if (ep_data(iec)%isstanza == 1) then
+          integrate(iec) = -iec
       else
 
       end if
@@ -444,21 +444,21 @@
 !#endif
 
   ! The absolute model results will be written into the below file
-  open(1111, file = "Ecosim_absResults.dat", form = 'formatted', &
-       status = 'unknown')
+!  open(1111, file = "Ecosim_absResults.dat", form = 'formatted', &
+!       status = 'unknown')
   ! The relative model results will be written into the below file
-  open(2222, file = "Ecosim_relResults.dat", form = 'formatted', &
-       status = 'unknown')
+!  open(2222, file = "Ecosim_relResults.dat", form = 'formatted', &
+!       status = 'unknown')
 
-  write(FMT0, '( "("I4, "(A35,"",""))" )') (nvars + 1)
-  write(1111, FMT0) "Time " , groupnames
-  write(2222, FMT0) "Time " , groupnames
+!  write(FMT0, '( "("I4, "(A35,"",""))" )') (nvars + 1)
+!  write(1111, FMT0) "Time " , groupnames
+!  write(2222, FMT0) "Time " , groupnames
 
-  write(FMT2, '( "("I4, "(f21.7,"",""))" )') (nvars + 1)
+!  write(FMT2, '( "("I4, "(f21.7,"",""))" )') (nvars + 1)
 
 !#ifdef _Ecospace_
-  write(1111, FMT2) 0.0, ep_data(:)%biomass
-  write(2222, FMT2) 0.0, spread(1.0, 1, nvars)
+!  write(1111, FMT2) 0.0, ep_data(:)%biomass
+!  write(2222, FMT2) 0.0, spread(1.0, 1, nvars)
 !#else
 !  ! Write absolute and relative model results in files
 !  write(1111, FMT2) 0.0, mat_out(1, :)
@@ -507,24 +507,24 @@
 !#endif
 
   ! The absolute model results will be written into the below file
-  open(3333, file = "Ecosim_absResults_monthly.dat", form = 'formatted', &
-       status = 'unknown')
+!  open(3333, file = "Ecosim_absResults_monthly.dat", form = 'formatted', &
+!       status = 'unknown')
   ! The relative model results will be written into the below file
-  open(4444, file = "Ecosim_relResults_monthly.dat", form = 'formatted', &
-       status = 'unknown')
+!  open(4444, file = "Ecosim_relResults_monthly.dat", form = 'formatted', &
+!       status = 'unknown')
   ! The absolute monthly catches will be written into the below file
-  open(5555, file = "Ecosim_absCatches_monthly.dat", form = 'formatted', &
-       status = 'unknown')
+!  open(5555, file = "Ecosim_absCatches_monthly.dat", form = 'formatted', &
+!       status = 'unknown')
 
-  write(3333, FMT0) "Time " , groupnames
-  write(4444, FMT0) "Time " , groupnames
-  write(5555, FMT0) "Time " , groupnames
+!  write(3333, FMT0) "Time " , groupnames
+!  write(4444, FMT0) "Time " , groupnames
+!  write(5555, FMT0) "Time " , groupnames
 
 !#ifdef _Ecospace_
   ! Write absolute and relative model results in files
-  write(3333, FMT2) 0.0, ep_data(:)%biomass
-  write(4444, FMT2) 0.0, spread(1.0, 1, nvars)
-  write(5555, FMT2) 0.0, ep_data(:)%landings + ep_data(:)%discards
+!  write(3333, FMT2) 0.0, ep_data(:)%biomass
+!  write(4444, FMT2) 0.0, spread(1.0, 1, nvars)
+!  write(5555, FMT2) 0.0, ep_data(:)%landings + ep_data(:)%discards
 !#else
 !  ! Write absolute and relative model results in files
 !  write(3333, FMT2) 0.0, mat_out_monthly(1, :)
