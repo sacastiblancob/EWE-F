@@ -48,8 +48,8 @@ real(RLEN)              :: yt(nvars),  dym(nvars), dydx(nvars), dyt(nvars)
 real(RLEN)              :: loss(nvars), biomeq(nvars)
 real(RLEN)              :: lossSt(nvars)
 
-dh = real(deltat / 2.0D0, 4)
-d6 = real(deltat / 6.0D0, 4)
+dh = real(deltat / 2.0D0, RLEN)
+d6 = real(deltat / 6.0D0, RLEN)
 th = time + dh
 
 !#ifdef _Ecospace_

@@ -5,17 +5,17 @@
 ! Istituto Nazionale di Oceanografia e di Geofisica Sperimentale (OGS),
 ! Trieste/Italy.
 !
-! This program is free software; you can redistribute it and/or modify 
-! it under the terms of the GNU General Public License version 2 as 
+! This program is free software; you can redistribute it and/or modify
+! it under the terms of the GNU General Public License version 2 as
 ! published by the Free Software Foundation.
 !
-! This program is distributed in the hope that it will be useful, but 
-! WITHOUT ANY WARRANTY; without even the implied warranty of 
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+! This program is distributed in the hope that it will be useful, but
+! WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ! General Public License for more details.
 !
-! You should have received a copy of the GNU General Public License 
-! along with  this program; if not, 
+! You should have received a copy of the GNU General Public License
+! along with  this program; if not,
 ! see <http://www.gnu.org/licenses/gpl-2.0.html>.
 !========================================================================
 
@@ -48,8 +48,8 @@ real(RLEN)              :: yt(nvars),  dym(nvars), dydx(nvars), dyt(nvars)
 real(RLEN)              :: loss(nvars), biomeq(nvars)
 real(RLEN)              :: lossSt(nvars)
 
-dh = real(deltat / 2.0D0, 4)
-d6 = real(deltat / 6.0D0, 4)
+dh = real(deltat / 2.0D0, RLEN)
+d6 = real(deltat / 6.0D0, RLEN)
 th = time + dh
 
 #ifdef _Ecospace_
@@ -148,7 +148,7 @@ end if
 ! averaging here for multistanza calculations
 ! and updating foraging times
 do i = 1, nvars
-    
+
     BBAvg(i)   = BBAvg(i) + B(i)
     LossAvg(i) = LossAvg(i) + loss(i)
 
@@ -164,7 +164,7 @@ do i = 1, nvars
 end do
 
 if (UpdateStanzas .eqv. .true.) then
-   
+
     if (nstanzas > 0) then
         ! below was lossSt but corrected upon EwE6 rk4 routine check
         call multistanza (B)

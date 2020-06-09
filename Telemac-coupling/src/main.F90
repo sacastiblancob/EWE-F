@@ -17,22 +17,68 @@
 !history
 ! Created 31-05-2020 - Sergio Castiblanco
 
-  use statevartypesecosim, only: tf, iec, m, noftsteps
+  use statevartypesecopath, only: RLEN
+
+  use statevartypesecosim, only: BBAvg, LossAvg, EatenByAvg, EatenOfAvg, &
+       PredAvg, imonth, tstep, step, time, tf, StepsPerMonth, SecondsPerMonth, &
+       iec, m, n, UpdateStanzas, noftsteps
 
   use statevartypesecospace, only: mat_out, ncdfout_fname
 
   IMPLICIT NONE
 
+  !Variables that emulate variables from telemac
+  REAL(RLEN)      :: TFTEL   !FINAL TIME IN TELEMAC
+  REAL(RLEN)      :: TSTEL    !TIME STEP IN TELEMAC
+  REAL(RLEN)      :: TIMETEL  !TIME EXECUTION IN TELEMAC
+  INTEGER         :: NTSTEL   !NUMBER OF TIME STEPS IN TELEMAC
+
 !================================================================================
 
-  CALL INIT_ECOSIM()
+  TFTEL = 2458.0
+  TSTEL = 1.0
+  TIMETEL = 0
+  NTSTEL = INT(TFTEL/TSTEL)
+
+  CALL INIT_ECOSIM(TFTEL)
 
   WRITE(*,*) "FINAL TIME", tf
+  imonth = 1
+!  step = 0
+  n = 1
+  do iec = 0,NTSTEL
+!  do iec = 0, (tf - 1)
+!    do m = 1, 12
+   IF(TIMETEL.GT.(SecondsPerMonth*imonth)) THEN
+       ! Clean monthly stanza variables
+       BBAvg(:)   = 0
+       LossAvg(:) = 0
+       EatenByAvg(:) = 0
+       EatenOfAvg(:) = 0
+       PredAvg(:)    = 0
 
-  do iec = 0, (tf - 1)
-    do m = 1, 12
-      CALL TIME_ECOSIM(iec,m)
-    end do
+       imonth = imonth + 1
+       n = 1
+       write(*,*) tf, imonth, time, step
+   ENDIF
+
+   IF(TIMETEL.GE.(SecondsPerMonth*(imonth-1) &
+        + n*(SecondsPerMonth/StepsPerMonth))) THEN
+        WRITE(*,*) step, imonth
+!       imonth  = (iec * 12) + m
+!      do n = 1, StepsPerMonth
+!         write(*,*) iec, m, n, imonth, time
+
+         CALL TIME_ECOSIM(n)
+
+         step = step + 1
+         time = time + tstep
+         n = n + 1
+
+!       end do
+   ENDIF
+!    end do
+    TIMETEL = TIMETEL+TSTEL
   end do
 
   print *, "Writing netCDF file in ", ncdfout_fname

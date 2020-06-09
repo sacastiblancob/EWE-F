@@ -674,6 +674,7 @@ program ecosim
 
           call calculateFishingMortalities (BB)
           do n = 1, StepsPerMonth
+              WRITE(*,*) "nnnnnnn", i, m, n, imonth
               if (n == StepsPerMonth) then
                   UpdateStanzas = .true.
               else
@@ -736,6 +737,7 @@ close(2222)
 close(3333)
 close(4444)
 close(5555)
+close(1235)
 
 deallocate(rrate)
 deallocate(integrate)

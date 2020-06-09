@@ -18,17 +18,29 @@
 
 &filenames
 
-HDF5_fname            = "testcases/Lab/Lab.h5"
-GroupInfo_fname       = "testcases/Lab/Lab_Scenario.csv"
-Vulnerability_fname   = "testcases/Lab/Lab_vul.csv"
-Forcing_fname         = "testcases/Lab/Lab_F.csv"
-!NutrientForcing_fname = "testcases/Lab/Lab_NutForce.csv"
+HDF5_fname            = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab.h5"
+GroupInfo_fname       = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_Scenario.csv"
+Vulnerability_fname   = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_vul.csv"
+Forcing_fname         = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_F.csv"
+
+!NutrientForcing_fname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_NutForce.csv"
 NutrientForcing_fname = ""
-!PrimaryProdForcing_fname = "testcases/Lab/Lab_PrimaryProdForce.csv"
+!PrimaryProdForcing_fname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_PrimaryProdForce.csv"
 PrimaryProdForcing_fname = ""
 
+! Ecospace files reffer to geographical grid, distribution and advection
+SpatialGrid_fname     = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_grid.csv"
+SpatialDistribution_dirname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/"
+Advection_fname       = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_advection.csv"
+
+!NET-CDF output file for ecospace
+ncdfout_fname         = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/ecospace_4D.nc"
+
 ! number of years to simulate
-tf              = 2
+!tf              = 2
+
+! how many seconds have a month?
+SecondsPerMonth = 100
 
 ! time steps per month
 StepsPerMonth   = 10

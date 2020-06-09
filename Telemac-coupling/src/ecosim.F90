@@ -133,10 +133,16 @@ program ecosim
 
   ! get file names from namelist (nml) file
 !#ifdef _Ecospace_
+!  namelist /filenames/ HDF5_fname, GroupInfo_fname, Vulnerability_fname, &
+!       Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
+!       SpatialGrid_fname, SpatialDistribution_dirname, Advection_fname, &
+!       tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, relax
+
   namelist /filenames/ HDF5_fname, GroupInfo_fname, Vulnerability_fname, &
        Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
        SpatialGrid_fname, SpatialDistribution_dirname, Advection_fname, &
-       tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, relax
+       ncdfout_fname, tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, relax
+
 !#else
 !  namelist /filenames/ HDF5_fname, GroupInfo_fname, Vulnerability_fname, &
 !       Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
@@ -601,6 +607,71 @@ WRITE(*,*) "Final time", tf
 
 !#ifdef _Ecospace_
 !!!!! run model over the specified time frame
+!  do i = 0, (tf - 1)
+!      do m = 1, 12
+!
+!          ! Clean monthly stanza variables
+!          BBAvg(:)   = 0
+!          LossAvg(:) = 0
+!          EatenByAvg(:) = 0
+!          EatenOfAvg(:) = 0
+!          PredAvg(:)    = 0
+!
+!          imonth  = (i * 12) + m
+!          do lon = 1, nlon
+!              do lat = 1, nlat
+!                  if (grid(lat, lon) == 1) then
+!                          ! print instantaneous results to stdout
+!                          write(*, '(A6, f9.3)' ) " Time: ", time
+!                          write(*, '(A12, I4)' ) " Latitude: ", lat
+!                          write(*, '(A12, I4)' ) " Longitude: ", lon
+!
+!                      BB = BB_spatial(lat, lon, :)
+!
+!                      call calculateFishingMortalities (BB)
+!
+!                      do n = 1, StepsPerMonth
+!
+!                          if (n == StepsPerMonth) then
+!                              UpdateStanzas = .true.
+!                          else
+!                              UpdateStanzas = .false.
+!                          end if
+!
+!                          ! call the Runge-Kutta 4th order numeric ode solver
+!                          call rk4 (BB, time, tstep, integrate, lat, lon)
+!
+!                          ! calculate geospatial dynamics
+!                          call ecospace (time, BB, lat, lon)
+!
+!                          ! Update BB_spatial with new biomasses in grid
+!                          BB_spatial(lat, lon, :) = BB
+!
+!                          mat_out(lat, lon, step + 2, :) = BB
+!
+!                          ! calculate relative change
+!                          ! with respect to initial biomasses
+!                          do j = 1, nvars
+!                              rel_out(lat, lon, step + 2, j) &
+!                                   = mat_out(lat, lon, step + 2, j) &
+!                                   / ep_data(j)%biomass * spatialhafs(lat, lon, j)
+!                          end do
+!
+!                      end do
+!                  else
+!                      mat_out(lat, lon, step + 2, :) = BB_spatial(lat, lon, :)
+!                  end if
+!
+!              end do
+!          end do
+!
+!          step = step + 1
+!          time = time + tstep
+!
+!      end do
+!
+!  end do
+
   do i = 0, (tf - 1)
       do m = 1, 12
 
@@ -612,63 +683,65 @@ WRITE(*,*) "Final time", tf
           PredAvg(:)    = 0
 
           imonth  = (i * 12) + m
-          do lon = 1, nlon
-              do lat = 1, nlat
-                  if (grid(lat, lon) == 1) then
+          do n = 1, StepsPerMonth
+            do lon = 1, nlon
+                do lat = 1, nlat
+                    if (grid(lat, lon) == 1) then
                           ! print instantaneous results to stdout
                           write(*, '(A6, f9.3)' ) " Time: ", time
                           write(*, '(A12, I4)' ) " Latitude: ", lat
                           write(*, '(A12, I4)' ) " Longitude: ", lon
 
-                      BB = BB_spatial(lat, lon, :)
+                       BB = BB_spatial(lat, lon, :)
 
-                      call calculateFishingMortalities (BB)
+                       call calculateFishingMortalities (BB)
 
-                      do n = 1, StepsPerMonth
+!                      do n = 1, StepsPerMonth
 
-                          if (n == StepsPerMonth) then
-                              UpdateStanzas = .true.
-                          else
-                              UpdateStanzas = .false.
-                          end if
+                       if (n == StepsPerMonth) then
+                           UpdateStanzas = .true.
+                       else
+                           UpdateStanzas = .false.
+                       end if
 
-                          ! call the Runge-Kutta 4th order numeric ode solver
-                          call rk4 (BB, time, tstep, integrate, lat, lon)
+                       ! call the Runge-Kutta 4th order numeric ode solver
+                       call rk4 (BB, time, tstep, integrate, lat, lon)
 
-                          ! calculate geospatial dynamics
-                          call ecospace (time, BB, lat, lon)
+                       ! calculate geospatial dynamics
+                       call ecospace (time, BB, lat, lon)
 
-                          ! Update BB_spatial with new biomasses in grid
-                          BB_spatial(lat, lon, :) = BB
+                       ! Update BB_spatial with new biomasses in grid
+                       BB_spatial(lat, lon, :) = BB
 
-                          mat_out(lat, lon, step + 2, :) = BB
+                       mat_out(lat, lon, step + 2, :) = BB
 
-                          ! calculate relative change
-                          ! with respect to initial biomasses
-                          do j = 1, nvars
-                              rel_out(lat, lon, step + 2, j) &
-                                   = mat_out(lat, lon, step + 2, j) &
-                                   / ep_data(j)%biomass * spatialhafs(lat, lon, j)
-                          end do
+                       ! calculate relative change
+                       ! with respect to initial biomasses
+                       do j = 1, nvars
+                           rel_out(lat, lon, step + 2, j) &
+                                = mat_out(lat, lon, step + 2, j) &
+                                / ep_data(j)%biomass * spatialhafs(lat, lon, j)
+                       end do
 
-                      end do
-                  else
-                      mat_out(lat, lon, step + 2, :) = BB_spatial(lat, lon, :)
-                  end if
+!                      end do
+                    else
+                        mat_out(lat, lon, step + 2, :) = BB_spatial(lat, lon, :)
+                    end if
 
-              end do
+                end do
+            end do
+
+            step = step + 1
+            time = time + tstep
           end do
-
-          step = step + 1
-          time = time + tstep
-
       end do
 
   end do
 
   print *, "Simulation ended successfully."
   print *, "Writing netCDF file..."
-  call writenetCDFfile (noftsteps, mat_out)
+!  call writenetCDFfile (noftsteps, mat_out)
+  call writenetCDFfile (noftsteps, mat_out, ncdfout_fname)
 
 !#else
 !

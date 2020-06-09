@@ -18,20 +18,17 @@
 
 &filenames
 
-HDF5_fname            = "testcases/Lab/Lab.h5"
-GroupInfo_fname       = "testcases/Lab/Lab_Scenario.csv"
-Vulnerability_fname   = "testcases/Lab/Lab_vul.csv"
-Forcing_fname         = "testcases/Lab/Lab_F.csv"
-!NutrientForcing_fname = "testcases/Lab/Lab_NutForce.csv"
-NutrientForcing_fname = ""
-!PrimaryProdForcing_fname = "testcases/Lab/Lab_PrimaryProdForce.csv"
-PrimaryProdForcing_fname = ""
+HDF5_fname            = "testcases/Tampa_Bay/Tampa_Bay.h5"
+GroupInfo_fname       = "testcases/Tampa_Bay/Tampa_Bay_Scenario.csv"
+Vulnerability_fname   = "testcases/Tampa_Bay/Tampa_Bay_vul.csv"
+Forcing_fname         = "testcases/Tampa_Bay/Tampa_Bay_F.csv"
+NutrientForcing_fname = "testcases/Tampa_Bay/Tampa_Bay_NutForce.csv"
 
 ! number of years to simulate
 tf              = 2
 
 ! time steps per month
-StepsPerMonth   = 1
+StepsPerMonth   = 10
 
 ! base proportion of free nutrients
 NutBaseFreeProp = 0.9

@@ -1,5 +1,5 @@
 !                    **********************
-                     SUBROUTINE INIT_ECOSIM
+                     SUBROUTINE INIT_ECOSIM(TFTEL)
 !                    **********************
 !
 !***********************************************************************
@@ -53,7 +53,7 @@
   use statevartypesecosim, only: GroupInfo_fname, &
        Vulnerability_fname, Forcing_fname, &
        NutrientForcing_fname, PrimaryProdForcing_fname, &
-       tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, &
+       tf, StepsPerMonth, SecondsPerMonth, NutBaseFreeProp, NutPBmax, &
        relax, es_data, nvars, nstanzas, ndetritus, &
        detritus_no, BBAvg, &
        EatenOfAvg, EatenByAvg, PredAvg, LossAvg, &
@@ -64,6 +64,8 @@
   use readHDF5Database
 
   implicit none
+
+  REAL(RLEN),INTENT(IN)           :: TFTEL  !Here in variable is final time of Telemac
 
   character(len = 2000):: FMT0, FMT1, FMT2
   integer              :: vrows, vcols     ! rows & columns of vul. matrix
@@ -130,10 +132,16 @@
 
   ! get file names from namelist (nml) file
 !#ifdef _Ecospace_
+!  namelist /filenames/ HDF5_fname, GroupInfo_fname, Vulnerability_fname, &
+!       Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
+!       SpatialGrid_fname, SpatialDistribution_dirname, Advection_fname, &
+!       ncdfout_fname, tf, SecondsPerMonth, StepsPerMonth, NutBaseFreeProp, &
+!       NutPBmax, relax
   namelist /filenames/ HDF5_fname, GroupInfo_fname, Vulnerability_fname, &
        Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
        SpatialGrid_fname, SpatialDistribution_dirname, Advection_fname, &
-       ncdfout_fname, tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, relax
+       ncdfout_fname, SecondsPerMonth, StepsPerMonth, NutBaseFreeProp, &
+       NutPBmax, relax
 !#else
 !  namelist /filenames/ HDF5_fname, GroupInfo_fname, Vulnerability_fname, &
 !       Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
@@ -142,6 +150,9 @@
   open(1010, file = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/filenames.nml", status = 'OLD')
   read(1010, nml = filenames)
   close(1010)
+
+!!!!!!!!!! COMPUTING FINAL TIME FOR ECOSPACE !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    tf = TFTEL/(SecondsPerMonth*12)!!
 
 !!!!!!!!!! INPUT/OUTPUT OF DATA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -206,9 +217,13 @@
 !  multistanza_update = 0.
 !  imonth    = 1
 !#else
-  tstep     = real(1.0D0 / (12.0D0 * StepsPerMonth), 4)
+  tstep     = real(1.0D0 / (12.0D0 * StepsPerMonth), RLEN)
+
 !#endif
   noftsteps = nint(tf / tstep)
+!  IF (MOD(TFTEL/))
+!  WRITE(*,*) "TSTEEEEEEP", tstep, noftsteps
+
 
 !!!!!!!!!! END SECTION: SET SIMULATION PERIOD PARAMETERS !!!!!!!!!!!!!!!!
 

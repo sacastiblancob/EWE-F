@@ -63,6 +63,8 @@ real(RLEN), intent(out) :: xdot(nvars)     ! results of state equations
 real(RLEN), intent(out) :: biomeq(nvars)   ! rate of change for state vars
 real(RLEN), intent(out) :: loss(nvars)     ! sinks for state variables
 
+real(RLEN)              :: integsum(nvars)
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifdef isWithBFM
 call HTLGlobalDynamics()
@@ -75,6 +77,8 @@ vcols = size(es_vul, 2)
 ! set predator abundance measure
 ! for predation rate calculations (setpred)
 b_derivs = biomass
+  OPEN(1235,file="integrate.dat")
+  integsum = 0D0
 do var = 1, nvars
     if (biomass(var) < 1.0e-20) then
         b_derivs(var) = 1.0e-20
@@ -82,7 +86,10 @@ do var = 1, nvars
     if (integrate(var) >= 0) then
         es_data(var)%pred = b_derivs(var)
     end if
+    integsum(var) = b_derivs(var)
+!    WRITE(*,*) integsum(var)
 end do
+  WRITE(1235,*) integsum
 
 
 ! nutrient biomass

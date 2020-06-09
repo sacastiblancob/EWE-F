@@ -18,11 +18,11 @@
 
 &filenames
 
-InputData_fname   = "testcases/Lab/Lab_Scenario.csv"
-DietComp_fname    = "testcases/Lab/Lab_DC.csv"
-DetFate_fname     = "testcases/Lab/Lab_DetFate.csv"
-GrowthParam_fname = "testcases/Lab/Lab_GrowthParameters.csv"
-Results_fname     = "testcases/Lab/Lab.h5"
+InputData_fname   = "testcases/Tampa_Bay/Tampa_Bay_Scenario.csv"
+DietComp_fname    = "testcases/Tampa_Bay/Tampa_Bay_DC.csv"
+DetFate_fname     = "testcases/Tampa_Bay/Tampa_Bay_DetFate.csv"
+GrowthParam_fname = "testcases/Tampa_Bay/Tampa_Bay_GrowthParameters.csv"
+Results_fname     = "testcases/Tampa_Bay/Tampa_Bay.h5"
 HDF5_fname        = ""
 
 isASCIIinputFile  = .true.

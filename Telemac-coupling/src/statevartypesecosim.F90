@@ -208,7 +208,9 @@ real(RLEN) :: NutBaseFreeProp  ! base proportion of free nutrients
 real(RLEN) :: NutPBmax         ! max P/B due to nutrient concentration
 integer :: StepsPerMonth    ! number of time steps per month
 real(RLEN) :: relax            ! relaxation parameter
-integer :: tf               ! number of years to simulate
+!tf original is integer
+real(RLEN) :: tf
+!integer :: tf               ! number of years to simulate
 integer :: imonth           ! integer month
 
 character(len = 250) :: GroupInfo_fname
@@ -232,8 +234,8 @@ real(RLEN), allocatable :: PredAvg(:)
 integer              :: nvars, nstanzas
 
 ! logicals for know if compute Primary Production Forcing and Nutrient Forcing
-  logical    :: boolFN = .true.
-  logical    :: boolFPP = .true.
+  logical    :: boolFN = .false.
+  logical    :: boolFPP = .false.
 
 !!!!ALL NEXT VARIABLES COMES FROM ECOSIM.F90 ORIGINAL FILE, DEFINED DOWN IMPLICIT NONE
 
@@ -245,6 +247,7 @@ integer              :: nvars, nstanzas
   integer              :: noftsteps, step  ! number of time steps
   real(RLEN)           :: tstep            ! time step
   real(RLEN)           :: time
+  real(RLEN)           :: SecondsPerMonth  !! Second Per Month for Telemac Coupling
 
 !  ! (1) integrate, (0) do not integrate
   integer, allocatable :: integrate(:)
