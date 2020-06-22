@@ -1,5 +1,5 @@
 !                    ***************************
-                     SUBROUTINE TIME_ECOSIM(n)
+                     SUBROUTINE TIME_ECOSIM(n,step)
 !                    ***************************
 !
 !***********************************************************************
@@ -23,12 +23,12 @@
   use statevartypesecopath, only: ep_data
 
   use statevartypesecosim, only: BB, StepsPerMonth, UpdateStanzas, &
-       step, tstep, time, integrate, j, nvars
+       tstep, time, integrate, j, nvars
 
 
   IMPLICIT NONE
 
-  INTEGER, INTENT(IN)   :: n
+  INTEGER, INTENT(IN)   :: n, step
 
 !========================================================================
 !#ifdef _Ecospace_

@@ -21,9 +21,9 @@
 
   use statevartypesecosim, only: BBAvg, LossAvg, EatenByAvg, EatenOfAvg, &
        PredAvg, imonth, tstep, step, time, tf, StepsPerMonth, SecondsPerMonth, &
-       iec, m, n, UpdateStanzas, noftsteps
+       iec, n, noftsteps
 
-  use statevartypesecospace, only: mat_out, ncdfout_fname
+  use statevartypesecospace
 
   IMPLICIT NONE
 
@@ -35,7 +35,7 @@
 
 !================================================================================
 
-  TFTEL = 2458.0
+  TFTEL = 2401.0
   TSTEL = 1.0
   TIMETEL = 0
   NTSTEL = INT(TFTEL/TSTEL)
@@ -50,6 +50,15 @@
 !  do iec = 0, (tf - 1)
 !    do m = 1, 12
    IF(TIMETEL.GT.(SecondsPerMonth*imonth)) THEN
+
+       WRITE(*,*) step, imonth, n
+
+       CALL TIME_ECOSIM(n,step)
+
+       step = step + 1
+       time = time + tstep
+       n = n + 1
+
        ! Clean monthly stanza variables
        BBAvg(:)   = 0
        LossAvg(:) = 0
@@ -60,16 +69,17 @@
        imonth = imonth + 1
        n = 1
        write(*,*) tf, imonth, time, step
+
    ENDIF
 
-   IF(TIMETEL.GE.(SecondsPerMonth*(imonth-1) &
+   IF(TIMETEL.GT.(SecondsPerMonth*(imonth-1) &
         + n*(SecondsPerMonth/StepsPerMonth))) THEN
-        WRITE(*,*) step, imonth
+        WRITE(*,*) step, imonth, n
 !       imonth  = (iec * 12) + m
 !      do n = 1, StepsPerMonth
 !         write(*,*) iec, m, n, imonth, time
 
-         CALL TIME_ECOSIM(n)
+         CALL TIME_ECOSIM(n,step)
 
          step = step + 1
          time = time + tstep
@@ -86,7 +96,7 @@
 
   print *, "Simulation ended successfully."
 
-  CALL CLOSING_AND_KILLING()
+!  CALL CLOSING_AND_KILLING()
 
 
 END PROGRAM MAIN

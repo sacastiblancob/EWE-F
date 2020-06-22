@@ -68,6 +68,6 @@ end do
 ! allocate and populate fields of <es_data>
  call setEcosimScenarioParameters (nrows, ncols, m_data)
 
- deallocate(m_data)
+! deallocate(m_data)
 
 end subroutine readEcosimScenario_io

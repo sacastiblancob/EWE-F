@@ -207,7 +207,8 @@ real(RLEN), allocatable :: PrimaryProdForce(:, :)
 real(RLEN) :: NutBaseFreeProp  ! base proportion of free nutrients
 real(RLEN) :: NutPBmax         ! max P/B due to nutrient concentration
 integer :: StepsPerMonth    ! number of time steps per month
-real(RLEN) :: relax            ! relaxation parameter
+!real(RLEN) :: relax
+real(RLEN) :: relaxeco            ! relaxation parameter
 !tf original is integer
 real(RLEN) :: tf
 !integer :: tf               ! number of years to simulate

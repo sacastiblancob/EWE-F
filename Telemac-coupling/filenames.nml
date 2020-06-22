@@ -23,10 +23,10 @@ GroupInfo_fname       = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/
 Vulnerability_fname   = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_vul.csv"
 Forcing_fname         = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_F.csv"
 
-NutrientForcing_fname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_NutForce.csv"
-!NutrientForcing_fname = ""
-PrimaryProdForcing_fname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_PrimaryProdForce.csv"
-!PrimaryProdForcing_fname = ""
+!NutrientForcing_fname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_NutForce.csv"
+NutrientForcing_fname = ""
+!PrimaryProdForcing_fname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_PrimaryProdForce.csv"
+PrimaryProdForcing_fname = ""
 
 ! Ecospace files reffer to geographical grid, distribution and advection
 SpatialGrid_fname     = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/Lab_grid.csv"
@@ -37,10 +37,13 @@ Advection_fname       = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/case/
 ncdfout_fname         = "/home/aldair/Documents/EwE-F/git/Telemac-coupling/ecospace_4D.nc"
 
 ! number of years to simulate
-tf              = 1
+!tf              = 2
+
+! how many seconds have a month?
+SecondsPerMonth = 100
 
 ! time steps per month
-StepsPerMonth   = 1
+StepsPerMonth   = 10
 
 ! base proportion of free nutrients
 NutBaseFreeProp = 0.9
@@ -49,6 +52,6 @@ NutBaseFreeProp = 0.9
 NutPBmax        = 1.5
 
 ! relaxation parameter
-relax           = 0.5
+relaxeco        = 0.5
 
 /
