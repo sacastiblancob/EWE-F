@@ -48,7 +48,7 @@ subroutine freeMemory
     deallocate(EatenByAvg)
     deallocate(EatenOfAvg)
     deallocate(PredAvg)
-    deallocate(BB)
+    deallocate(BBeco)
 
 !#ifdef isWithBFM
 !    deallocate(ruHTLc)

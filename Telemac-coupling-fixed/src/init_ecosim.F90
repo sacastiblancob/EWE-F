@@ -57,7 +57,7 @@
        relaxeco, es_data, nvars, nstanzas, ndetritus, &
        detritus_no, BBAvg, &
        EatenOfAvg, EatenByAvg, PredAvg, LossAvg, &
-       es_ms_data, imonth, FirstTime, BB, &
+       es_ms_data, imonth, FirstTime, BBeco, &
        boolFN, boolFPP, iec, j, var, &
        t0, noftsteps, step, tstep, time, integrate, &
        B, b_pred, xdot, biomeq, loss, b_out, rrate, NutTot, NutBiom, &
@@ -226,7 +226,7 @@
 !#endif
   WRITE(*,*) "TIIIIME", tf, tstep
 
-  noftsteps = CEILING(tf / tstep)
+  noftsteps = FLOOR(tf / tstep)
 !!  noftsteps = NINT(tf / tstep)
 !  IF (MOD(TFTEL/))
 !  WRITE(*,*) "TSTEEEEEEP", tstep, noftsteps
@@ -587,15 +587,15 @@
   allocate(EatenOfAvg(nvars))
   allocate(PredAvg(nvars))
 
-  allocate(BB(nvars))
-  BB = ep_data(:)%biomass
+  allocate(BBeco(nvars))
+  BBeco = ep_data(:)%biomass
 
 !#ifdef _Ecospace_
   do lon = 1, nlon
       do lat = 1, nlat
           do var = 1, nvars
               if (grid(lat, lon) == 1) then
-                  BB_spatial(lat, lon, var) = BB(var) * spatialhafs(lat, lon, var)
+                  BB_spatial(lat, lon, var) = BBeco(var) * spatialhafs(lat, lon, var)
               else
                   BB_spatial(lat, lon, var) = -999
               end if

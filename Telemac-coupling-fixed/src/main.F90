@@ -20,8 +20,8 @@
   use statevartypesecopath, only: RLEN, flow2detritus, det_export_rate
 
   use statevartypesecosim, only: BBAvg, LossAvg, EatenByAvg, EatenOfAvg, &
-       PredAvg, imonth, tstep, step, time, tf, StepsPerMonth, SecondsPerMonth, &
-       iec, n, noftsteps, es_data, BB, BBAvg, LossAvg, EatenByAvg, EatenOfAvg, &
+       PredAvg, imonth, tstep, step, time, tf, SecondsPerMonth, StepsPerMonth, &
+       iec, n, noftsteps, es_data, BBeco, BBAvg, LossAvg, EatenByAvg, EatenOfAvg, &
        PredAvg, es_ms_data, arena, NutFree, NutBiom, FirstTime, UpdateStanzas, &
        noftsteps
 
@@ -56,15 +56,15 @@
 !    do m = 1, 12
    IF(TIMETEL.GT.(SecondsPerMonth*imonth)) THEN
 
-       WRITE(*,*) step, imonth, n
+       WRITE(*,*) "UP",step, imonth, n, TIMETEL
 
 !       CALL TIME_ECOSIM(n,step)
-!        CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BB, BB_spatial,
-!     &                   flow2detritus, det_export_rate, BBAvg, LossAvg,
-!     &                   EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
-!     &                   NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
-!     &                   M2, mat_out, rel_out)
-        CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BB, BB_spatial, &
+!      CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco,
+!     &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
+!     &    EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
+!     &    NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
+!     &    M2, mat_out, rel_out)
+        CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco, BB_spatial, &
                         flow2detritus, det_export_rate, BBAvg, LossAvg, &
                         EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena, &
                         NutFree, NutBiom, FirstTime, UpdateStanzas, QperB, &
@@ -88,18 +88,18 @@
 
    IF(TIMETEL.GT.(SecondsPerMonth*(imonth-1) &
         + n*(SecondsPerMonth/StepsPerMonth))) THEN
-        WRITE(*,*) step, imonth, n
+        WRITE(*,*) "DOWN",step, imonth, n, TIMETEL
 !       imonth  = (iec * 12) + m
 !      do n = 1, StepsPerMonth
 !         write(*,*) iec, m, n, imonth, time
 
 !       CALL TIME_ECOSIM(n,step)
-!        CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BB, BB_spatial,
-!     &                   flow2detritus, det_export_rate, BBAvg, LossAvg,
-!     &                   EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
-!     &                   NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
-!     &                   M2, mat_out, rel_out)
-        CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BB, BB_spatial, &
+!      CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco,
+!     &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
+!     &    EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
+!     &    NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
+!     &    M2, mat_out, rel_out)
+        CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco, BB_spatial, &
                         flow2detritus, det_export_rate, BBAvg, LossAvg, &
                         EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena, &
                         NutFree, NutBiom, FirstTime, UpdateStanzas, QperB, &

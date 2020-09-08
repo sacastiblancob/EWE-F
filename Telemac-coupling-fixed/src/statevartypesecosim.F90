@@ -226,7 +226,7 @@ integer :: ndetritus
 integer, allocatable :: producer_no(:)
 integer :: nproducer
 
-real(RLEN), allocatable :: BB(:)
+real(RLEN), allocatable :: BBeco(:)
 real(RLEN), allocatable :: BBAvg(:), LossAvg(:)
 real(RLEN), allocatable :: EatenByAvg(:)
 real(RLEN), allocatable :: EatenOfAvg(:)
