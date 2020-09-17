@@ -18,23 +18,23 @@
 
 &filenames
 
-HDF5_fname            = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/case/Lab.h5"
-GroupInfo_fname       = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/case/Lab_Scenario.csv"
-Vulnerability_fname   = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/case/Lab_vul.csv"
-Forcing_fname         = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/case/Lab_F.csv"
+HDF5_fname            = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/case/Lab.h5"
+GroupInfo_fname       = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/case/Lab_Scenario.csv"
+Vulnerability_fname   = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/case/Lab_vul.csv"
+Forcing_fname         = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/case/Lab_F.csv"
 
-!NutrientForcing_fname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/case/Lab_NutForce.csv"
+!NutrientForcing_fname = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/case/Lab_NutForce.csv"
 NutrientForcing_fname = ""
-!PrimaryProdForcing_fname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/case/Lab_PrimaryProdForce.csv"
+!PrimaryProdForcing_fname = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/case/Lab_PrimaryProdForce.csv"
 PrimaryProdForcing_fname = ""
 
 ! Ecospace files reffer to geographical grid, distribution and advection
-SpatialGrid_fname     = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/case/Lab_grid.csv"
-SpatialDistribution_dirname = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/case/"
-Advection_fname       = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/case/Lab_advection.csv"
+SpatialGrid_fname     = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/case/Lab_grid.csv"
+SpatialDistribution_dirname = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/case/"
+Advection_fname       = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/case/Lab_advection.csv"
 
 !NET-CDF output file for ecospace
-ncdfout_fname         = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/ecospace_4D.nc"
+ncdfout_fname         = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/ecospace_4D.nc"
 
 ! number of years to simulate
 !tf              = 2

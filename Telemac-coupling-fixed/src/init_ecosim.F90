@@ -149,7 +149,7 @@
 !       Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
 !       tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, relaxeco
 !#endif
-  open(1010, file = "/home/aldair/Documents/EwE-F/git/Telemac-coupling-fixed/filenames.nml", status = 'OLD')
+  open(1010, file = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/filenames.nml", status = 'OLD')
   read(1010, nml = filenames)
   close(1010)
 

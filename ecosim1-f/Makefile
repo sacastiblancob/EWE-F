@@ -25,7 +25,7 @@
 FC = gfortran
 
 # Uncomment below to build for 64 bits architecture
- FCFLAGS = -m64
+ FCFLAGS = -m64 -O2
 
 # Uncomment below if there is nutrient forcing
 # CPPDEFS += -D_ForceNutrient_
@@ -40,10 +40,12 @@ FC = gfortran
 # Path to the HDF5 installation
 # The HDF5 should have been compiled by the same compiler
 # specified above
-HDF5DIR = /home/aldair/Documents/EwE-F/APPS/HDF5-1.10.4
+#HDF5DIR = /home/aldair/Documents/EwE-F/APPS/HDF5-1.10.4
+HDF5DIR = /home/aldair/Documents/APPS/HDF5-1.10.4
 
 # Path to the NetCDF-Fortran installation
-NFDIR = /home/aldair/Documents/EwE-F/APPS/NETCDF-F-4.4.5
+#NFDIR = /home/aldair/Documents/EwE-F/APPS/NETCDF-F-4.4.5
+NFDIR = /home/aldair/Documents/APPS/NETCDF-F-4.4.5
 
 
 # This flag below specifies the directory into which the compiled module
