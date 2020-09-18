@@ -73,7 +73,7 @@
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
       USE DECLARATIONS_SPECIAL
-      USE DECLARATIONS_TELEMAC2D, ONLY : IND_SEC,ITURB
+      USE DECLARATIONS_TELEMAC2D, ONLY : IND_SEC,ITURB,NUSRVAR
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !     This is our own module
@@ -445,21 +445,14 @@
 !-------------------------  MODIFIED SECTION  -------------------------!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      !IF(NUSRVAR.GT.4) THEN
-	!    I = 35 + NTRAC + 2 * NPERIAF + NADVAR + NUSRVAR-4
-      !  TEXTE(I)  = 'INDEX4          %               '
-      !  TEXTPR(I) = 'INDEX4          %               '
-      !  MNEMO(I)  = 'IDX     '
-      !ENDIF
-
-      !ADITIONAL VARIABLES FOR ECOSPACE
-      I = 35 + NTRAC + 2*NPERIAF + NADVAR + 1
-      TEXTE(I)  = 'GRUF1           BIO             '
-      TEXTPR(I) = 'GRUF1           BIO             '
-      MNEMO(I)  = 'GRUF1   '
-
-
-
+!
+      !ADDITIONAL VARIABLES FOR ECOSPACE 
+      IF(NUSRVAR.GT.4) THEN
+	    I = 35 + NTRAC + 2 * NPERIAF + NADVAR + NUSRVAR-4
+          TEXTE(I)  = 'GRUF1           BIO             '
+          TEXTPR(I) = 'GRUF1           BIO             '
+          MNEMO(I)  = 'GRUF1   '
+      ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

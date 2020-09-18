@@ -37,7 +37,7 @@ DO II = 1,nvars
 !
   ENDDO
 ENDDO
-!WRITE(*,*) "IIIIIIIND", ECOSUI%ADR(1)%P%R(1)
+!WRITE(*,*) "IIIIIIIND", VEL
 
 
 

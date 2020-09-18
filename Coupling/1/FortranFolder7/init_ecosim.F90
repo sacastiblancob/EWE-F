@@ -41,8 +41,8 @@
 !  use statevartypesecopath, only: RLEN
 !#endif
 
-  USE BIEF
-  USE DECLARATIONS_TELEMAC2D
+!  USE BIEF
+!  USE DECLARATIONS_TELEMAC2D
 
 !#ifdef _Ecospace_
   use statevartypesecospace

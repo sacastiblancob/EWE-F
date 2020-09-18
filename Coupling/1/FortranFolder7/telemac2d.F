@@ -1667,7 +1667,7 @@
 !
       COUNTER = COUNTER + 1D0   !ADVANCING COUNTER
       CALL ECOHABITAT(nvars,U,V,H,ECOSUI)
-      WRITE(*,*) "COUUNTER", COUNTER
+      !WRITE(*,*) "COUUNTER", COUNTER
 !      
 !=======================================================================
 !                    END OF HABITAT SUITABILITY
@@ -1686,7 +1686,7 @@
      &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
      &    EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
      &    NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
-     &    M2, mat_out, rel_out, COUNTER)
+     &    M2, mat_out, rel_out, COUNTER, ECOSUI, COUECO)
       
       COUNTER = 0D0        !RESTARTING COUNTER FOR HABITAT       
       step = step + 1      !ADVANCING STEP
@@ -1714,7 +1714,7 @@
      &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
      &    EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
      &    NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
-     &    M2, mat_out, rel_out, COUNTER)
+     &    M2, mat_out, rel_out, COUNTER, ECOSUI, COUECO)
       
       COUNTER = 0D0        !RESTARTING COUNTER FOR HABITAT       
       step = step + 1      !ADVANCING STEP

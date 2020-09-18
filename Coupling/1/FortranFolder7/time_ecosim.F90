@@ -4,7 +4,7 @@
   (n,step, imonth, time, tstep, es_data, BBeco, BB_spatial, flow2detritus, &
    det_export_rate, BBAvg, LossAvg, EatenByAvg, EatenOfAvg, PredAvg, &
    es_ms_data, arena, NutFree, NutBiom, FirstTime, UpdateStanzas, &
-   QperB, M2, mat_out, rel_out, COUNTER)
+   QperB, M2, mat_out, rel_out, COUNTER, ECOSUI, COUECO)
 
 !
 !***********************************************************************
@@ -25,7 +25,7 @@
 
   USE BIEF
   !USE DECLARATIONS_COUPECOSPACE
-  USE DECLARATIONS_TELEMAC2D
+  USE DECLARATIONS_TELEMAC2D, ONLY: NPOIN, ECOOUT
 
   use statevartypesecospace, only: nlon, nlat, grid, advection, &
        spatialhafs
@@ -63,10 +63,15 @@
   REAL(RLEN), INTENT(OUT) :: rel_out(nlat, nlon, noftsteps+1, nvars)
 
   REAL(RLEN), INTENT(IN)        :: COUNTER
+
+  TYPE(BIEF_OBJ), INTENT(INOUT) :: ECOSUI
+  TYPE(BIEF_OBJ), INTENT(IN) :: COUECO
+  !TYPE(BIEF_OBJ), INTENT(OUT) :: ECOOUT
   
 
 ! IN SUBROUTINE VARIABLES
   INTEGER    :: lat, lon, latlon, j, K, II
+  REAL(SELECTED_REAL_KIND(15,307)) :: CCOUN
 
 
 !========================================================================
@@ -74,12 +79,13 @@
 !!!!! run model over the specified time frame
 ! [...]
 !      [...]
-
+  CCOUN = 1D0/COUNTER
+  !WRITE(*,*) 'CCOUN', CCOUN
 ! COMPUTING HABITAT SUITABILITY INDEX
   DO II = 1,nvars
-    CALL OS('X=CX    ', X=ECOSUI%ADR(II)%P, C=1D0/COUNTER)
+    CALL OS('X=CX    ', X=ECOSUI%ADR(II)%P, C=CCOUN)
   ENDDO
-  WRITE(*,*) "ECOSUIaa", ECOSUI%ADR(1)%P%R(1)
+  !WRITE(*,*) "ECOSUIaa", ECOSUI%ADR(1)%P%R(1)
 
   latlon = 1
 
@@ -144,11 +150,13 @@
     end do
   end do
   !WRITE(*,*) 'NPOIN1', ECOOUT%ADR(7)%P%R(1)
+  !WRITE(*,*) 'MATOUT', mat_out(1, 1, step + 2, 6)
 
 ! TURNING BACK TO 0 ALL HABITAT SUITABILITY VALUES
+  CCOUN = 0D0;
   DO II = 1,nvars
-    CALL OS('X=C     ', X=ECOSUI%ADR(II)%P, C=0D0)
+    CALL OS('X=C     ', X=ECOSUI%ADR(II)%P, C=CCOUN)
   ENDDO
-  WRITE(*,*) "ECOSUI", ECOSUI%ADR(1)%P%R(1)
+  !WRITE(*,*) "ECOSUI", ECOSUI%ADR(1)%P%R(1)
 
 END SUBROUTINE TIME_ECOSIM

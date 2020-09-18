@@ -358,14 +358,16 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !  ARRAYS CONTAINING THE USER VARIABLES WHICH WILL BE OUTPUT TO THE RESULT FILE:
 !
-      CALL BIEF_ALLVEC(1,IDX,'IDX   ',IELMT,1,2,MESH)
+!      CALL BIEF_ALLVEC(1,IDX,'IDX   ',IELMT,1,2,MESH)
+
 !
 !     ALLOCATES FUNCTIONAL GROUP RESULTS
-!      CALL ALLBLO(ECOOUT,'ECOOUT')
-!      CALL BIEF_ALLVEC_IN_BLOCK(ECOOUT,8,1,'GRUF  ',IELMT,1,2,MESH)
+      CALL ALLBLO(ECOOUT,'ECOOUT')
+      CALL BIEF_ALLVEC_IN_BLOCK(ECOOUT,8,1,'GRUF  ',IELMT,1,2,MESH)
 !
-!      CALL BIEF_ALLVEC(1,GRUF1,'GRUF1 ',IELMT,1,2,MESH)
-!      GRUF2 => ECOOUT%ADR(2)%P
+      CALL BIEF_ALLVEC(1,GRUF1,'GRUF1 ',IELMT,1,2,MESH)
+      CALL BIEF_ALLVEC(1,ECOSUI,'ECOSUI',IELMT,1,2,MESH)
+!      GRUF1 => ECOOUT%ADR(6)%P
 !      GRUF3 => ECOOUT%ADR(3)%P
 !      GRUF4 => ECOOUT%ADR(4)%P
 !      GRUF5 => ECOOUT%ADR(5)%P
@@ -1609,9 +1611,9 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
 ! Add pointer to graphic variables in the block VARSOR:
-      CALL ADDBLO(VARSOR, IDX)
+      CALL ADDBLO(VARSOR, GRUF1)
 ! To set the value of the vector to 0.D0 for all points of the mesh:
-	  CALL OS('X=0     ',X = IDX)
+      CALL OS('X=0     ',X = GRUF1)
 !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
