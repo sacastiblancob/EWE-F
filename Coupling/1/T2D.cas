@@ -181,7 +181,7 @@ LISTING PRINTOUT PERIOD  = 1000
 
 VARIABLES FOR GRAPHIC PRINTOUTS =
 /U,V,H,S,B,F,L,Q,M,US
-U,V,H,S,B,F,L,Q,M,US,GRUF1
+U,V,H,S,B,F,L,Q,M,US,T*,GRUF1
 /   U: Velocity along x axis (m/s)
 /   V: Velocity along y axis (m/s)
 /   C: Wave celerity (m/s)
@@ -208,21 +208,21 @@ U,V,H,S,B,F,L,Q,M,US,GRUF1
 / COUPLING
 /----------------------------------------------------------------------------------
 
-/COUPLING WITH            = 'WAQTEL'
+COUPLING WITH            = 'WAQTEL'
 /  GAIA: internal coupling with Gaia
 /  WAQTEL: internal coupling with Waqtel
 /  SISYPHE: internal coupling with Sisyphe
 /  TOMAWAC: internal coupling with Tomawac
 /  DELWAQ: will yield results file for Delwaq
 
-/WAQTEL STEERING FILE   = eutro.cas
+WAQTEL STEERING FILE   = eutro.cas
 /SISYPHE STEERING FILE  = 'SIS.cas'
 /GAIA STEERING FILE     = 'gai_bump2d-t2d.cas'
 
-/WATER QUALITY PROCESS = 5
+WATER QUALITY PROCESS = 5
 
 / initial values of         PHY,PO4,POR,NO3,NOR,NH4,L, O2
-/INITIAL VALUES OF TRACERS = 1.0;3.; 1.1;0.2;4.9;5.5;0.7;1.0
+INITIAL VALUES OF TRACERS = 1.0;3.; 1.1;0.2;4.9;5.5;0.7;1.0
 
 /
 /------------------------------------------------------------------------------------

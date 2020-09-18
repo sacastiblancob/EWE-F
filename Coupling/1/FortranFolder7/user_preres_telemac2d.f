@@ -44,7 +44,7 @@
 !		  ELSE
 !		    PRIVE%ADR(1)%P%R(N)=0.0993D0
 !		  ENDIF
-            PRIVE%ADR(1)%P%R(N)=ECOOUT%ADR(6)%P%R(N)
+            PRIVE%ADR(1)%P%R(N)=3.0D0
         ENDDO
       ENDIF
 !
@@ -86,6 +86,7 @@
 !=======================================================================
 !
 !     PRINT *, MAXVAL(IDX%R)
+!      GRUF1 = ECOUT%ADR(6)
       DO N=1,NPOIN
 	    GRUF1%R(N)=ECOOUT%ADR(6)%P%R(N)
       ENDDO

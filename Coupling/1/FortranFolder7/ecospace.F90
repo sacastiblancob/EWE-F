@@ -27,6 +27,8 @@
 !  use global_mem
 !#endif
 
+!   USE BIEF
+!   USE DECLARATIONS_TELEMAC2D, ONLY: NPOIN
 !#ifndef isWithBFM
 !  use statevartypesecopath, only: RLEN, ep_data
   use statevartypesecopath, only: RLEN, ecopath_data
@@ -46,6 +48,8 @@
   INTEGER, INTENT(IN), DIMENSION(nlat, nlon)           :: grid, advection
   REAL(RLEN), INTENT(IN), DIMENSION(nlat, nlon, nvars) :: QperB, M2
   REAL(RLEN), INTENT(INOUT) :: BB_spatial(nlat, nlon, nvars)
+
+  !TYPE(BIEF_OBJ), INTENT(IN) :: ECOSUI
 
   !in-subroutine variables
   integer    :: var

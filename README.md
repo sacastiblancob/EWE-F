@@ -47,3 +47,18 @@ Modified EWE-F for Telemac coupling purposes
 
 - MAKEFILE-LIB contiene la instruccion para compilar la libreria ecospace.a con "make all" que contiene los objetos necesarios para poder llamar las funciones de ecospace desde cualquier otro programa,
   en nuestro caso de interes, Telemac
+
+!!!!!!!!!!!!!!!!! ACTUALIZACIÓN SEPTIEMBRE 18 - 2020 !!!!!!!!!!!!!!!!!!!!
+
+- Todos los problemas aparantes de ecopath-f, ecosim-f y ecospace-f se solucionaron, después de comunicarme con el profesor Ekin, efectivamente los avaló y los dejó actualizados en los códigos fuente
+  de EwE-f
+
+- Se arregló el problema de compatibilidad entre variables nuevas y variables de WAQTEL, existía un cruce entre la posición de las variables para imprimir en VARSOR y los nombres de las variables imprimibles,
+  por lo que cuando se usaba el módulo de WAQTEL, los nombres se corrían y se volvía un lío la impresión de variables en el selafin
+
+- Corren telemac y EwE-f en simultaneo, se calcula la idoneidad de habitat, y se pueden escribir ya salidas de EwE-f en el selafin de resultados, todo lo anterior en conjunto con uso de WAQTEL
+
+- Próximos pasos van encaminados a implementar el acople
+
+- Hasta aquí el FortranFolder7 es funcional con todo lo anterior implementado
+
