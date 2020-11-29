@@ -61,6 +61,10 @@ module statevartypesecospace
   ! matrix of monthly biomass results relative
   real(RLEN), allocatable :: rel_out_monthly (:, :, :, :)
 
+  ! ECOSUITABILITY IN GRID
+  REAL(SELECTED_REAL_KIND(15,307)), ALLOCATABLE :: ECOSUI_GRID(:,:,:)  !Ecosuitability in ecospace grid
+   
+
 end module statevartypesecospace
 
 
