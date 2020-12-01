@@ -1,0 +1,687 @@
+!        **********************************************
+                   MODULE DECLARATIONS_WAQTEL
+!        **********************************************
+!
+!
+!***********************************************************************
+! WAQTEL   V7P3
+!***********************************************************************
+!
+!brief    DECLARATION OF PRINCIPAL WAQTEL VARIABLES
+!
+!history  R. ATA (EDF-LNHE)
+!+
+!+
+!history  M.JODEAU (EDF-LNHE)
+!+        08/2016
+!+        V7P3
+!+        AED2 coupling
+!
+!history  S.E. BOURBAN (HRW)
+!+        07/06/2017
+!+        V7P3
+!+        Indexing tracer (IND_*) to avoid conflicting naming convention
+!+        between user defined tracers, water quality processes and
+!+        ice processes.
+!
+!history  S.E. BOURBAN (HRW)
+!+        21/09/2017
+!+        V7P3
+!+        WAQPROCESS is now a prime number, so that multiple processes
+!+        can be called by multiplication of the prime numbers.
+!
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!
+      USE BIEF_DEF
+!
+!       NOTE: THIS MODULE IS ORGANIZED IN 6 PARTS
+!
+!       (1) VECTORS (WILL BE DECLARED AS BIEF_OBJ STRUCTURES)
+!       (2) INTEGERS
+!       (3) LOGICAL VALUES
+!       (4) REALS
+!       (5) STRINGS
+!       (6) ALIASES (IF NECESSARY)
+!
+!-----------------------------------------------------------------------
+! (1) VECTORS (REAL AND INTEGER)
+!-----------------------------------------------------------------------
+!
+!
+!     COEFFICIENT OF REAERATION
+!
+      TYPE(BIEF_OBJ), TARGET :: K2
+!
+!     EFFECT OF SUNSHINE ON ALGAE GROWTH (BIOMASS PROCESS)
+!
+      TYPE(BIEF_OBJ), TARGET :: RAYEFF
+!-----------------------------------------------------------------------
+!
+!       2) INTEGERS
+!
+!-----------------------------------------------------------------------
+!
+!     MAXIMUM NUMBER OF VALUES OF KEY-WORDS OF ONE KIND (INTEGER, LOGICAL, ETC.)
+!
+      INTEGER, PARAMETER :: MAXKEY = 300
+!     GRAPHIC PRINTOUT PERIOD WAQ
+!
+      INTEGER LEOPRD
+!
+!     LISTING PRINTOUT PERIOD WAQ
+!
+      INTEGER LISPRD
+!
+!     MAXIMUM NUMBER OF OUTPUT VARIABLES
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      
+! PART MODIFIED BY SERGIO
+!ORIGINAL      INTEGER, PARAMETER :: MAXWQVAR = 50
+      INTEGER, PARAMETER :: MAXWQVAR = 50
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+!-----------------------------------------------------------------------
+!
+!     WAQ PROCESS, A MULTPLICATIVE COMBINATION OF PRIME NUMBERS:
+!     -  2: O2,
+!     -  3: BIOMASS,
+!     -  5: EUTRO,
+!     -  7: MICROPOL,
+!     - 11: THERMIC
+!     - 13: AED2 LIBRARY
+!     - 17: TRACER DEGRADATION
+!     - 19: GHOST PROCESS IN WAITING FOR THE MERGE WITH ICE PROCESS
+!
+      INTEGER WAQPROCESS
+!
+!     TOTAL NUMBER OF TRACERS RELATED TO WAQPROCESS
+!       AND THEIR ASSOCIATED INDICES
+!
+      INTEGER WAQTR
+      INTEGER RANKTR(MAXWQVAR)
+!
+!     TOTAL NUMBER OF TRACERS RELATED TO INDIVIDUAL PROCESSES
+!       AND THEIR ASSOCIATED INDICES
+!
+      INTEGER, PARAMETER :: NWAQ_OXYGN = 3
+      INTEGER RANK_OXYGN(NWAQ_OXYGN)
+!
+      INTEGER, PARAMETER :: NWAQ_BIOMA = 5
+      INTEGER RANK_BIOMA(NWAQ_BIOMA)
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      
+! PART MODIFIED BY SERGIO
+!ORIGINAL
+!      INTEGER, PARAMETER :: NWAQ_EUTRO = 8
+!MODIFIED
+      INTEGER, PARAMETER :: NWAQ_EUTRO = 9
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      INTEGER RANK_EUTRO(NWAQ_EUTRO)
+!
+      INTEGER, PARAMETER :: NWAQ_MICRO = 5
+      INTEGER RANK_MICRO(NWAQ_MICRO)
+!
+      INTEGER, PARAMETER :: NWAQ_THERM = 1
+      INTEGER RANK_THERM(NWAQ_THERM)
+!
+      INTEGER :: NWAQ_AED2
+      INTEGER RANK_AED2(MAXWQVAR)
+!
+      INTEGER :: NWAQ_DEGRA
+      INTEGER RANK_DEGRA(MAXWQVAR)
+!
+!     TO KNOW IF A VARIABLE WILL BE EXITED ON FILE, ON LISTING
+!
+      LOGICAL SORLEO(MAXWQVAR),SORIMP(MAXWQVAR)
+!
+!     WAQ RESULT FILE NUMBER
+!
+      INTEGER WAQRES
+!
+!     WAQ BOUNDARY CONDITION FILE NUMBER
+!
+      INTEGER WAQCLI
+!
+!     WAQ GEOMETRY FILE NUMBER
+!
+      INTEGER WAQGEO
+!
+!     WAQ HYDRODYNAMICS FILE NUMBER
+!
+      INTEGER WAQHYD
+!
+!     WAQ STEERING FILE NUMBER
+!
+      INTEGER WAQCAS
+!
+!     WAQ REFERENCE FILE NUMBER
+!
+      INTEGER WAQREF
+!
+!     DEBUGGER
+!
+      INTEGER DEBUG
+!
+!     FORMULA FOR COMPUTING K2
+!
+      INTEGER FORMK2
+!
+!     FORMULA FOR COMPUTING RS
+!
+      INTEGER FORMRS
+!
+!     FORMULA FOR COMPUTING CS
+!
+      INTEGER FORMCS
+!
+!     COEFFICIENTS OF AERATION FORMULA
+!
+      INTEGER CFORMAERA(2)
+!
+!     ATMOSPHERE-WATER EXCHANGE MODEL
+!
+      INTEGER ATMOSEXCH
+!
+!     BRIGHTNESS OF THE SKY
+!
+      INTEGER ISKYTYPE
+!
+!     METHOD OF COMPUTATION OF EXTINCTION OF SUN RAY
+!
+      INTEGER MEXTINC
+!
+!     FORMULA OF ATMOSPHERIC RADIATION (GLM)
+!
+      INTEGER IRAY_ATM
+!
+!     LAW OF TRACERS DEGRADATION
+!
+      INTEGER, ALLOCATABLE :: LOITRAC(:)
+!
+!     COEFFICIENT 1 FOR LAW OF TRACERS DEGRADATION
+!     (1 IN CASE OF FUTURE LAW WITH MORE COEF.)
+      DOUBLE PRECISION, ALLOCATABLE :: COEF1TRAC(:)
+!
+!     AED2 COUPLING
+!
+      INTEGER NWQVARS,NWQBEN,NWQDIAGS
+!
+!-----------------------------------------------------------------------
+!
+!     WATER QUALITY INDICES
+!     (EVEN IF SOME ARE DUPLICATED IN TELEMAC)
+!
+!     TEMPERATURE
+      INTEGER IND_T
+!     SALINITY
+      INTEGER IND_S
+!     DISSOLVED O2
+      INTEGER IND_O2
+!     ORGANIC LOAD
+      INTEGER IND_OL
+!     NH4 LOAD
+      INTEGER IND_NH4
+!     PHYTO BIOMASS
+      INTEGER IND_PHY
+!     DISSOLVED PO4
+      INTEGER IND_PO4
+!     POR NON ASSIM
+      INTEGER IND_POR
+!     DISSOLVED NO3
+      INTEGER IND_NO3
+!     NOR NON ASSIM
+      INTEGER IND_NOR
+!     SUSPENDED LOAD
+      INTEGER IND_SS
+!     BED SEDIMENTS
+      INTEGER IND_SF
+!     MICRO POLLUTANT
+      INTEGER IND_C
+!     ABS. SUSP. LOAD.
+      INTEGER IND_CSS
+!     ABSORB. BED SED.
+      INTEGER IND_CSF
+!     THIS COULD ACTUALLY BE AN ARRAY
+      INTEGER IND_AED2(MAXWQVAR)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+! PART ADDED BY SERGIO
+!     ZOO BIOMASS
+      INTEGER IND_ZOO      
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+!
+!-----------------------------------------------------------------------
+!
+!       3) LOGICAL
+!
+!-----------------------------------------------------------------------
+!
+!     IF YES, MASS-BALANCE
+!
+      LOGICAL WQBILMAS
+!
+!     IF YES, VALIDATION
+!
+      LOGICAL WQVALID
+!
+!     STEADY HYDRODYNAMICS
+!
+      LOGICAL  PERMA
+!
+!     IF TEMPERATURE IS VARIABLE
+!
+      LOGICAL YATEMP
+!
+!     AED2 COUPLING
+!
+      LOGICAL :: DEJA_SW = .FALSE.
+      LOGICAL :: DEJA_CA = .FALSE.
+!-----------------------------------------------------------------------
+!
+!       4) REALS
+!
+!-----------------------------------------------------------------------
+!
+!     WATER DENSITY
+!
+      DOUBLE PRECISION RO0 ! (RHO ZERO)
+!
+!     KINEMATIC VISCOSITY
+!
+      DOUBLE PRECISION VCE
+
+!     LONGITUDINAL DISPERSION
+!
+      DOUBLE PRECISION LDISP
+!
+!     TRANSVERSAL DISPERSION
+!
+      DOUBLE PRECISION TDISP
+!
+!     WATER QUALITY VARIABLES PCO2
+!
+      DOUBLE PRECISION PCO2
+!
+!     WATER QUALITY VARIABLES PVAP
+!
+      DOUBLE PRECISION PVAP
+!
+!     WATER QUALITY VARIABLES RAY3
+!
+      DOUBLE PRECISION RAY3
+!
+!     SOLAR RADIATION FOR AED2
+!
+      TYPE(BIEF_OBJ), TARGET :: RAYAED2
+!
+!     WATER QUALITY VARIABLES NEBU
+!
+      DOUBLE PRECISION NEBU
+!
+!     WATER QUALITY VARIABLES - RELATIVE HUMIDITY
+!
+      DOUBLE PRECISION HREL
+!
+!     WATER QUALITY VARIABLES - RAINFALL
+!
+      DOUBLE PRECISION RAINFALL
+!
+!     WATER QUALITY VARIABLES - AIR TEMPERATURE
+!
+      TYPE(BIEF_OBJ), TARGET :: TAIR
+!
+!     WATER QUALITY VARIABLES - ???
+!
+      TYPE(BIEF_OBJ), TARGET :: TDEW
+!
+!     WATER QUALITY VARIABLES - ???
+!
+      TYPE(BIEF_OBJ), TARGET :: VISBI
+!
+!     VALUE OF THE AIR TEMPERATURE
+!
+      DOUBLE PRECISION TAIR_VALUE
+!
+!     WATER QUALITY VARIABLES ZSD (SECCHI LENGTH)
+!
+      DOUBLE PRECISION ZSD
+!
+!     WATER QUALITY VARIABLES NWIND (IF CONSTANT WIND IN SPACE)
+!
+      DOUBLE PRECISION NWIND
+!
+!     WATER QUALITY VARIABLES C14_ATM
+!
+      DOUBLE PRECISION C14_ATM
+!
+!     WATER QUALITY VARIABLES HTO_ATM
+!
+      DOUBLE PRECISION HTO_ATM
+!
+!     WEIR COEFFICIENT OF REAERATION
+!
+      DOUBLE PRECISION RSW
+!
+!     COEFFICIENT TO CALIBRATE THE ATMOSPHERE-WATER EXCHANGE MODEL
+!
+      DOUBLE PRECISION C_ATMOS
+!
+!     WATER QUALITY VARIABLE: EVAPORATION
+!
+      DOUBLE PRECISION EVAPORATION
+!
+! Water quality specific key-words
+!
+!
+!     EUTRO PROCESS
+!
+!
+!     CONSTANT OF DEGRADATION OF ORGANIC LOAD K120
+!
+      DOUBLE PRECISION K120
+!
+!     CONSTANT OF NITRIFICATION KINETIC K520
+!
+      DOUBLE PRECISION K520
+!
+!     O2 PRODUCED BY PHOTOSYNTHESIS (F FOR TRACER)
+!
+      DOUBLE PRECISION O2PHOTO
+!
+!     O2 CONSUMED BY NITRIFICATION (N FOR TRACER)
+!
+      DOUBLE PRECISION O2NITRI
+!
+!     BENTHIC DEMAND
+!
+      DOUBLE PRECISION DEMBEN
+!
+!      COEFFICIENT A AND B USED IN RS FORMULA
+!
+      DOUBLE PRECISION ABRS(2)
+!
+!     O2 SATURATION DENSITY OF WATER (CS)
+!
+      DOUBLE PRECISION O2SATU
+!
+!     SEDIMENTATION VELOCITY OF ORGANIC PHOSPHORUS
+!
+      DOUBLE PRECISION WPOR
+!
+!     SEDIMENTATION VELOCITY OF ORGANIC NITROGEN
+!
+      DOUBLE PRECISION WNOR
+!
+!     MAXIMUM ALGAL GROWTH
+!
+      DOUBLE PRECISION CMAX
+!
+!     COEF VEGETAL TURBIDITY WITHOUT PHYTOPLANKTON
+!
+      DOUBLE PRECISION KPE
+!
+!     PARAMETER OF CALIBRATION OF SMITH FORMULA
+!
+      DOUBLE PRECISION IK
+!
+!     CONSTANT OF HALF-SATURATION WITH PHOSPHATE
+!
+      DOUBLE PRECISION KP
+!
+!     CONSTANT OF HALF-SATURATION WITH PHOSPHA
+!
+      DOUBLE PRECISION KN
+!
+!     ALGAL COEFF OF TOXICITY (ALPHA; ALPHA2)
+!
+      DOUBLE PRECISION CTOXIC(2)
+!
+!     RESPIRATION RATE OF ALGAL BIOMASS (RP)
+!
+      DOUBLE PRECISION TRESPIR
+!
+!     PROPORTION OF PHOSPHORUS WITHIN PHYTO CELLS (FP)
+!
+      DOUBLE PRECISION PROPHOC
+!
+!     PERCENTAGE OF PHYSPHORUS ASSIMILABLE IN DEAD PHYTO
+!
+      DOUBLE PRECISION DTP
+!
+!     RATE OF TRANSFORMATION OF POR INTO PO
+!
+      DOUBLE PRECISION K320
+!
+!     PROPORTION OF NITROGEN WITHIN PHYTO CELLS (FN)
+!
+      DOUBLE PRECISION PRONITC
+!
+!     PERCENTAGE OF NITROGEN ASSIMILABLE IN DEAD PHYTO (DTN)
+!
+      DOUBLE PRECISION PERNITS
+!
+!     RATE OF TRANSFORMATION OF NOR INTO NO3
+!
+      DOUBLE PRECISION K360
+!
+!     COEF OF ALGAL MORTALITY (M1 AND M2)
+!
+      DOUBLE PRECISION CMORALG(2)
+!
+!     SEDIMENTATION VELOCITY OF ORGANIC LOAD
+!
+      DOUBLE PRECISION WLOR
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+! PART ADDED BY SERGIO
+!     ZOOPLANKTON CONSTANTS AND DUE TO ZOOPLANKTON CONSTANTS
+!
+!     SPECIFIC MORTALITY RATE OF THE ZOOPLANKTON (DAY^-1)
+      DOUBLE PRECISION, PARAMETER :: MUZ = 0.1D0
+!
+!     SPECIFIC RATE OF ZOOPLANKTON METABOLIC EXCRETIONS (DAY^-1)
+      DOUBLE PRECISION, PARAMETER :: GAMMAZ = 0.01
+!
+!     SEMI-SATURATION CONSTANT BY FOOD IN THE ZOOPLANKTON GRWOTH PROCESS
+!     (mgC m^-3)
+      DOUBLE PRECISION, PARAMETER :: ZOOBK = 4150
+!
+!     MAXIMUM GRAZING RATE (DAY^-1)
+      DOUBLE PRECISION, PARAMETER :: ZOOG = 0.75
+!
+!     STOICHIOMETRIC TRANSFER COEFFICIENT FROM mgC TO mgP, FOR PO4
+!     (mgC/mgP)
+      DOUBLE PRECISION, PARAMETER :: BETAPC = 0.024
+!
+!     TRANSFER COEFFICIENT FROM CUBIC METERS TO LITER, FOR VARIOUS
+      DOUBLE PRECISION, PARAMETER :: BETAM3L = 0.001D0
+!
+!     STOICHIOMETRIC TRANSFER COEFFICIENT FROM mgC TO mgN, FOR NH4
+!     (mgC/mgN)
+      DOUBLE PRECISION, PARAMETER :: BETANC = 0.176
+!
+!     STOICHIOMETRIC TRANSFER COEFFICIENT FROM mgC TO O2
+!     (mgO2/mgN)
+      DOUBLE PRECISION, PARAMETER :: BETAO2C = 2.67
+!
+!     FEEDING RATE OF THE ZOOPLANKTON FROM PHYTOPLANKTON, ZOOPLANKTON AN
+!     D ORGANIC LOAD
+      TYPE(BIEF_OBJ), TARGET :: ZOOGS1
+      TYPE(BIEF_OBJ), TARGET :: ZOOGS2
+      TYPE(BIEF_OBJ), TARGET :: ZOOGS3
+!
+!     ASSIMILATION FEEDING OF ZOOPLANKTON FROM PHYTOPLANKTON, ZOOPLANKTO
+!     N AND ORGANIC LOAD
+      DOUBLE PRECISION ZOOOME(3)
+!
+!     ZOOPLANKTON DIET FROM PHYTOPLANKTON, ZOOPLANKTON AND
+!     ORGANIC LOAD
+      DOUBLE PRECISION ZOORHOS(3)
+!
+!     WORKING ARRAYS FOR DEAL WITH ZOOPLANKTON
+      TYPE(BIEF_OBJ), TARGET :: ZOOT1
+      TYPE(BIEF_OBJ), TARGET :: ZOOT2
+!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      
+!
+!     BIOMASS PROCESS
+!
+!
+!
+!     EFFECTS OF PHOSPHORIOUS AND NITROGENIOUS NUTRIMENTS ON ALGAE GROWT
+!
+!      DOUBLE PRECISION LNUT
+!
+!     DENSITY OF SUNSHINE FLUX ON WATER SURFACE
+!
+      DOUBLE PRECISION I0
+!
+!
+!     O2 PROCESS
+!
+!
+!     CONSTANT OF DEGRADATION OF ORGANIC LOAD K1
+!
+      DOUBLE PRECISION K1
+!
+!     COEFFICIENT OF REAERATION K2 (if constant)
+!
+      DOUBLE PRECISION K22
+!
+!     CONSTANT OF NITRIFICATION KINETIC K4
+!
+      DOUBLE PRECISION K44
+!
+!     PHOTOSYNTHESIS P
+!
+      DOUBLE PRECISION PHOTO
+!
+!     VEGATAL RESPIRATION
+!
+      DOUBLE PRECISION  RESP
+!
+!     WATER TEMPERATURE
+!
+      DOUBLE PRECISION WATTEMP
+!
+!
+!     MICROPOL PROCESS (MOSTLY COMMON WITH EUTRO)
+!
+!
+!     EROSION RATE
+!
+      DOUBLE PRECISION ERO
+!
+!     SEDIMENTATION CRITICAL STRESS
+!
+      DOUBLE PRECISION TAUS
+!
+!     CRITICAL STRESS OF RESUSPENSION
+!
+      DOUBLE PRECISION TAUR
+!
+!     SEDIMENT SETTLING VELOCITY
+!
+      DOUBLE PRECISION VITCHU
+!
+!     COEFF OF DISTRIBUTION (KD)
+!
+      DOUBLE PRECISION CDISTRIB
+!
+!     CONSTANT OF DESORPTION KINETIC (KDESORP)
+!
+      DOUBLE PRECISION KDESORP
+!
+!
+!
+!     THERMIC PROCESS (COMMON VARIABLES WITH EWCHANGE_WITH_ATMOSPHERE MODULE)
+!
+!
+!     WATER SPECIFIC HEAT
+!
+      DOUBLE PRECISION CP_EAU
+!
+!     AIR SPECIFIC HEAT
+!
+      DOUBLE PRECISION CP_AIR
+!
+!     COEFF OF CLOUDING RATE
+!
+      DOUBLE PRECISION COEF_K
+!
+!     COEFFICIENTS FOR CALIBRATING ATMOSPHERIC RADIATION
+!
+      DOUBLE PRECISION EMA
+!
+!     COEFFICIENTS FOR CALIBRATING FREE SURFACE RADIATION
+!
+      DOUBLE PRECISION EMI_EAU
+!
+!     BOLTZMANN CONSTANT (wM-2K-4)
+!
+      DOUBLE PRECISION, PARAMETER :: BOLTZ=5.67D-8
+!
+!     CONVERSION SECOND TO DAYS
+!
+      DOUBLE PRECISION, PARAMETER :: SECTODAY=1.D0/86400.D0
+!
+!     COEFFICIENTS OF RAERATION FORMULA
+!
+      DOUBLE PRECISION CFAER(2)
+!
+!
+!     MES PROCESS
+!
+!
+!     EXPONENTIAL DESINTEGRATION CONSTANT (LAMBD)
+!
+      DOUBLE PRECISION CCSEDIM
+!
+!     EVAPORATION
+!
+      DOUBLE PRECISION EVAPOR
+!
+!
+!     AED2 PROCESS
+!
+!
+      DOUBLE PRECISION, ALLOCATABLE :: EXTCAED2(:,:),FLUXAED2(:,:,:)
+!
+!-----------------------------------------------------------------------
+!
+!       5) STRINGS
+!
+!-----------------------------------------------------------------------
+!
+!     TITLE OF STUDY
+!
+      CHARACTER(LEN=72) TITWAQCAS
+!
+!     COPY OF SUBMIT STRINGS IN THE DICTIONARY
+!
+      CHARACTER(LEN=PATH_LEN) SUBMIT(4,300)
+
+!     MAXIMUM OF LOGICAL UNITS NUMBERS
+!
+      INTEGER, PARAMETER :: MAXLU_WAQ = 14
+!
+!     BIEF_FILES STRUCTURES
+!
+      TYPE(BIEF_FILE) :: WAQ_FILES(MAXLU_WAQ)
+!
+      SAVE
+!
+      END MODULE DECLARATIONS_WAQTEL

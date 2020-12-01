@@ -88,7 +88,8 @@
 !     PRINT *, MAXVAL(IDX%R)
 !      GRUF1 = ECOUT%ADR(6)
       DO N=1,NPOIN
-	    GRUF1%R(N)=ECOOUT%ADR(6)%P%R(N)
+!	    GRUF1%R(N)=ECOOUT%ADR(6)%P%R(N)
+          GRUF1%R(N) = 1.0D0
       ENDDO
 !
 !=======================================================================

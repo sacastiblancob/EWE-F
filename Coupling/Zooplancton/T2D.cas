@@ -79,7 +79,7 @@ FREE SURFACE GRADIENT COMPATIBILITY      = 0.9
 / TIME-RELATED CONFIGURATIONS
 /----------------------------------------------------------------------------------
 
-DURATION                                 = 2401
+DURATION                                 = 2800
 
 ORIGINAL DATE OF TIME                    = 2020;01;01
 
@@ -115,6 +115,9 @@ FRICTION COEFFICIENT                   = 0.03
 BOUNDARY CONDITIONS FILE       = 'BOTTOM_BC.cli'
 
 LIQUID BOUNDARIES FILE         = 'LB.txt'
+
+/ ASMOPHERIC DATA FILE 'WATCH THE EXAMPLE'
+ASCII ATMOSPHERIC DATA FILE = 'meteo_thermic_case1.txt'
 
 VELOCITY PROFILES               = 5;2
 /  1: constant normal profile.
@@ -166,7 +169,7 @@ INITIAL ELEVATION	 = 1
 
 GEOMETRY FILE            = 'geometry.slf'
 
-FORTRAN FILE             = 'FortranFolder8'
+FORTRAN FILE             = 'FortranFolder1'
 
 /
 /----------------------------------------------------------------------------------
@@ -176,8 +179,10 @@ FORTRAN FILE             = 'FortranFolder8'
 RESULTS FILE             = 'Results_T2D.slf'
 
 GRAPHIC PRINTOUT PERIOD  = 2000
+/GRAPHIC PRINTOUT PERIOD  = 1
 
 LISTING PRINTOUT PERIOD  = 1000
+/LISTING PRINTOUT PERIOD  = 1
 
 VARIABLES FOR GRAPHIC PRINTOUTS =
 /U,V,H,S,B,F,L,Q,M,US
@@ -202,7 +207,6 @@ U,V,H,S,B,F,L,Q,M,US,T*,GRUF1
 /MAXV: Maximum velocity
 /TMXV: Time of maximum velocity
 /  US: Friction velocity (m/s)
-
 /
 /----------------------------------------------------------------------------------
 / COUPLING
@@ -219,10 +223,17 @@ WAQTEL STEERING FILE   = eutro.cas
 /SISYPHE STEERING FILE  = 'SIS.cas'
 /GAIA STEERING FILE     = 'gai_bump2d-t2d.cas'
 
-WATER QUALITY PROCESS = 5
+WATER QUALITY PROCESS = 55
 
 / initial values of         PHY,PO4,POR,NO3,NOR,NH4,L, O2
-INITIAL VALUES OF TRACERS = 1.0;3.; 1.1;0.2;4.9;5.5;0.7;1.0
+/ initial values of         T,PHY,PO4,POR,NO3,NOR,NH4,L, O2,ZOO
+/ INITIAL VALUES OF TRACERS = 1.0;3.; 1.1;0.2;4.9;5.5;0.7;6.0
+INITIAL VALUES OF TRACERS = 
+20;46.49;0.0018; 2.85;0.918;2.82;0.397;1.04;7.0;19.3
+
+/ SCHEMES FOR THE TRACER, !!!NEVER USE CHARACTERISTICS !!!
+SCHEME FOR ADVECTION OF TRACERS = 5;5;5;5;5;5;5;5;5;5
+SCHEME OPTION FOR ADVECTION OF TRACERS = 4;4;4;4;4;4;4;4;4;4
 
 /
 /------------------------------------------------------------------------------------
@@ -233,4 +244,4 @@ INITIAL VALUES OF TRACERS = 1.0;3.; 1.1;0.2;4.9;5.5;0.7;1.0
 
 /CONTROL SECTIONS         = 1223;1068
 
-/DEBUGGER = 0
+/DEBUGGER = 1
