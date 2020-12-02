@@ -13,5 +13,5 @@
 *.xml
 .DS_Store
 *.bk
-*.pdf
+*.mat
 Makefile
