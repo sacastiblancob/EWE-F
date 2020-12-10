@@ -1,0 +1,41 @@
+"Number of groups",37,,,,,,,,,
+"Number of parameters",10,,,,,,,,,
+"Number of split groups",0,,,,,,,,,
+Groups,"Max rel. P/B","Feeding time","Max rel. feeding time","Feeding time adjust rate [0,1]","Fraction of other mortality sens. to changes in feeding time","Predator effect on feeding time [0,1]","Density-dep. catchability: Qmax/Qo [>=1]","QBmax/QBo (for handling time) [>1]","Switching power parameter [0,2]",Advected?
+"Baleen whales",2,1,2,0.5,1,0,1,1000,0,0
+"Toothed whales",2,1,2,0.5,1,0,1,1000,0,0
+Seals,2,1,2,0.5,1,0,1,1000,0,0
+Birds,2,1,2,0.5,1,0,1,1000,0,0
+"Sharks, large",2,1,2,0.5,1,0,1,1000,0,0
+"Sharks, small medium",2,1,2,0.5,1,0,1,1000,0,0
+"Rays, large",2,1,2,0.5,1,0,1,1000,0,0
+"Rays, small medium",2,1,2,0.5,1,0,1,1000,0,0
+"Pelagics, large",2,1,2,0.5,1,0,1,1000,0,0
+"Pelagics, medium",2,1,2,0.5,1,0,1,1000,0,0
+"Pelagics, small, carniv.",2,1,2,0.5,1,0,1,1000,0,0
+"Pelagics, small, herbiv.",2,1,2,0.5,1,0,1,1000,0,0
+"Benthopelagics, large",2,1,2,0.5,1,0,1,1000,0,0
+"Benthopelagics, small medium",2,1,2,0.5,1,0,1,1000,0,0
+"Demersals, large",2,1,2,0.5,1,0,1,1000,0,0
+"Demersals, medium",2,1,2,0.5,1,0,1,1000,0,0
+"Demersals, small",2,1,2,0.5,1,0,1,1000,0,0
+"Reeffish, large",2,1,2,0.5,1,0,1,1000,0,0
+"Reeffish, medium",2,1,2,0.5,1,0,1,1000,0,0
+"Flatfish, large",2,1,2,0.5,1,0,1,1000,0,0
+"Flatfish, small medium",2,1,2,0.5,1,0,1,1000,0,0
+"Reeffish, small",2,1,2,0.5,1,0,1,1000,0,0
+Bathypelagics,2,1,2,0.5,1,0,1,1000,0,0
+Bathydemersals,2,1,2,0.5,1,0,1,1000,0,0
+Jellyfish,2,1,2,0.5,1,0,1,1000,0,0
+Cephalopods,2,1,2,0.5,1,0,1,1000,0,0
+Shrimps,2,1,2,0.5,1,0,1,1000,0,0
+"Lobsters, crabs",2,1,2,0.5,1,0,1,1000,0,0
+Macrobenthos,2,1,2,0.5,1,0,1,1000,0,0
+Meiobenthos,2,1,2,0.5,1,0,1,1000,0,0
+Corals,2,1,2,0.5,1,0,1,1000,0,0
+"Softcorals, sponges, etc",2,1,2,0.5,1,0,1,1000,0,0
+Krill,2,1,2,0.5,1,0,1,1000,0,0
+"Zooplankton, other",2,1,2,0.5,1,0,1,1000,0,1
+Phytoplankton,2,1,-999,-999,-999,-999,-999,-999,-999,1
+"Benthic plants",2,1,-999,-999,-999,-999,-999,-999,-999,0
+Detritus,-999,1,-999,-999,-999,-999,-999,-999,-999,0

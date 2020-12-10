@@ -162,7 +162,7 @@ do i = 1, nvars
         PredAvg(i)      = PredAvg(i) / StepsPerMonth
         lossSt(i)       = lossSt(i) / StepsPerMonth
     end if
-    WRITE(*,*) 'BB ',B(i)
+    !WRITE(*,*) 'BB ',B(i)
 end do
 
 if (UpdateStanzas .eqv. .true.) then

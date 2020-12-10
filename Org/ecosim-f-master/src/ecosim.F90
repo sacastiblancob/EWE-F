@@ -678,6 +678,7 @@ program ecosim
 
               ! call the Runge-Kutta 4th order numeric ode solver
               call rk4 (BB, time, tstep, integrate)
+              ! call EULER (BB, time, tstep, integrate)
               mat_out(step + 2, :) = BB
 
               ! print instantaneous results to stdout

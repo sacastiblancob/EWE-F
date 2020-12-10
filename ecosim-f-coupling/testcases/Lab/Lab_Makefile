@@ -1,0 +1,322 @@
+#========================================================================
+# This file is part of EwE-F
+# Copyright (C) 2011-2019 METU Institute of Marine Sciences, Turkey.
+#
+# This program is free software; you can redistribute it and/or modify 
+# it under the terms of the GNU General Public License version 2 as 
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License 
+# along with  this program; if not, 
+# see <http://www.gnu.org/licenses/gpl-2.0.html>.
+#========================================================================
+# begin
+
+# Compiler definitions and parameters
+
+# Set compiler:  Intel Fortran Compiler (ifort)
+# Oracle Developer Studio Fortran Compiler (f90)
+# GNU Fortran Compiler (gfortran) 
+FC = gfortran
+
+# Uncomment below to build for 64 bits architecture
+# FCFLAGS = -m64
+
+# Uncomment below if there is nutrient forcing
+# CPPDEFS += -D_ForceNutrient_
+
+# Uncomment below if there is primary production forcing
+# CPPDEFS += -D_ForcePrimaryProd_
+
+# Uncomment below if there is geospatial simulation
+# CPPDEFS += -D_Ecospace_
+
+# Path to the HDF5 installation
+# The HDF5 should have been compiled by the same compiler
+# specified above
+HDF5DIR = /home/aldair/Documents/EwE-F/APPS/HDF5-1.10.4
+
+# Path to the NetCDF-Fortran installation
+NFDIR = /home/aldair/Documents/EwE-F/APPS/NETCDF-F-4.4.5
+
+
+# This flag below specifies the directory into which the compiled module
+# files (*.mod) are going to be put. For GNU Fortran compiler
+# set it to "-J", for Oracle Solaris Studio Fortran Compiler "-moddir=" and
+# for Intel Fortran and PGI Fortran compilers set it to  "-module " (with a whitespace afterwards!!)
+MODFLAG = -J
+
+# EwEFORTRAN root directory
+EwEFORTRANDIR = $(CURDIR)
+
+# Directory names for the source, object, module and binary files
+SRCDIR = $(EwEFORTRANDIR)/src
+OBJDIR = $(EwEFORTRANDIR)/obj
+MODDIR = $(EwEFORTRANDIR)/mod
+BINDIR = $(EwEFORTRANDIR)/bin
+
+# Compiler and linker flags for Intel Fortran compiler
+# CFLAGS = -c -g -CB -traceback $(FCFLAGS)
+# LFLAGS = -g -CB -traceback $(FCFLAGS)
+
+# Compiler and linker flags for PGI Fortran compiler
+# CFLAGS = -c -g -Mbounds -traceback -w $(FCFLAGS)
+# LFLAGS = -g -Mbounds -traceback -w $(FCFLAGS)
+
+# Compiler and linker flags for GNU Fortran compiler
+ CFLAGS = -c -g -Warray-bounds -fbacktrace -fbounds-check -Wall $(FCFLAGS)
+ LFLAGS = -g -Warray-bounds -fbacktrace -fbounds-check -Wall $(FCFLAGS)
+
+# Compiler and linker flags for Oracle Developer Studio Fortran compiler
+# CFLAGS = -c -g -w3 -traceback
+# LFLAGS = -g -w3 -traceback
+
+####### The section below this notice does not need any changes ########
+
+# Flags for module directory
+CFLAGS += $(MODFLAG)$(MODDIR)
+LFLAGS += $(MODFLAG)$(MODDIR)
+
+# HDF5 flags
+CFLAGS += -I$(HDF5DIR)/include -L$(HDF5DIR)/lib -lhdf5_fortran -lhdf5
+LFLAGS += -I$(HDF5DIR)/include -L$(HDF5DIR)/lib -lhdf5_fortran -lhdf5
+
+ifdef ecospace
+# netCDF flags
+ CFLAGS += -I$(NFDIR)/include -L$(NFDIR)/lib -lnetcdff
+ LFLAGS += -I$(NFDIR)/include -L$(NFDIR)/lib -lnetcdff
+endif
+
+# Source files
+SRCECOSIM     = $(SRCDIR)/ecosim.F90
+SRCMODECOPATH = $(SRCDIR)/statevartypesecopath.F90
+SRCMODECOSIM  = $(SRCDIR)/statevartypesecosim.F90
+ifdef ecospace
+ SRCMODECOSPACE= $(SRCDIR)/statevartypesecospace.F90
+endif
+SRCMODHDF5    = $(SRCDIR)/readHDF5Database.F90
+SRCGROUP      = $(SRCDIR)/readEcosimScenario_io.F90
+SRCVUL        = $(SRCDIR)/readVulnerability_io.F90
+SRCFORCE      = $(SRCDIR)/readForcingFunctions_io.F90
+SRCNUTFORCE   = $(SRCDIR)/readNutrientForcingFunction_io.F90
+SRCPRIMPRODFORCE   = $(SRCDIR)/readPrimaryProdForcingFunction_io.F90
+SRCALLOC      = $(SRCDIR)/setEcosimScenarioParameters.F90
+SRCALLOCA     = $(SRCDIR)/setForagingArenaParameters.F90
+SRCPOBREL     = $(SRCDIR)/calculateMaximumPoBRelatedValues.F90
+SRCNUT        = $(SRCDIR)/calculateNutrientConcentrations.F90
+SRCDIET       = $(SRCDIR)/removeImportFromDiet.F90
+SRCSWITCH     = $(SRCDIR)/initialiseRelativeSwitchingParameters.F90
+SRCSETSWITCH  = $(SRCDIR)/setRelativeSwitchingParameters.F90  
+SRCVULSEARCH  = $(SRCDIR)/setArenaVulnerabilityandSearchRates.F90
+SRCVULCALC    = $(SRCDIR)/calculateVulnerableBiomasses.F90
+SRCEFFSEARCH  = $(SRCDIR)/calculateLotkaVolterraEffectiveSearchRates.F90
+SRCFISHMORT   = $(SRCDIR)/calculateFishingMortalities.F90
+SRCFORAGE     = $(SRCDIR)/updateForagingTimes.F90
+SRCDET        = $(SRCDIR)/calculateDetritalFlows.F90
+SRCDERIVS     = $(SRCDIR)/derivs.F90
+SRCSETSPLIT   = $(SRCDIR)/setSplitPred.F90
+SRCSPLITINIT  = $(SRCDIR)/initialiseSplitGroups.F90
+SRCSTANZA     = $(SRCDIR)/multistanza.F90
+SRCRK4        = $(SRCDIR)/rk4.F90
+ifdef ecospace
+ SRCREADGRID  = $(SRCDIR)/readGridFile_io.F90
+ SRCREADSPAT  = $(SRCDIR)/readSpatialDistribution_io.F90
+ SRCREADADVEC = $(SRCDIR)/readAdvectionFile_io.F90
+ SRCECOSPACE  = $(SRCDIR)/ecospace.F90
+ SRCWRITENC   = $(SRCDIR)/writenetCDFfile.F90
+endif
+SRCFREE      = $(SRCDIR)/freeMemory.F90
+
+# Object files
+OBJECOSIM     = $(OBJDIR)/ecosim.o
+OBJMODECOPATH = $(OBJDIR)/statevartypesecopath.o
+OBJMODECOSIM  = $(OBJDIR)/statevartypesecosim.o
+ifdef ecospace
+ OBJMODECOSPACE  = $(OBJDIR)/statevartypesecospace.o
+endif
+OBJMODHDF5    = $(OBJDIR)/readHDF5Database.o
+OBJGROUP      = $(OBJDIR)/readEcosimScenario_io.o
+OBJVUL        = $(OBJDIR)/readVulnerability_io.o
+OBJFORCE      = $(OBJDIR)/readForcingFunctions_io.o
+OBJNUTFORCE   = $(OBJDIR)/readNutrientForcingFunction_io.o
+OBJPRIMPRODFORCE   = $(OBJDIR)/readPrimaryProdForcingFunction_io.o
+OBJALLOC      = $(OBJDIR)/setEcosimScenarioParameters.o
+OBJALLOCA     = $(OBJDIR)/setForagingArenaParameters.o
+OBJPOBREL     = $(OBJDIR)/calculateMaximumPoBRelatedValues.o
+OBJNUT        = $(OBJDIR)/calculateNutrientConcentrations.o
+OBJDIET       = $(OBJDIR)/removeImportFromDiet.o
+OBJSWITCH     = $(OBJDIR)/initialiseRelativeSwitchingParameters.o
+OBJSETSWITCH  = $(OBJDIR)/setRelativeSwitchingParameters.o  
+OBJVULSEARCH  = $(OBJDIR)/setArenaVulnerabilityandSearchRates.o
+OBJVULCALC    = $(OBJDIR)/calculateVulnerableBiomasses.o
+OBJEFFSEARCH  = $(OBJDIR)/calculateLotkaVolterraEffectiveSearchRates.o
+OBJFISHMORT   = $(OBJDIR)/calculateFishingMortalities.o
+OBJFORAGE     = $(OBJDIR)/updateForagingTimes.o
+OBJDET        = $(OBJDIR)/calculateDetritalFlows.o
+OBJDERIVS     = $(OBJDIR)/derivs.o
+OBJSETSPLIT   = $(OBJDIR)/setSplitPred.o
+OBJSPLITINIT  = $(OBJDIR)/initialiseSplitGroups.o
+OBJSTANZA     = $(OBJDIR)/multistanza.o
+OBJRK4        = $(OBJDIR)/rk4.o
+ifdef ecospace
+ OBJREADGRID  = $(OBJDIR)/readGridFile_io.o
+ OBJREADSPAT  = $(OBJDIR)/readSpatialDistribution_io.o
+ OBJREADADVEC = $(OBJDIR)/readAdvectionFile_io.o
+ OBJECOSPACE  = $(OBJDIR)/ecospace.o
+ OBJWRITENC   = $(OBJDIR)/writenetCDFfile.o
+endif
+OBJFREE      = $(OBJDIR)/freeMemory.o
+
+ifdef ecospace
+ OBJECTS = $(OBJMODECOPATH) $(OBJMODECOSIM) $(OBJMODECOSPACE) $(OBJMODHDF5) \
+  $(OBJGROUP) $(OBJVUL) $(OBJFORCE) $(OBJNUTFORCE) $(OBJALLOC) $(OBJALLOCA) \
+  $(OBJDET) $(OBJNUT) $(OBJDIET) $(OBJPOBREL) $(OBJSWITCH) $(OBJSETSWITCH) \
+  $(OBJVULSEARCH) $(OBJVULCALC) $(OBJEFFSEARCH) $(OBJFISHMORT) $(OBJFORAGE) \
+  $(OBJDERIVS) $(OBJSETSPLIT) $(OBJSPLITINIT) $(OBJSTANZA) $(OBJRK4) $(OBJREADSPAT)\
+  $(OBJREADGRID) $(OBJREADADVEC) $(OBJECOSPACE) $(OBJPRIMPRODFORCE) $(OBJWRITENC) $(OBJFREE) $(OBJECOSIM)
+else
+ OBJECTS = $(OBJMODECOPATH) $(OBJMODECOSIM) $(OBJMODHDF5) \
+  $(OBJGROUP) $(OBJVUL) $(OBJFORCE) $(OBJNUTFORCE) $(OBJALLOC) $(OBJALLOCA) \
+  $(OBJDET) $(OBJNUT) $(OBJDIET) $(OBJPOBREL) $(OBJSWITCH) $(OBJSETSWITCH)\
+  $(OBJVULSEARCH) $(OBJVULCALC) $(OBJEFFSEARCH) $(OBJFISHMORT) $(OBJFORAGE) \
+  $(OBJDERIVS) $(OBJSETSPLIT) $(OBJSPLITINIT) $(OBJSTANZA) $(OBJRK4) \
+  $(OBJPRIMPRODFORCE) $(OBJFREE) $(OBJECOSIM)
+endif
+
+# Module files
+MODECOPATH = $(MODDIR)/statevartypesecopath.mod
+MODECOSIM  = $(MODDIR)/statevartypesecosim.mod
+ifdef ecospace
+ MODECOSPACE = $(MODDIR)/statevartypesecospace.mod
+endif
+MODHDF5    = $(MODDIR)/readhdf5database.mod
+
+ifdef ecospace
+ MODULES = $(MODECOPATH) $(MODECOSIM) $(MODECOSPACE) $(MODHDF5)
+else
+ MODULES = $(MODECOPATH) $(MODECOSIM) $(MODHDF5)
+endif
+
+# Binary files
+BINECOSIM     = $(BINDIR)/ecosim.out
+
+# Now compile the program
+$(BINECOSIM): $(OBJECTS)
+	$(FC) $(CPPDEFS) $(LFLAGS) $(OBJECTS) -o $(BINECOSIM)
+
+$(OBJMODECOPATH): $(SRCMODECOPATH)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCMODECOPATH) -o $(OBJMODECOPATH)
+
+$(OBJMODECOSIM): $(SRCMODECOSIM)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCMODECOSIM) -o $(OBJMODECOSIM)
+
+ifdef ecospace
+$(OBJMODECOSPACE): $(SRCMODECOSPACE)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCMODECOSPACE) -o $(OBJMODECOSPACE)
+endif
+
+$(OBJMODHDF5): $(SRCMODHDF5)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCMODHDF5) -o $(OBJMODHDF5)
+
+$(OBJGROUP): $(SRCGROUP)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCGROUP) -o $(OBJGROUP)
+
+$(OBJVUL): $(SRCVUL)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCVUL) -o $(OBJVUL)
+
+$(OBJFORCE): $(SRCFORCE)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCFORCE) -o $(OBJFORCE)
+
+$(OBJNUTFORCE): $(SRCNUTFORCE)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCNUTFORCE) -o $(OBJNUTFORCE)
+
+$(OBJPRIMPRODFORCE): $(SRCPRIMPRODFORCE)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCPRIMPRODFORCE) -o $(OBJPRIMPRODFORCE)
+
+$(OBJALLOC): $(SRCALLOC)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCALLOC) -o $(OBJALLOC)
+
+$(OBJALLOCA): $(SRCALLOCA)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCALLOCA) -o $(OBJALLOCA)
+
+$(OBJPOBREL): $(SRCPOBREL)
+	$(FC) $(CFLAGS) $(SRCPOBREL) -o $(OBJPOBREL)
+
+$(OBJNUT): $(SRCNUT)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCNUT) -o $(OBJNUT)
+
+$(OBJDIET): $(SRCDIET)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCDIET) -o $(OBJDIET)
+
+$(OBJSWITCH): $(SRCSWITCH)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCSWITCH) -o $(OBJSWITCH)
+
+$(OBJSETSWITCH): $(SRCSETSWITCH)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCSETSWITCH) -o $(OBJSETSWITCH)
+
+$(OBJVULSEARCH): $(SRCVULSEARCH)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCVULSEARCH) -o $(OBJVULSEARCH)
+
+$(OBJVULCALC): $(SRCVULCALC)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCVULCALC) -o $(OBJVULCALC)
+
+$(OBJEFFSEARCH): $(SRCEFFSEARCH)
+	$(FC) $(CFLAGS) $(SRCEFFSEARCH) -o $(OBJEFFSEARCH)
+
+$(OBJFISHMORT): $(SRCFISHMORT)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCFISHMORT) -o $(OBJFISHMORT)
+
+$(OBJFORAGE): $(SRCFORAGE)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCFORAGE) -o $(OBJFORAGE)
+
+$(OBJDET): $(SRCDET)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCDET) -o $(OBJDET)
+
+$(OBJDERIVS): $(SRCDERIVS)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCDERIVS) -o $(OBJDERIVS)
+
+$(OBJSETSPLIT): $(SRCSETSPLIT)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCSETSPLIT) -o $(OBJSETSPLIT)
+
+$(OBJSPLITINIT): $(SRCSPLITINIT)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCSPLITINIT) -o $(OBJSPLITINIT)
+
+$(OBJSTANZA): $(SRCSTANZA)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCSTANZA) -o $(OBJSTANZA)
+
+ifdef ecospace
+$(OBJREADGRID): $(SRCREADGRID)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCREADGRID) -o $(OBJREADGRID)
+
+$(OBJREADSPAT): $(SRCREADSPAT)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCREADSPAT) -o $(OBJREADSPAT)
+
+$(OBJREADADVEC): $(SRCREADADVEC)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCREADADVEC) -o $(OBJREADADVEC)
+
+$(OBJECOSPACE): $(SRCECOSPACE)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCECOSPACE) -o $(OBJECOSPACE)
+
+$(OBJWRITENC): $(SRCWRITENC)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCWRITENC) -o $(OBJWRITENC)
+endif
+
+$(OBJRK4): $(SRCRK4)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCRK4) -o $(OBJRK4)
+
+$(OBJFREE): $(SRCFREE)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCFREE) -o $(OBJFREE)
+
+$(OBJECOSIM): $(MODULES) $(SRCECOSIM)
+	$(FC) $(CPPDEFS) $(CFLAGS) $(SRCECOSIM) -o $(OBJECOSIM)
+
+clean:
+	rm -f $(OBJECTS)
+	rm -f $(MODULES)
+	rm -f $(BINECOSIM)
+# end

@@ -53,7 +53,7 @@ do var = 1, nvars
         es_data(var)%fishmort = ((ep_data(var)%landings + ep_data(var)%discards) &
           / ep_data(var)%biomass) * es_data(var)%Q_mult
     end if
-    WRITE(*,*) 'Qmult', es_data(var)%Q_mult
+    !WRITE(*,*) 'Qmult', es_data(var)%Q_mult
 end do
 
 end subroutine calculateFishingMortalities
