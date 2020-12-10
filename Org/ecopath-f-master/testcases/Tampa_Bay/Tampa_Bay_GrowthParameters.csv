@@ -1,0 +1,10 @@
+"Number of split groups",7
+"Number of growth parameters",4
+Groups,K,"Rec. Power",BA/B,Wmaturity/Winf
+Snook,0.35,1,0,0.25
+"Red Drum",0.323,1,0,0.2
+"Sea Trout",0.32,1,0,0.25
+"Sand Trout",0.3,1,0,0.35
+Mullet,0.35,1,0,0.35
+Mackerel,0.35,1,0,0.45
+Ladyfish,0.28,0.7,0,0.4

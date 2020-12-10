@@ -33,7 +33,7 @@ FC = gfortran
 # Set the path to your HDF5 installation
 # The HDF5 should have been compiled by the same compiler
 # specified above
-HDF5DIR = /home/aldair/Documents/EwE-F/APPS/HDF5-1.10.4
+HDF5DIR = /home/aldair/Documents/APPS/HDF5-1.10.4
 
 # This flag below specifies the directory into which the compiled module
 # files (*.mod) are going to be put. For GNU Fortran compiler

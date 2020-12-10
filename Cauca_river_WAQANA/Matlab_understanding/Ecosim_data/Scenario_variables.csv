@@ -1,0 +1,57 @@
+Number of groups,52,,,,,,,,,
+Number of parameters,10,,,,,,,,,
+Number of split groups,7,,,,,,,,,
+,rel_PoB_max,Ftime,Ftime_max,Ftime_adjust,M0_pred,risk_time,Q_maxoQ_0,QB_maxoQB_0,switch_power,isAdvected
+Groups,Max rel. P/B,Feedingtime,Max rel. feeding time,"Feeding time adjust rate [0,1]",Fraction of other mortality sens. to changes in feeding time,"Predator effect on feeding time [0,1]",Density-dep. catchability: Qmax/Qo [>=1],QBmax/QBo (for handling time) [>1],"Switching power parameter [0,2]",Advected?
+0-12 Snook,2,1,2,0.5,1,0,1,1000,0,0
+3-12 Snook,2,1,2,0,1,0,1,1000,0,0
+12-48 Snook,2,1,2,0,1,0,1,1000,0,0
+48-90 Snook,2,1,2,0,1,0,1,1000,0,0
+90+ Snook,2,1,2,0,1,0,1,1000,0,0
+0-3 Red Drum,2,1,2,0.5,1,0,1,1000,0,0
+3-8 Red Drum,2,1,2,0,1,0,1,1000,0,0
+8-18 Red Drum,2,1,2,0,1,0,1,1000,0,0
+18-36 Red Drum,2,1,2,0,1,0,1,1000,0,0
+36+ Red Drum,2,1,2,0,1,0,1,1000,0,0
+0-3 Sea Trout,2,1,2,0.5,1,0,1,1000,0,0
+3-18 Sea Trout,2,1,2,0,1,0,1,1000,0,0
+18+ Sea Trout,2,1,2,0,1,0,1,1000,0,0
+0-3 Sand Trout,2,1,2,0.5,1,0,1,1000,0,0
+3-12 Sand Trout,2,1,2,0,1,0,1,1000,0,0
+12+ Sand Trout,2,1,2,0,1,0,1,1000,0,0
+0-6 Mullet,2,1,2,0.5,1,0,1,1000,0,0
+6-18 Mullet,2,1,2,0,1,0,1,1000,0,0
+18+ Mullet,2,1,2,0,1,0,1,1000,0,0
+Mackrel 0-3,2,1,2,0.5,1,0,1,1000,0,0
+Mackrel 3+,2,1,2,0,1,0,1,1000,0,0
+Ladyfish 0-10,2,1,2,0.5,0.1,0,1,1000,0,0
+Ladyfish 10+,2,1,2,0.5,1,0,1,1000,0,0
+Jacks,2,1,2,0,1,0,1,1000,0,0
+Bay Anchovy,2,1,2,0,1,0,1,1000,0,0
+Pin Fish,2,1,2,0,1,0,1,1000,0,0
+Spot,2,1,2,0,1,0,1,1000,0,0
+Silver Perch,2,1,2,0,1,0,1,1000,0,0
+Scaled Sardine,2,1,2,0,1,0,1,1000,0,0
+Mojarra,2,1,2,0,1,0,1,1000,0,0
+Threadfin Herring,2,1,2,0,1,0,1,1000,0,0
+Manhaden,2,1,2,0,1,0,1,1000,0,0
+Menidia (silverside),2,1,2,0,1,0,1,1000,0,0
+Catfish,2,1,2,0,1,0,1,1000,0,0
+Bumper,2,1,2,0,1,0,1,1000,0,0
+Caridan Shrimp,2,1,2,0,1,0,1,1000,0,0
+Shrimp,2,1,2,0,1,0,1,1000,0,0
+Stone Crab,2,1,2,0,1,0,1,1000,0,0
+Blue Crab,2,1,2,0,1,0,1,1000,0,0
+Cyprinodontids,2,1,2,0.5,1,0,1,1000,0,0
+Poecilids,2,1,2,0.5,1,0,1,1000,0,0
+Pigfish,2,1,2,0.5,1,0,1,1000,0,0
+Gobies,2,1,2,0.5,1,0,1,1000,0,0
+Rays,2,1,2,0.5,1,0,1,1000,0,0
+Benthic Invertebrates,2,1,2,0,1,0,1,1000,0,0
+Macro Zooplankton,2,1,2,0,1,0,1,1000,0,1
+Micro Zoolplankton,2,1,2,0,1,0,1,1000,0,1
+Infauna,2,1,2,0,1,0,1,1000,0,0
+Attached Microalgae,5,1,-999,-999,-999,-999,-999,-999,-999,0
+Sea Grass,1.5,1,-999,-999,-999,-999,-999,-999,-999,0
+Phytoplankton,3,1,-999,-999,-999,-999,-999,-999,-999,1
+Detritus,-999,1,-999,-999,-999,-999,-999,-999,-999,0
