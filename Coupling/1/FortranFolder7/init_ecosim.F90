@@ -156,7 +156,8 @@
 !       Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
 !       tf, StepsPerMonth, NutBaseFreeProp, NutPBmax, relaxeco
 !#endif
-  open(1010, file = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/filenames.nml", status = 'OLD')
+!  open(1010, file = "/home/aldair/Documents/EwE-F/EWE-F/Telemac-coupling-fixed/filenames.nml", status = 'OLD')
+  open(1010, file = "filenames.nml", status = 'OLD')
   read(1010, nml = filenames)
   close(1010)
 
@@ -238,6 +239,7 @@
 !  IF (MOD(TFTEL/))
 !  WRITE(*,*) "TSTEEEEEEP", tstep, noftsteps
 
+ALLOCATE(ECOSUI_GRID(nlat,nlon,nvars))
 
 !!!!!!!!!! END SECTION: SET SIMULATION PERIOD PARAMETERS !!!!!!!!!!!!!!!!
 
