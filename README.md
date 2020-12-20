@@ -62,3 +62,13 @@ Modified EWE-F for Telemac coupling purposes
 
 - Hasta aquí el FortranFolder7 es funcional con todo lo anterior implementado
 
+!!!!!!!!!!!!!!!!! ACTUALIZACIÓN DICIEMBRE 20 - 2020 !!!!!!!!!!!!!!!!!!!!
+
+- Se decide implementar el modelo de Ecospace directamente en la malla de Telemac, para ello se añadirá como un trazador y se usará una estrategia de espacialización acorde con el compotamiento de los peces,
+
+- El plancton definitivamente se modelará en conjunto con Waqtel (ya se incluyo el Zooplancton con el modelo del paper de la Ciénaga Grande de Santa Marta)
+
+- El necton se modelará exclusivamente con el modelo de ecospace, si quedan acoplados estos grupos podran afectar los grupos planctónicos y los nutrientes directamente en las ecuaciones.
+
+- Se usarán las subrutinas desarrolladas por el profesor Ekin para calcular los términos de mano derecha de las ecuaciones diferenciales.
+

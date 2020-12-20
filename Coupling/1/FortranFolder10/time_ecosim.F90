@@ -88,34 +88,34 @@
   ENDDO
   !WRITE(*,*) "ECOSUIaa", ECOSUI%ADR(1)%P%R(1)
 
-! PASSING HABITAT SUITABILITY FROM ECOSUI BIEF OBJECT TO ECOSUI_GRID
-  IF (time == 0D0) THEN
-    ECOSUI_GRID = 0.1D0
-  ELSE
-    ECOSUI_GRID = 0.0D0
-    latlon = 1
-    DO lon = 1, nlon
-      DO lat = 1,nlat
-        IF (grid(lat,lon).EQ.1) THEN
-          DO j = 1,nvars
-            CCOUN = 0;
-            SUIT = 0;
-            DO K=1,NPOIN
-              IF(INT(COUECO%R(K)) .EQ. latlon) THEN
-                SUIT = SUIT + ECOSUI%ADR(j)%P%R(K)
-                CCOUN = CCOUN + 1
-              ENDIF
-            ENDDO
-            IF (CCOUN .NE. 0D0) THEN
-              ECOSUI_GRID(lat,lon,j) = SUIT/CCOUN
-            ENDIF
-            !WRITE(*,*) 'SUIT', ECOSUI_GRID(lat,lon,j)   
-          ENDDO
-        ENDIF
-        latlon = latlon + 1
-      ENDDO
-    ENDDO
-  ENDIF
+! ! PASSING HABITAT SUITABILITY FROM ECOSUI BIEF OBJECT TO ECOSUI_GRID
+!   IF (time == 0D0) THEN
+!     ECOSUI_GRID = 0.1D0
+!   ELSE
+!     ECOSUI_GRID = 0.0D0
+!     latlon = 1
+!     DO lon = 1, nlon
+!       DO lat = 1,nlat
+!         IF (grid(lat,lon).EQ.1) THEN
+!           DO j = 1,nvars
+!             CCOUN = 0;
+!             SUIT = 0;
+!             DO K=1,NPOIN
+!               IF(INT(COUECO%R(K)) .EQ. latlon) THEN
+!                 SUIT = SUIT + ECOSUI%ADR(j)%P%R(K)
+!                 CCOUN = CCOUN + 1
+!               ENDIF
+!             ENDDO
+!             IF (CCOUN .NE. 0D0) THEN
+!               ECOSUI_GRID(lat,lon,j) = SUIT/CCOUN
+!             ENDIF
+!             !WRITE(*,*) 'SUIT', ECOSUI_GRID(lat,lon,j)   
+!           ENDDO
+!         ENDIF
+!         latlon = latlon + 1
+!       ENDDO
+!     ENDDO
+!   ENDIF
   !WRITE(*,*) 'INITTTTTT'
   !DO II=1,nlon
   !  WRITE(*,*) 'ECOFILA', ECOSUI_GRID(:,II,6)

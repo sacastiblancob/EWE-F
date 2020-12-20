@@ -2093,7 +2093,8 @@
 !=======================================================================
 !
 !      COUNTER = COUNTER + 1D0   !ADVANCING COUNTER
-      CALL ECOHABITAT(nvars,U,V,H,ECOSUI)
+      CALL ECOHABITAT(nvars, U,V,H,ECOSUI,ECGRXN,ECGRYN,UNSV2D,MESH,
+     &                MSK,MASKEL,S)
       !WRITE(*,*) "COUUNTER", COUNTER
 !      
 !=======================================================================
@@ -2107,7 +2108,7 @@
 !
 !      IF(AT.GT.(SecondsPerMonth*imonth)) THEN
 !
-!      WRITE(*,*) "UP",step, imonth, n, AT
+!      !WRITE(LU,*) "UP",step, imonth, n, AT
 !
 !      CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco,
 !     &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
@@ -2135,7 +2136,7 @@
 !      IF(AT.GT.(SecondsPerMonth*(imonth-1)
 !     &   + n*(SecondsPerMonth/StepsPerMonth))) THEN
 !
-!      WRITE(*,*) "DOWN",step, imonth, n, AT
+!      !WRITE(LU,*) "DOWN",step, imonth, n, AT
 !
 !      CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco,
 !     &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
@@ -2148,7 +2149,7 @@
 !      time = time + tstep  !ADVANCING ECO-TIME
 !      n = n + 1            !ADVANCING N INDEX
 !
-!      ENDIF
+!      ! ENDIF
 !!
 !=======================================================================
 !                    END OF ECOSPACE TIME STUFF

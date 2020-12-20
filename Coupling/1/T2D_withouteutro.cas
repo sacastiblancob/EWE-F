@@ -1,0 +1,236 @@
+/----------------------------------------------------------------------------------
+/----------- WARNING!, remember that each line is limited to 72 columns -----------
+/----------------------------------------------------------------------------------
+/
+/----------------------------------------------------------------------------------
+/ EQUATIONS, SCHEMES AND NUMERICAL PARAMETERS
+/----------------------------------------------------------------------------------
+
+EQUATIONS = 'SAINT-VENANT FE'
+/Can take the following values:
+/  ‘SAINT-VENANT FE’ (default value)
+/  ‘SAINT-VENANT FV’
+/  ‘BOUSSINESQ’
+
+TREATMENT OF THE LINEAR SYSTEM = 2
+/It is possible to replace the original equations by a generalized wave equation
+/obtained by eliminating the velocity from the continuity equation using a value
+/obtained from the momentum equation. This technique increases calculation speed
+/but has the disadvantage of smoothing the results.
+/  1: coupled
+/  2: wave equation
+
+TYPE OF ADVECTION = 1;5;1;1
+/Choice of advection schemes for every variable
+/Coefficients are applied respectively to: U and V, H, T, K-EPSILON
+/  1: characteristics
+/  2: SUPG
+/  3: Conservative N-scheme
+/  4: Conservative N-scheme
+/  5: Conservative PSI-scheme
+/ 13: Edge-based N-scheme
+/ 14: Edgebased N-scheme
+/ 15: ERIA scheme Second integer must be 5
+
+/OPTION FOR THE DIFFUSION OF VELOCITIES   = 1
+/  1: Diffusion in the form div(nu grad(U)) (default value)
+/  2: Diffusion in the form 1/h div(h nu grad(U))
+
+/VELOCITY DIFFUSIVITY                     = 1.E-6
+/ Sets the value of the viscosity coefficient (dynamic+turbulent) in an even way
+/ and for the whole domain. This value may have a significant effect both on the
+/ shapes and sizes of recirculation zones. The default value is 1.E-6.
+
+FREE SURFACE GRADIENT COMPATIBILITY      = 0.9
+/Values less than 1 are intended to suppress spurious oscillations.
+
+/MAXIMUM NUMBER OF ITERATIONS FOR SOLVER  = 120
+
+/VERTICAL STRUCTURES                      = YES
+
+/TIDAL FLATS                              = YES
+
+/OPTION FOR THE TREATMENT OF TIDAL FLATS  = 1
+/  1: The tidal flats are detected and the free surface gradient is corrected.
+/  2: The tidal flat areas are removed from computations. Exposed elements still
+/     form part of the mesh, but any contributions they make to the computations
+/     are cancelled (by a so-called "masking" table). The data structure and the
+/     computations are thus formally the same to within the value of the masking
+/     coefficient. However, conservation of mass may be slightly altered in this
+/     case.
+/  3: Processing is done in almost the same way as in the first case, but with a
+/     porosity term added to half-dry elements. Consequently, the water quantity
+/     is changed, so it is no longer equal to the depth integral over the entire
+/     domain but to the depth integral multiplied by that porosity. The user can
+/     modify the porosity value, determined by the processing in the USER_CORPOR
+/     subroutine.
+
+/TREATMENT OF NEGATIVE DEPTHS             = 1
+/  0: No treatment
+/  1: Smoothing the negative depths in a conservative way (default value).
+/  2: Flux limitation that ensures strictly positive depths (only possible since
+/     release 6). Must be preferably coupled with advection schemes able to cope
+/     with tidal flats. This option is recommended when conservative tracers are
+/     modelled using distributive schemes (i. e. SCHEME FOR ADVECTION OF TRACERS
+/     4 or 5), as it allows to obtain a "perfect mass balance".
+
+/
+/----------------------------------------------------------------------------------
+/ TIME-RELATED CONFIGURATIONS
+/----------------------------------------------------------------------------------
+
+DURATION                                 = 2401
+
+ORIGINAL DATE OF TIME                    = 2020;01;01
+
+TIME STEP                                = 0.03
+
+VARIABLE TIME-STEP                       = YES
+
+DESIRED COURANT NUMBER                   = 1.0
+
+/
+/------------------------------------------------------------------------------------
+/ FRICTION
+/------------------------------------------------------------------------------------
+
+LAW OF BOTTOM FRICTION                 = 4
+LAW OF FRICTION ON LATERAL BOUNDARIES  = 4
+/  0: no friction against bottom
+/  1: Haaland's formula
+/  2: Chezy's formula
+/  3: Strickler's formula
+/  4: Manning's formula
+/  5: Nikuradse's formula
+
+FRICTION COEFFICIENT                   = 0.03
+
+/ROUGHNESS COEFFICIENT OF BOUNDARIES    = 0.1
+
+/
+/------------------------------------------------------------------------------------
+/ BOUNDARY CONDITIONS
+/------------------------------------------------------------------------------------
+
+BOUNDARY CONDITIONS FILE       = 'BOTTOM_BC.cli'
+
+LIQUID BOUNDARIES FILE         = 'LB.txt'
+
+VELOCITY PROFILES               = 5;2
+/  1: constant normal profile.
+/  2: u and v given in the conlim file.
+/  3: normal velocity given in ubor in the conlim file.
+/  4: sqrt(depth) profile.
+/  5: sqrt(depth) profile, variant.
+
+/PRESCRIBED FLOWRATES           = 0;1.5
+
+/PRESCRIBED ELEVATIONS	        = 0.9;0
+
+/MAXIMUM NUMBER OF BOUNDARIES   = 320
+
+/
+/------------------------------------------------------------------------------------
+/ INITIAL CONDITIONS
+/------------------------------------------------------------------------------------
+
+/COMPUTATION CONTINUED		           = YES
+
+/PREVIOUS COMPUTATION FILE       = 'HotStart.slf'
+
+/INITIAL TIME SET TO ZERO        = YES
+
+INITIAL CONDITIONS = 'CONSTANT ELEVATION'
+/  ZERO ELEVATION: ........ Initializes the free surface elevation to 0. The initial
+/                           water depths are then found by computing the difference
+/                           between the free surface and the bottom.
+/  CONSTANT ELEVATION: .... Initializes the water elevation to the value given by
+/                           the keyword 'INITIAL ELEVATION'. The initial water depths
+/                           are computed as in the previous case.
+/  ZERO DEPTH: ............ Initializes the water depths to 0.
+/  CONSTANT DEPTH: ........ Initializes the water depths to the value given by the
+/                           key-word 'INITIAL DEPTH'.
+/  SPECIAL: ............... The initial conditions with the water depth should be
+/                           started in the CONDIN subroutine.
+/  TPXO SATELITE ALTIMETRY: The initial conditions on the free surface and
+/                           velocities are established from the TPXO satellite
+/                           program data, the harmonic constituents of which are
+/                           stored in the TIDE DATA BASE file.
+
+INITIAL ELEVATION	 = 1
+
+/
+/----------------------------------------------------------------------------------
+/ OTHER INPUT FILE(S)
+/----------------------------------------------------------------------------------
+
+GEOMETRY FILE            = 'geometry.slf'
+
+FORTRAN FILE             = 'FortranFolder10'
+
+/
+/----------------------------------------------------------------------------------
+/ OUTPUT FILES AND CONFIGURATIONS
+/----------------------------------------------------------------------------------
+
+RESULTS FILE             = 'Results_T2D.slf'
+
+GRAPHIC PRINTOUT PERIOD  = 2000
+
+LISTING PRINTOUT PERIOD  = 1000
+
+VARIABLES FOR GRAPHIC PRINTOUTS =
+/U,V,H,S,B,F,L,Q,M,US
+U,V,H,S,B,F,L,Q,M,US,T*,GRUF1
+/   U: Velocity along x axis (m/s)
+/   V: Velocity along y axis (m/s)
+/   C: Wave celerity (m/s)
+/   H: Water depth (m)
+/   S: Free surface elevation (m)
+/   B: Bottom elevation (m)
+/   F: Froude number
+/   Q: Scalar flowrate of fluid (m2/s)
+/   I: Flowrate along x axis (m2/s)
+/   J: Flowrate along y axis (m2/s)
+/   M: Scalar velocity (m/s)
+/   X: Wind along x axis (m/s)
+/   Y: Wind along y axis (m/s)
+/   W: Friction coefficient
+/   L: Courant number
+/MAXZ: Maximum elevation
+/TMXZ: Time of maximum elevation
+/MAXV: Maximum velocity
+/TMXV: Time of maximum velocity
+/  US: Friction velocity (m/s)
+
+/
+/----------------------------------------------------------------------------------
+/ COUPLING
+/----------------------------------------------------------------------------------
+
+COUPLING WITH            = 'WAQTEL'
+/  GAIA: internal coupling with Gaia
+/  WAQTEL: internal coupling with Waqtel
+/  SISYPHE: internal coupling with Sisyphe
+/  TOMAWAC: internal coupling with Tomawac
+/  DELWAQ: will yield results file for Delwaq
+
+WAQTEL STEERING FILE   = eutro.cas
+/SISYPHE STEERING FILE  = 'SIS.cas'
+/GAIA STEERING FILE     = 'gai_bump2d-t2d.cas'
+
+WATER QUALITY PROCESS = 5
+
+/ initial values of         PHY,PO4,POR,NO3,NOR,NH4,L, O2
+INITIAL VALUES OF TRACERS = 1.0;3.; 1.1;0.2;4.9;5.5;0.7;1.0
+
+/
+/------------------------------------------------------------------------------------
+/ OTHERS
+/------------------------------------------------------------------------------------
+
+/PARALLEL PROCESSORS = 4
+
+/CONTROL SECTIONS         = 1223;1068
+
+/DEBUGGER = 0

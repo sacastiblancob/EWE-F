@@ -449,9 +449,9 @@
       !ADDITIONAL VARIABLES FOR ECOSPACE 
       IF(NUSRVAR.GT.4) THEN
 	    I = 35 + NTRAC + 2 * NPERIAF + NADVAR + NUSRVAR-4
-          TEXTE(I)  = 'GRUF1           BIO             '
-          TEXTPR(I) = 'GRUF1           BIO             '
-          MNEMO(I)  = 'GRUF1   '
+          TEXTE(I)  = 'ECOSUI1         adm             '
+          TEXTPR(I) = 'ECOSUI1         adm             '
+          MNEMO(I)  = 'ECOSUI1 '
       ENDIF
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

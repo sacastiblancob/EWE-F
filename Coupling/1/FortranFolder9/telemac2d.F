@@ -2092,7 +2092,7 @@
 !                    HABITAT SUITABILITY
 !=======================================================================
 !
-!      COUNTER = COUNTER + 1D0   !ADVANCING COUNTER
+      COUNTER = COUNTER + 1D0   !ADVANCING COUNTER
       CALL ECOHABITAT(nvars,U,V,H,ECOSUI)
       !WRITE(*,*) "COUUNTER", COUNTER
 !      
@@ -2104,51 +2104,51 @@
 !                    ECOSPACE TIME STUFF
 !=======================================================================
 !!
-!
-!      IF(AT.GT.(SecondsPerMonth*imonth)) THEN
-!
-!      WRITE(*,*) "UP",step, imonth, n, AT
-!
-!      CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco,
-!     &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
-!     &    EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
-!     &    NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
-!     &    M2, mat_out, rel_out, COUNTER, ECOSUI, COUECO)
-!      
-!      COUNTER = 0D0        !RESTARTING COUNTER FOR HABITAT       
-!      step = step + 1      !ADVANCING STEP
-!      time = time + tstep  !ADVANCING ECO-TIME
-!      n = n + 1            !ADVANCING N INDEX
-!
-!      ! Clean monthly stanza variables
-!      BBAvg(:)   = 0
-!      LossAvg(:) = 0
-!      EatenByAvg(:) = 0
-!      EatenOfAvg(:) = 0
-!      PredAvg(:)    = 0
-!
-!      imonth = imonth + 1
-!      n = 1
-!
-!      ENDIF
-!
-!      IF(AT.GT.(SecondsPerMonth*(imonth-1)
-!     &   + n*(SecondsPerMonth/StepsPerMonth))) THEN
-!
-!      WRITE(*,*) "DOWN",step, imonth, n, AT
-!
-!      CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco,
-!     &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
-!     &    EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
-!     &    NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
-!     &    M2, mat_out, rel_out, COUNTER, ECOSUI, COUECO)
-!      
-!      COUNTER = 0D0        !RESTARTING COUNTER FOR HABITAT       
-!      step = step + 1      !ADVANCING STEP
-!      time = time + tstep  !ADVANCING ECO-TIME
-!      n = n + 1            !ADVANCING N INDEX
-!
-!      ENDIF
+
+      IF(AT.GT.(SecondsPerMonth*imonth)) THEN
+
+      WRITE(*,*) "UP",step, imonth, n, AT
+
+      CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco,
+     &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
+     &    EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
+     &    NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
+     &    M2, mat_out, rel_out, COUNTER, ECOSUI, COUECO)
+      
+      COUNTER = 0D0        !RESTARTING COUNTER FOR HABITAT       
+      step = step + 1      !ADVANCING STEP
+      time = time + tstep  !ADVANCING ECO-TIME
+      n = n + 1            !ADVANCING N INDEX
+
+      ! Clean monthly stanza variables
+      BBAvg(:)   = 0
+      LossAvg(:) = 0
+      EatenByAvg(:) = 0
+      EatenOfAvg(:) = 0
+      PredAvg(:)    = 0
+
+      imonth = imonth + 1
+      n = 1
+
+      ENDIF
+
+      IF(AT.GT.(SecondsPerMonth*(imonth-1)
+     &   + n*(SecondsPerMonth/StepsPerMonth))) THEN
+
+      WRITE(*,*) "DOWN",step, imonth, n, AT
+
+      CALL TIME_ECOSIM(n,step, imonth, time, tstep, es_data, BBeco,
+     &    BB_spatial, flow2detritus, det_export_rate, BBAvg, LossAvg,
+     &    EatenByAvg, EatenOfAvg, PredAvg, es_ms_data, arena,
+     &    NutFree, NutBiom, FirstTime, UpdateStanzas, QperB,
+     &    M2, mat_out, rel_out, COUNTER, ECOSUI, COUECO)
+      
+      COUNTER = 0D0        !RESTARTING COUNTER FOR HABITAT       
+      step = step + 1      !ADVANCING STEP
+      time = time + tstep  !ADVANCING ECO-TIME
+      n = n + 1            !ADVANCING N INDEX
+
+      ENDIF
 !!
 !=======================================================================
 !                    END OF ECOSPACE TIME STUFF

@@ -43,6 +43,7 @@
 
 !  USE BIEF
 !  USE DECLARATIONS_TELEMAC2D
+!  USE DECLARATIONS_SPECIAL
 
 !#ifdef _Ecospace_
   use statevartypesecospace
@@ -232,7 +233,7 @@
   tstep     = real(1.0D0 / (12.0D0 * StepsPerMonth), RLEN)
 
 !#endif
-  WRITE(*,*) "TIIIIME", tf, tstep
+!  WRITE(*,*) "TIIIIME", tf, tstep
 
   noftsteps = FLOOR(tf / tstep)
 !!  noftsteps = NINT(tf / tstep)

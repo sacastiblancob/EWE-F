@@ -151,13 +151,18 @@
       USE BIEF
       USE DECLARATIONS_TELEMAC
       USE DECLARATIONS_TELEMAC2D
-!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!     This is our own module
-!	  USE Declarations_EPM_ft_PUJ
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!
       USE DECLARATIONS_SPECIAL
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!  ADDED BY SERGIO
+      USE statevartypesecosim, only: nvars
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
       IMPLICIT NONE
 !
 !+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -354,30 +359,49 @@
 !
 !
 !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!  ARRAYS CONTAINING THE USER VARIABLES WHICH WILL BE OUTPUT TO THE RESULT FILE:
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!  ADDED BY SERGIO
+!!  ARRAYS CONTAINING THE USER VARIABLES WHICH WILL BE OUTPUT TO THE RESULT FILE:
+!!
+!!      CALL BIEF_ALLVEC(1,IDX,'IDX   ',IELMT,1,2,MESH)
 !
-!      CALL BIEF_ALLVEC(1,IDX,'IDX   ',IELMT,1,2,MESH)
-
+!!
+      !ALLOCATES COUECO VECTOR
+      WRITE(LU,*) '1111111111111111111111'
+      CALL BIEF_ALLVEC(1,COUECO,'COUECO',IELMT,1,2,MESH)
 !
 !     ALLOCATES FUNCTIONAL GROUP RESULTS
       CALL ALLBLO(ECOOUT,'ECOOUT')
-      CALL BIEF_ALLVEC_IN_BLOCK(ECOOUT,8,1,'GRUF  ',IELMT,1,2,MESH)
+      CALL BIEF_ALLVEC_IN_BLOCK(ECOOUT,NVARS,1,'ECOOUT',IELMT,1,2,MESH)
 !
-      CALL BIEF_ALLVEC(1,GRUF1,'GRUF1 ',IELMT,1,2,MESH)
-      CALL BIEF_ALLVEC(1,ECOSUI,'ECOSUI',IELMT,1,2,MESH)
-!      GRUF1 => ECOOUT%ADR(6)%P
-!      GRUF3 => ECOOUT%ADR(3)%P
-!      GRUF4 => ECOOUT%ADR(4)%P
-!      GRUF5 => ECOOUT%ADR(5)%P
-!      GRUF6 => ECOOUT%ADR(6)%P
-!      GRUF7 => ECOOUT%ADR(7)%P
-!      GRUF8 => ECOOUT%ADR(8)%P
-!      
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!     CALL BIEF_ALLVEC(1,ECOSUI,'ECOSUI',IELMT,1,2,MESH)
+      CALL ALLBLO(ECOSUI,'ECOSUI')
+      CALL BIEF_ALLVEC_IN_BLOCK(ECOSUI,NVARS,1,'ECOSUI',IELMT,1,2,MESH)
 !
+!     ALLOCATES BIEF OBJECTS FOR COMPUTING HABITAT SUITABILITY
+!     GRADIENTS
+      CALL ALLBLO(ECGRXN,'ECGRXN')
+      CALL BIEF_ALLVEC_IN_BLOCK(ECGRXN,NVARS,1,'ECGRXN',IELMU,1,2,MESH)
+!
+      CALL ALLBLO(ECGRYN,'ECGRYN')
+      CALL BIEF_ALLVEC_IN_BLOCK(ECGRYN,NVARS,1,'ECGRYN',IELMU,1,2,MESH)
+!
+!!!!!!!!!! INITILIASING BLOCKS IN ZERO !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+      DO I = 1, NVARS
+          CALL OS('X=C     ',X=ECOOUT%ADR(I)%P,C=0.D0)
+          CALL OS('X=C     ',X=ECOSUI%ADR(I)%P,C=0.D0)
+          CALL OS('X=C     ',X=ECGRXN%ADR(I)%P,C=0.D0)
+          CALL OS('X=C     ',X=ECGRYN%ADR(I)%P,C=0.D0)
+      ENDDO
+      WRITE(LU,*) "BBBBBBBBBBBBbbbbbbbbbb"       
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
 !
 !  ARRAYS CONTAINING THE VARIABLES WHICH WILL BE OUTPUT TO THE RESULT FILE:
@@ -1688,16 +1712,19 @@
         J = J+NADVAR
       ENDIF
 !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! ! ! ADDED BY NICOLAS
 !
 ! Add pointer to graphic variables in the block VARSOR:
-      CALL ADDBLO(VARSOR, GRUF1)
-! To set the value of the vector to 0.D0 for all points of the mesh:
-      CALL OS('X=0     ',X = GRUF1)
+      CALL ADDBLO(VARSOR, ECGRXN%ADR(1)%P)
 !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
 !=======================================================================
 !
