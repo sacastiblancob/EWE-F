@@ -46,6 +46,17 @@
       USE DECLARATIONS_SPECIAL
       USE DECLARATIONS_WAQTEL
       USE INTERFACE_WAQTEL, EX_NAMETRAC_WAQTEL => NAMETRAC_WAQTEL
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! MODIFIED PART BY SERGIO
+
+      USE statevartypesecosim, ONLY: nvars, groupnames
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #if defined HAVE_AED2
       USE T3D_AED2
 #endif
@@ -86,7 +97,27 @@
 !
         RANK_OXYGN = 0 ! GROUP O2 TRACERS
         RANK_BIOMA = 0 ! GROUP BIOMASS TRACERS
-        RANK_EUTRO = 0 ! GROUP EUTRO TRACERS
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+! PART CHANGED BY SERGIO
+! ORIGINAL
+!        RANK_EUTRO = 0 ! GROUP EUTRO TRACERS
+! MODIFIED
+!
+! ALLOCATES RANK_EUTRO HERE, WITH ADDITION OF NEW VARIABLES
+!
+        IF(ISECO) THEN
+          ALLOCATE(RANK_EUTRO(9+nvars))  !9 WAQTEL PROCESSES AND ECOTRACERS
+        ELSE 
+          ALLOCATE(RANK_EUTRO(9))
+        ENDIF
+        RANK_EUTRO = 0
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
         RANK_MICRO = 0 ! GROUP MICROPOL TRACERS
         RANK_THERM = 0 ! GROUP THERMIC TRACER
 !
@@ -114,11 +145,28 @@
         IND_CSF = 0   ! ABSORB. BED SED.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
-! PART ADDED BY SERGIO
-        IND_ZOO = 0   ! ZOO BIOMASS
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
-
+! PART ADDED BY SERGIO
+! POSITIONAL IDENTIFIER FOR ZOOPLANKTON INTO THE TRACER BLOCK
+        IND_ZOO = 0   ! ZOO BIOMASS
+!
+! POSITIONAL IDENTIFIER FOR FUNCTIONAL GRUOPS INTO THE TRACER BLOCK
+!
+        IF(ISECO) THEN
+        ! INTIALISATION OF ECOSPACE INDEXES IN TRACERS BLOCK
+        ALLOCATE(IND_ECO(nvars))
+        IND_ECO = 0
+        ! READING FUNCTIONAL GROUP NAMES
+        ALLOCATE(ECONAMES(nvars))
+        DO I=1,nvars
+          ECONAMES(I) = groupnames(I)
+        ENDDO        
+        ENDIF
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
       ELSE IF( PROCESS*INT(WAQPROCESS/PROCESS).NE.WAQPROCESS ) THEN
         WRITE(LU,21) PROCESS,WAQPROCESS
@@ -372,6 +420,8 @@
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! PART ADDED BY SERGIO
 !       9. ~~> ZOOPLANKTON 
         IF( IND_ZOO.EQ.0 ) THEN
@@ -383,6 +433,21 @@
         ENDIF
         RANK_EUTRO(9) = IND_ZOO
 !
+!       10,11,... ~~> FUNTIONAL GROUPS
+        IF(ISECO) THEN
+          DO I = 1,nvars
+            IF(IND_ECO(I).EQ.0) THEN
+              CALL ADDTRACER(NAMETRAC,NTRAC,
+     &        IND_ECO(I),
+     &        'BIOMASS         ',ECONAMES(I),' kg/m^2         ')
+              WAQTR = WAQTR + 1
+              RANKTR(WAQTR) = IND_ECO(I)
+            ENDIF
+            RANK_EUTRO(9+I) = IND_ECO(I)
+          ENDDO
+        ENDIF
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !

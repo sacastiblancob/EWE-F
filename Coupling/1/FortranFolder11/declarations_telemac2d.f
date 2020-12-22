@@ -162,16 +162,20 @@
       TYPE(BIEF_OBJ), TARGET :: ECOSUI
 !
 !
-!     BIEF_OBJ FOR COMPUING GRADIENTS OF HABITAT SUITABILITY
+!     BIEF_OBJ FOR COMPUTING GRADIENTS OF HABITAT SUITABILITY
 !     
       TYPE(BIEF_OBJ), TARGET :: ECGRXN
       TYPE(BIEF_OBJ), TARGET :: ECGRYN
+!
+!     LOGICAL TO KNOW IF FUNCTIONAL GROUPS WILL BE ADVECTED WITH THE
+!     GRADIENT OF HABITAT SUITABILITY FIELDS
+!
+      LOGICAL, PARAMETER :: ECOADV = .TRUE.
 !
 !     POINTERS TO FUNCTIONAL GROUPS RESULTS
 !
       !TYPE(BIEF_OBJ), POINTER :: GRUF1, GRUF2, GRUF3, GRUF4, GRUF5
       !TYPE(BIEF_OBJ), POINTER :: GRUF6, GRUF7, GRUF8, GRUF9, GRUF10                 
-!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

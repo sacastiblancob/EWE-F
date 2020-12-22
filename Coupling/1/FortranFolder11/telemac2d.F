@@ -371,7 +371,7 @@
 !     Variables adicionales lectura malla
 !     USER MODULES
 !      USE DECLARATIONS_COUPECOSPACE    !MODULE WITH THE BIEF OBJECT FOR READ
-
+      USE DECLARATIONS_WAQTEL, ONLY: ISECO, IND_ECO
       use statevartypesecopath, only: RLEN, flow2detritus,
      &   det_export_rate
       use statevartypesecosim, only: BBAvg, LossAvg, EatenByAvg,
@@ -434,6 +434,16 @@
 !-----------------------------------------------------------------------
 !
       INTEGER IMAX,ITRAC,IVAR
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! ADDED BY SERGIO
+      INTEGER :: KK=1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      
 !
 !-----------------------------------------------------------------------
 !
@@ -1604,6 +1614,75 @@
         CALL OS('X=+(Y,C)',X=FLUDP%ADR(ISUSP)%P,
      &          Y=FLUDP%ADR(ISUSP)%P,C=0.D0)
 !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!  ADDED BY SERGIO
+      ELSEIF(INCLUS(COUPLING,'WAQTEL').AND.ISECO.AND.
+     &  (ITRAC.GE.IND_ECO(1)).AND.(ITRAC.LE.IND_ECO(nvars))) THEN
+!
+!     CASE OF COUPLING WITH ECOSPACE
+!
+        ! CALL ECOHABITAT FOR COMPUTING SUITABILITY FIELD AND GRADIENT
+        IF(DEBUG.GT.0) WRITE(LU,*) 'CALLING ECOHABITAT=',IND_ECO(KK)
+        CALL ECOHABITAT(nvars, U,V,H,ECOSUI%ADR(KK)%P,ECGRXN%ADR(KK)%P,
+     &                ECGRYN%ADR(KK)%P,UNSV2D,MESH,MSK,MASKEL,S)
+!
+!     CALLING ADVECTION-DIFFUSION
+!
+        IF(DEBUG.GT.0) WRITE(LU,*) 'CALLING CVDFTR SOLSYS=',SOLSYS
+!        IF(SOLSYS.EQ.1) THEN
+        CALL CVDFTR(T%ADR(ITRAC)%P,TTILD%ADR(ITRAC)%P,TN%ADR(ITRAC)%P,
+     &              TSCEXP%ADR(ITRAC)%P,
+     &              DIFT,ICONVFT(ITRAC),CONVV(3),H,HN,HPROP,
+     &              ECGRXN%ADR(KK)%P,ECGRYN%ADR(KK)%P,DM1,ZCONV,SOLSYS,
+     &              VISCT%ADR(ITRAC)%P,VISC_S,TEXP%ADR(ITRAC)%P,SMH,
+     &              YASMH,TIMP%ADR(ITRAC)%P,YASMI(ITRAC),AM1,AM2,ZF,
+     &              TBOR%ADR(ITRAC)%P,ATBOR%ADR(ITRAC)%P,
+     &              BTBOR%ADR(ITRAC)%P,IT1,MASKTR,MESH,TB,
+     &              T1,T2,T4,T10,TE1,TE2,TE3,
+     &              KDIR,KDDL,
+     &              DT,ENTET,TETAT,AGGLOT,INFOGT,BILMAS,
+     &              OPTADV_TR(ITRAC),ISOUSI,OPDTRA,OPTBAN,
+     &              MSK,MASKEL,MASKPT,MBOR,S,MASSOU(ITRAC),
+     &              OPTSOU,SLVTRA(ITRAC),FLBOR,VOLU2D,V2DPAR,UNSV2D,
+     &              2,FLBORTRA,FLULIM,YAFLULIM,FLULIMEBE,YAFLULIMEBE,
+     &              DIRFLU,RAIN,PLUIE,TRAIN(ITRAC),
+     &              FLODEL,.FALSE.,MAXADV,TB2,NCO_DIST,NSP_DIST)
+!!
+!        ELSE
+!        CALL CVDFTR(T%ADR(ITRAC)%P,TTILD%ADR(ITRAC)%P,TN%ADR(ITRAC)%P,
+!     &              TSCEXP%ADR(ITRAC)%P,
+!     &              DIFT,ICONVFT(ITRAC),CONVV(3),H,HN,HPROP,
+!     &              UDEL,VDEL,DM1,ZCONV,SOLSYS,
+!     &              VISCT%ADR(ITRAC)%P,VISC_S,TEXP%ADR(ITRAC)%P,SMH,
+!     &              YASMH,TIMP%ADR(ITRAC)%P,YASMI(ITRAC),AM1,AM2,ZF,
+!     &              TBOR%ADR(ITRAC)%P,ATBOR%ADR(ITRAC)%P,
+!     &              BTBOR%ADR(ITRAC)%P,IT1,MASKTR,MESH,TB,
+!     &              T1,T2,T4,T10,TE1,TE2,TE3,
+!     &              KDIR,KDDL,
+!     &              DT,ENTET,TETAT,AGGLOT,INFOGT,BILMAS,
+!     &              OPTADV_TR(ITRAC),ISOUSI,OPDTRA,OPTBAN,
+!     &              MSK,MASKEL,MASKPT,MBOR,S,MASSOU(ITRAC),
+!     &              OPTSOU,SLVTRA(ITRAC),FLBOR,VOLU2D,V2DPAR,UNSV2D,
+!     &              2,FLBORTRA,FLULIM,YAFLULIM,FLULIMEBE,YAFLULIMEBE,
+!     &              DIRFLU,RAIN,PLUIE,TRAIN(ITRAC),
+!     &              FLODEL,YAFLODEL,MAXADV,TB2,NCO_DIST,NSP_DIST)
+!        ENDIF
+        IF(DEBUG.GT.0) WRITE(LU,*) 'BACK FROM CVDFTR'
+!
+!     UPDATING INTEGER KK
+!
+        KK = KK + 1
+        ! REINTIALISE K
+        IF(ITRAC.EQ.IND_ECO(nvars)) THEN
+          KK = 1
+        ENDIF
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ELSE
 !
         IF(DEBUG.GT.0) WRITE(LU,*) 'CALLING CVDFTR SOLSYS=',SOLSYS
@@ -2093,8 +2172,10 @@
 !=======================================================================
 !
 !      COUNTER = COUNTER + 1D0   !ADVANCING COUNTER
-      CALL ECOHABITAT(nvars, U,V,H,ECOSUI,ECGRXN,ECGRYN,UNSV2D,MESH,
-     &                MSK,MASKEL,S)
+!      IF(ISECO) THEN
+!      CALL ECOHABITAT(nvars, U,V,H,ECOSUI,ECGRXN,ECGRYN,UNSV2D,MESH,
+!     &                MSK,MASKEL,S)
+!      ENDIF
       !WRITE(*,*) "COUUNTER", COUNTER
 !      
 !=======================================================================

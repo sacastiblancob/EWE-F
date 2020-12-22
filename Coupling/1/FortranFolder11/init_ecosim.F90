@@ -1,7 +1,8 @@
 !                    **********************
-                     SUBROUTINE INIT_ECOSIM &
+                     SUBROUTINE INIT_ECOSIM
 !                    **********************
-  (TFTEL)
+!  (TFTEL), ELIMINATED THE ENTRY TFTEL FOR RUNNING THIS SUBROUTINE BEFORE
+!  LECDON_TELEMAC2D
 !***********************************************************************
 ! MAIN FOR CALL ECOSIM-ECOSPACE PROGRAM TROUGH JUST FEW SUBROUTINES
 !***********************************************************************
@@ -72,8 +73,8 @@
 
   implicit none
 
-! INTENT VARIABLES
-  REAL(RLEN),INTENT(IN)           :: TFTEL  !Here in variable is final time of Telemac
+! INTENT VARIABLES IF ANY, TFTEL IS NOT ANYMORE AN INTENT VARIABLE
+!  REAL(RLEN),INTENT(IN)           :: TFTEL  !Here in variable is final time of Telemac
 
 ! IN  SUBROUTINE VARIABLES
   INTEGER  :: II, JJ
@@ -163,7 +164,8 @@
   close(1010)
 
 !!!!!!!!!! COMPUTING FINAL TIME FOR ECOSPACE !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    tf = TFTEL/(SecondsPerMonth*12)!!
+!!! IS tf AND TFTEL BEING USED AFTER THIS SUBROUTINE, I THINK THAT NO
+!    tf = TFTEL/(SecondsPerMonth*12)!!
 
 !!!!!!!!! INPUT/OUTPUT OF DATA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -235,7 +237,8 @@
 !#endif
 !  WRITE(*,*) "TIIIIME", tf, tstep
 
-  noftsteps = FLOOR(tf / tstep)
+!!! IS noftsteps AND tf BEING USED AFTER THIS SUBROUTINE, I THINK THAT NO
+!  noftsteps = FLOOR(tf / tstep)
 !!  noftsteps = NINT(tf / tstep)
 !  IF (MOD(TFTEL/))
 !  WRITE(*,*) "TSTEEEEEEP", tstep, noftsteps
@@ -244,6 +247,6 @@ ALLOCATE(ECOSUI_GRID(nlat,nlon,nvars))
 
 !!!!!!!!!! END SECTION: SET SIMULATION PERIOD PARAMETERS !!!!!!!!!!!!!!!!
 
-WRITE(*,*) "ECOSPACE READING DONE"
+! ! WRITE(*,*) "ECOSPACE READING DONE"
 
 END SUBROUTINE INIT_ECOSIM

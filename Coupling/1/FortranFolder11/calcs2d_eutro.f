@@ -118,13 +118,15 @@
 ! PART MODIFIED BY SERGIO
 !ORIGINAL
 !      INTEGER, PARAMETER :: NWAQ_EUTRO = 8
+!
+!      INTEGER RANK_EUTRO(NWAQ_EUTRO)
+!
 !MODIFIED
 ! NUMBER OF TRACERS IN WAQTEL
-      INTEGER, PARAMETER :: NWAQ_EUTRO = 9
-
+!      INTEGER :: NWAQ_EUTRO = 9
+      INTEGER, ALLOCATABLE :: RANK_EUTRO(:)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      INTEGER RANK_EUTRO(NWAQ_EUTRO)
 !
       INTEGER, PARAMETER :: NWAQ_MICRO = 5
       INTEGER RANK_MICRO(NWAQ_MICRO)
@@ -252,15 +254,24 @@
 !     THIS COULD ACTUALLY BE AN ARRAY
       INTEGER IND_AED2(MAXWQVAR)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! PART ADDED BY SERGIO
 !     ZOO BIOMASS
 ! THIS IS THE IDENTIFIER OF ZOOPLANKTON INTO THE TRACERS BLOCK, TELEMAC
 ! ASSIGN IT A VALUE AUTOMATICALLY BY CALLING THE SUBROUTINE ADDTRACER
 ! INTO THE SUBROUTINE NAMETRAC_WAQTEL.F
-      INTEGER IND_ZOO      
+      INTEGER IND_ZOO
+!
+! THE NEXT INDEXES ARE FOR ECOSPACE COUPLING PURPOSES, HAVE THE SAME FUN
+!     TION AS IND_ZOO, OR IND_PHY
+!     
+      INTEGER, ALLOCATABLE :: IND_ECO(:) 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!        
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
 !-----------------------------------------------------------------------
 !
@@ -543,6 +554,14 @@
       TYPE(BIEF_OBJ), TARGET :: ZOOT1
       TYPE(BIEF_OBJ), TARGET :: ZOOT2
 !
+!
+!     ACTIVATE OR DEACTIVATE COUPLING WITH ECOSPACE
+!
+      LOGICAL :: ISECO=.TRUE.
+!
+!     FUNCTIONAL GROUPS NAMES
+!
+      CHARACTER(LEN=16), ALLOCATABLE :: ECONAMES(:)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
