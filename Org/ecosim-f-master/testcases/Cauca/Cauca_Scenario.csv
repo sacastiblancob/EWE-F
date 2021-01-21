@@ -1,8 +1,7 @@
-"Number_of_groups",16
-"Number_of_parameters",10
-"Number_of_split_groups",0
-"Groups,Max rel. P/B","Feedingtime","Max rel. feeding time","Feeding time adjust rate [0,1]","Fraction of other mortality sens. to changes in feeding time","Predator effect on feeding time [0,1]","Density-dep. catchability: Qmax/Qo [>=1]","QBmax/QBo (for handling time) [>1]","Switching power parameter [0,2]","Advected?"
-Zooplancton,2,1,2,0,1,0,1,1000,0,0
+Number_of_groups,16
+Number_of_parameters,10
+Number_of_split_groups,0
+Groups,Max_rel._P/B,Feedingtime,Max_rel._feeding_time,"Feeding_time_adjust_rate_[0,1]",Fraction_of_other_mortality_sens._to_changes_in_feeding_time,"Predator_effect_on_feeding_time_[0,1]",Density_dep._catchability:_Qmax/Qo_[>=1],QBmax/QBo_(for_handling_time)_[>1],"Switching_power_parameter_[0,2]",Advected?
 Benthos,2,1,2,0,1,0,1,1000,0,0
 Insects,2,1,2,0,1,0,1,1000,0,0
 Cyphocharax_magdalenae,2,1,2,0,1,0,1,1000,0,0
@@ -14,7 +13,8 @@ Prochilodus_magdalenae,2,1,2,0,1,0,1,1000,0,0
 Otros_detritívoros,2,1,2,0,1,0,1,1000,0,0
 Otros_carnívoros-insectivoros,2,1,2,0,1,0,1,1000,0,0
 Otros_omnívoros,2,1,2,0,1,0,1,1000,0,0
+Zooplancton,2,1,2,0,1,0,1,1000,0,0
 Periphyton,5,1,-999,-999,-999,-999,-999,-999,-999,0
-Fitoplancton,3,1,-999,-999,-999,-999,-999,-999,-999,0
 Macrofitas,1.5,1,-999,-999,-999,-999,-999,-999,-999,0
+Fitoplancton,3,1,-999,-999,-999,-999,-999,-999,-999,0
 Detritus,2,1,-999,-999,-999,-999,-999,-999,-999,0

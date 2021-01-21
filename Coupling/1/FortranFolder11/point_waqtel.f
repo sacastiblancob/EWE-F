@@ -39,7 +39,10 @@
 ! INCLUDING BIEF_OBJ THAT ZOOPLANKTON CALCULATIONS NEED TO INITIALISE
 ! THEM
       USE DECLARATIONS_WAQTEL,ONLY:K2,RAYEFF,TAIR,WAQPROCESS,RAYAED2,
-     & ZOOGS1,ZOOGS2,ZOOGS3,ZOOOME,ZOORHOS,ZOOT1,ZOOT2
+     & ZOOGS1,ZOOGS2,ZOOGS3,ZOOOME,ZOORHOS,ZOOT1,ZOOT2,ISECO,ECOSM2,
+     & EQPERB
+! ADDED BY SERGIO
+      USE statevartypesecosim, ONLY: nvars
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -57,6 +60,16 @@
       TYPE(BIEF_MESH), INTENT(INOUT) :: MESH2D
       TYPE(BIEF_MESH), INTENT(INOUT),OPTIONAL :: MESH3D
       INTEGER,         INTENT(IN   ),OPTIONAL :: IELM3
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! ADDED BY SERGIO
+      INTEGER I
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !
 !+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 !
@@ -140,6 +153,29 @@
       ZOORHOS(1) = 0.6D0
       ZOORHOS(2) = 0.1D0
       ZOORHOS(3) = 0.3D0
+!
+!     ALLOCATING VARIABLES FOR ECOSPACE COUPLING
+!
+      IF(((3*INT(WAQPROCESS/3).EQ.WAQPROCESS) .OR.
+     &    (5*INT(WAQPROCESS/5).EQ.WAQPROCESS)) .AND. ISECO ) THEN
+!
+!     original M2 = ECOSM2
+!
+        CALL ALLBLO(ECOSM2,'ECOSM2')
+        CALL BIEF_ALLVEC_IN_BLOCK(ECOSM2,NVARS,1,'ECOSM2',
+     &                            IELM1,1,2,MESH2D)
+!
+!     orignal QperB = EQPERB
+!
+        CALL ALLBLO(EQPERB,'EQPERB')
+        CALL BIEF_ALLVEC_IN_BLOCK(EQPERB,NVARS,1,'EQPERB',
+     &                            IELM1,1,2,MESH2D)
+        DO I = 1,nvars
+          CALL OS('X=0     ',X=ECOSM2%ADR(I)%P)
+          CALL OS('X=0     ',X=EQPERB%ADR(I)%P)
+        ENDDO
+
+      ENDIF
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

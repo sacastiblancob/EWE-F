@@ -639,11 +639,15 @@
 !
 !-----------------------------------------------------------------------
 !
-      CALL ECOCALC_BEFORE
+      IF(ISECO) THEN
+      WRITE(LU,*) 'GOING ECOCALC_BEFORE'
+      CALL ECOCALC_BEFORE(DT*NIT)
+      WRITE(LU,*) 'EXITING ECOCALC_BEFORE'
 !
 !      WRITE(LU,*) "FINAL TIME", tf
       imonth = 1
       n = 1
+      ENDIF
 !
 !      WRITE(LU,*) "NNNNNOFTSTEPS", noftsteps
 !

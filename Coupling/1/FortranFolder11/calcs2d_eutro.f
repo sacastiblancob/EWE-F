@@ -559,9 +559,28 @@
 !
       LOGICAL :: ISECO=.TRUE.
 !
+!     ECOLOGICAL AREA
+!
+      DOUBLE PRECISION :: ECOAREA
+!
 !     FUNCTIONAL GROUPS NAMES
 !
       CHARACTER(LEN=16), ALLOCATABLE :: ECONAMES(:)
+!
+!     VARIABLES FOR ECOSPACE COUPLING
+!     ECOSM2 = M2 (see statevartypesecospace.F90)
+!     EQPERB = QperB (see statevartypesecospace.F90)
+!
+      TYPE(BIEF_OBJ), TARGET :: ECOSM2
+      TYPE(BIEF_OBJ), TARGET :: EQPERB
+!
+!     LOGICAL TO KNOW IF DERIVS IS CALL BY FIRST TIME OR NOT
+!
+      LOGICAL :: FIRSTDERV
+!
+!     DENOMINATOR FOR AVERAGES, INITIALIZED IN ZERO
+!
+      INTEGER :: DENAVG = 0
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -783,7 +802,8 @@
 ! ADDED PART BY SERGIO
 ! INCLUSING ZOOPLANKTON RELATED VARIABLES
      & IND_ZOO,MUZ,GAMMAZ,ZOOBK,ZOOG,BETAPC,BETAM3L,BETANC,BETAO2C,
-     & ZOOGS1,ZOOGS2,ZOOGS3,ZOOOME,ZOORHOS,ZOOT1,ZOOT2
+     & ZOOGS1,ZOOGS2,ZOOGS3,ZOOOME,ZOORHOS,ZOOT1,ZOOT2,
+     & IND_ECO, ISECO, ECOSM2, EQPERB, FIRSTDERV
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -849,6 +869,10 @@
 ! !  ZOOPES   ! R  !    ! BIOMASS RELATIONS BETWEEN PHYTO, ZOO AND ORG.!
 ! !  ZOOOME   ! R  !    ! ASSIMILATION COEFF. OF ZOO FEEDING PROCESS   !
 ! !  ZOORHOS  ! R  !    ! ZOOPLANKTON DIET COMPOSITION
+! !  FOR ECOSPACE COUPLING
+! !  ISECO    ! L  !    ! IF .TRUE. ECOSPACE COUPLING
+! !  ECOSM2   ! R  !    ! M2 ECOSPACE VARIABLE
+! !  EQPERB   ! R  !    ! QperB ECOSPACE VARIABLE
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1260,6 +1284,16 @@
 !
       CALL OS( 'X=X+CYZ ' ,X=TEXP%ADR(IND_ZOO)%P,Y=ZOOT1,
      &                     Z=TN%ADR(IND_ZOO)%P  ,C=SECTODAY)
+!
+!     OTHER TRACERS, ECO (IND_ECO)
+!
+      IF(ISECO) THEN
+!
+!     COMPUTING ECOSIM RIGHT HAND SIDE TERMS
+!
+        CALL ECOSIM_RHS (ECOSM2, EQPERB, FIRSTDERV,TN,HPROP,TEXP,
+     &   IND_PHY,IND_ZOO,IND_OL,IND_ECO,NPOIN)
+      ENDIF
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

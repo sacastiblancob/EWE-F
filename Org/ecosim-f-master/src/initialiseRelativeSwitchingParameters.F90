@@ -40,6 +40,8 @@ do pred = 1, vcols
         end if
     end do
 end do
+!WRITE(*,*) 'PRED_DEN ', es_data(:)%pred_den
+!WRITE(*,*) 'AAAAAAAAA ', arena%a(:,:)
 
 do pred = 1, vcols
     do prey = 1, vrows
@@ -53,8 +55,8 @@ do pred = 1, vcols
               * ep_data(prey)%biomass ** es_data(pred)%switch_power &
               / (es_data(pred)%pred_den + 1.0e-20), 4)
 #endif 
-            !WRITE(*,*) 'arena_base_time_switch ',  &
-            !arena%base_time_switch(prey, pred)
+            !WRITE(*,*) 'arena_base_time_switch ', prey, pred, &
+            !arena%base_time_switch(prey, pred), es_data(pred)%pred_den
         end if
     end do
 end do

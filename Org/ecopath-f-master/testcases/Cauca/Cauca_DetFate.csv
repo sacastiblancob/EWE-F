@@ -1,20 +1,20 @@
-"Number of groups",16
-"Number of detrital groups incl. export",2
-"Number of detrital groups",1
-"Groups","Detritus1","Export"
-"Zooplancton",1,0
-"Benthos",1,0
-"Insects",1,0
-"Cyphocharax_magdalenae",1,0
-"Megaleporinus_muyscorum",1,0
-"Pseudoplatystoma_magdaleniatum",1,0
-"Sorubim_cuspicaudus",1,0
-"Triportheus_magdalenae",1,0
-"Prochilodus_magdalenae",1,0
-"Otros_detritívoros",1,0
-"Otros_carnívoros-insectivoros",1,0
-"Otros_omnívoros",1,0
-"Periphyton",1,0
-"Fitoplancton",1,0
-"Macrofitas",1,0
-"Detritus",0,1
+Number_of_groups,16
+Number_of_detrital_groups_incl._export,2
+Number_of_detrital_groups,1
+Groups,Detritus1,Export
+Benthos,1,0
+Insects,1,0
+Cyphocharax_magdalenae,1,0
+Megaleporinus_muyscorum,1,0
+Pseudoplatystoma_magdaleniatum,1,0
+Sorubim_cuspicaudus,1,0
+Triportheus_magdalenae,1,0
+Prochilodus_magdalenae,1,0
+Otros_detritívoros,1,0
+Otros_carnívoros-insectivoros,1,0
+Otros_omnívoros,1,0
+Zooplancton,1,0
+Periphyton,1,0
+Macrofitas,1,0
+Fitoplancton,1,0
+Detritus,0,1

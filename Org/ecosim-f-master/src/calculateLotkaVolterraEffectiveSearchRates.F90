@@ -78,8 +78,7 @@ do pred = 1, vcols
               * es_data(pred)%pred * arena%vulrate(prey, pred) &
               - Consumption * es_data(pred)%pred
             
-            !WRITE(*,*) 'Denv ', Denv, ep_data(pred)%biomass * ep_data(pred)%QoB * &
-            !ep_diet(prey, pred) * es_data(pred)%pred * (es_vul(prey, pred) - 1)
+            !WRITE(*,*) 'Denv ', Denv, arena%vulrate(prey, pred), es_data(pred)%pred*Consumption
             
             if (Denv < 1.0e-20) then
                 Denv = 1.0e-20

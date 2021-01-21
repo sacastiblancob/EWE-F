@@ -27,8 +27,10 @@
   !USE DECLARATIONS_COUPECOSPACE
   USE DECLARATIONS_TELEMAC2D, ONLY: NPOIN, ECOOUT
 
+!  use statevartypesecospace, only: nlon, nlat, grid, advection, &
+!       spatialhafs, ECOSUI_GRID
   use statevartypesecospace, only: nlon, nlat, grid, advection, &
-       spatialhafs, ECOSUI_GRID
+       spatialhafs
 
 !  use statevartypesecopath, only: ep_data
   use statevartypesecopath, only: RLEN, ep_data, ms_data, ep_detfate

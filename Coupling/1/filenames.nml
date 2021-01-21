@@ -18,20 +18,20 @@
 
 &filenames
 
-HDF5_fname            = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case/Lab.h5"
-GroupInfo_fname       = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case/Lab_Scenario.csv"
-Vulnerability_fname   = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case/Lab_vul.csv"
-Forcing_fname         = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case/Lab_F.csv"
+HDF5_fname            = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case2/Lab.h5"
+GroupInfo_fname       = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case2/Lab_Scenario.csv"
+Vulnerability_fname   = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case2/Lab_vul.csv"
+Forcing_fname         = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case2/Lab_F.csv"
 
-!NutrientForcing_fname = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case/Lab_NutForce.csv"
+!NutrientForcing_fname = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case2/Lab_NutForce.csv"
 NutrientForcing_fname = ""
-!PrimaryProdForcing_fname = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case/Lab_PrimaryProdForce.csv"
+!PrimaryProdForcing_fname = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case2/Lab_PrimaryProdForce.csv"
 PrimaryProdForcing_fname = ""
 
 ! Ecospace files reffer to geographical grid, distribution and advection
-SpatialGrid_fname     = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case/Lab_grid.csv"
-SpatialDistribution_dirname = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case/"
-Advection_fname       = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case/Lab_advection.csv"
+SpatialGrid_fname     = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case2/Lab_grid.csv"
+SpatialDistribution_dirname = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case2/"
+Advection_fname       = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/case2/Lab_advection.csv"
 
 !NET-CDF output file for ecospace
 ncdfout_fname         = "/home/aldair/Documents/EwE-F/EWE-F/Coupling/1/ecospace_4D.nc"
@@ -53,5 +53,8 @@ NutPBmax        = 1.5
 
 ! relaxation parameter
 relaxeco        = 0.5
+
+! Area of the domain (m^2)
+ECOAREA         = 10
 
 /

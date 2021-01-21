@@ -370,7 +370,7 @@
 !
 !!
       !ALLOCATES COUECO VECTOR
-      WRITE(LU,*) '1111111111111111111111'
+!      WRITE(LU,*) '1111111111111111111111'
       CALL BIEF_ALLVEC(1,COUECO,'COUECO',IELMT,1,2,MESH)
 !
 !     ALLOCATES FUNCTIONAL GROUP RESULTS
@@ -397,7 +397,7 @@
           CALL OS('X=C     ',X=ECGRXN%ADR(I)%P,C=0.D0)
           CALL OS('X=C     ',X=ECGRYN%ADR(I)%P,C=0.D0)
       ENDDO
-      WRITE(LU,*) "BBBBBBBBBBBBbbbbbbbbbb"       
+!      WRITE(LU,*) "BBBBBBBBBBBBbbbbbbbbbb"       
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

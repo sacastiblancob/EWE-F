@@ -25,7 +25,7 @@ Forcing_fname         = "testcases/Cauca/Cauca_F.csv"
 NutrientForcing_fname = ""
 
 ! number of years to simulate
-tf              = 51
+tf              = 2
 
 ! time steps per month
 StepsPerMonth   = 1

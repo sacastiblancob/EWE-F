@@ -1,0 +1,11 @@
+"Number of groups",7
+"Number of parameters",10
+"Number of split groups",1
+"Groups","Max rel. P/B","Feeding time","Max rel. feeding time","Feeding time adjust rate [0,1]","Fraction of other mortality sens. to changes in feeding time","Predator effect on feeding time [0,1]","Density-dep. catchability: Qmax/Qo [>=1]","QBmax/QBo (for handling time) [>1]","Switching power parameter [0,2]","Advected?"
+GC_D_0_3,2,1,2,0.5,1,0,1,1000,0,0
+GC_D_3_6,2,1,2,0.5,1,0,1,1000,0,0
+GC_C,2,1,2,0.5,1,0,1,1000,0,0
+GC_B,2,1,2,0.5,1,0,1,1000,0,0
+GC_A,2,1,2,0.5,1,0,1,1000,0,0
+GP_A,2,1,-999,-999,-999,-999,-999,-999,-999,0
+GD_A,-999,1,-999,-999,-999,-999,-999,-999,-999,0

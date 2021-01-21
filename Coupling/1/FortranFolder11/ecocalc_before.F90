@@ -1,6 +1,7 @@
 !                    *************************
-                     SUBROUTINE ECOCALC_BEFORE
+                     SUBROUTINE ECOCALC_BEFORE &
 !                    *************************
+   (TFTEL)
 !
 !***********************************************************************
 ! MAIN FOR CALL ECOSIM-ECOSPACE PROGRAM TROUGH JUST FEW SUBROUTINES
@@ -18,15 +19,17 @@
 ! Created 31-05-2020 - Sergio Castiblanco
 
 !#ifdef _Ecospace_
+  !USE BIEF
+  USE DECLARATIONS_WAQTEL, ONLY: FIRSTDERV
   use statevartypesecospace
   !#endif
   
     ! This is the main ecosim model. All subroutines are called from
     ! this model and state equations are calculated here.
   
-    use statevartypesecopath, only: HDF5_fname, ep_data, ep_diet, ms_data, &
+  use statevartypesecopath, only: HDF5_fname, ep_data, ep_diet, ms_data, &
          ep_detfate, det_export_rate, flow2detritus
-    use statevartypesecosim, only: GroupInfo_fname, &
+  use statevartypesecosim, only: GroupInfo_fname, &
          Vulnerability_fname, Forcing_fname, &
          NutrientForcing_fname, PrimaryProdForcing_fname, &
          tf, StepsPerMonth, SecondsPerMonth, NutBaseFreeProp, NutPBmax, &
@@ -40,14 +43,34 @@
          NutFree, NutMin, NutFreeBase, NutBaseFreeProp, es_vul, arena, &
          frows, fcols, vrows, vcols
 
+  IMPLICIT NONE
+!
+! INTENT VARIABLE
+!
+  DOUBLE PRECISION, INTENT(IN) :: TFTEL
+!
+! IN-SUBROUTINE VARIABLES
+!
+  DOUBLE PRECISION, DIMENSION(nvars) :: dumQperB, dumM2
+
+!!!!!!!!!! COMPUTING FINAL TIME FOR ECOSPACE !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
+    tf = TFTEL/(SecondsPerMonth*12)!!
+!
+!!!!!!!!!! SECTION: SET SIMULATION PERIOD PARAMETERS !!!!!!!!!!!!!!!!!!!!
+!
+  t0        = 0
+  tstep     = REAL(1.0D0 / (12.0D0 * StepsPerMonth), 8)
+!
+  noftsteps = FLOOR(tf / tstep)
+!
 !!!!!!!!!! SECTION: MAIN CALCULATIONS BEFORE RUN MODEL !!!!!!!!!!!!!!!!!!
-
+!
   ndetritus = count(ep_data(:)%org_type == 0)
-
   allocate(det_export_rate(ndetritus))
   allocate(detritus_no(ndetritus))
   allocate(flow2detritus(ndetritus))
-
+  
   j = 0
   do iec = 1, nvars
       if (ep_data(iec)%org_type == 0) then
@@ -74,7 +97,7 @@
 !      write(*,*) es_data(iec)%QB_maxoQB_0
 !      write(*,*) es_data(iec)%hden
   end do
-
+  
   do iec = 1, nvars
       es_data(iec)%CB_base = ep_data(iec)%EatenBy / ep_data(iec)%biomass
       if (es_data(iec)%CB_base == 0) then
@@ -89,17 +112,18 @@
 !      write(*,*) ep_data(iec)%biomass
 !      write(*,*)
   end do
-
+  
 !!!!! initialize stanza parameters if any
   allocate(B(nvars))
   B = 0
+  
   if (nstanzas > 0) then
-      allocate (es_ms_data(nstanzas))
-      call initialiseSplitGroups(nvars, nstanzas, B, ep_data, ms_data, &
+    allocate (es_ms_data(nstanzas))
+    call initialiseSplitGroups(nvars, nstanzas, B, ep_data, ms_data, &
             es_data, es_ms_data)
   end if
   deallocate(B)
-
+  
   allocate(integrate(nvars))
   do iec = 1, nvars
       if (ep_data(iec)%isstanza == 1) then
@@ -149,7 +173,7 @@
 !#endif
       end if
   end do
-
+  
   call calculateLotkaVolterraEffectiveSearchRates(nvars, vrows, vcols, ep_data, &
                                                    ep_diet, es_data, es_vul, arena)
 
@@ -179,20 +203,22 @@
   FirstTime = .true.
 
 !#ifndef isWithBFM
-
-
+  
 !!!!!!!!!!!!!!!!!!!!!! This is the first initalisation of Ecosim !!!!!!!!!!!!!!
   imonth = 0
 !#ifdef _Ecospace_
-  lat = 0
-  lon = 0
+!  lat = 0
+!  lon = 0
+  FIRSTDERV = .FALSE.
+  dumQperB = 0D0
+  dumM2 = 0D0
 !  call derivs (0., ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon) !Original, 0. was taken weird
 !  call derivs (0D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon)
-  call derivs(nvars, ndetritus, vrows, vcols, nlon, nlat, &
-   imonth, lat, lon, 0D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate, &
+  call derivs(nvars, ndetritus, vrows, vcols, &
+   imonth, 0D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate, &
    ep_data, ep_detfate, flow2detritus, det_export_rate, es_data, es_vul, &
    arena, NutFree, NutTot, NutBiom, NutFreeBase, NutMin, &
-   detritus_no, boolFN, boolFPP, FirstTime, QperB, M2)
+   detritus_no, boolFN, boolFPP, FirstTime, dumQperB, dumM2,FIRSTDERV)
 
 !#else
 !!  call derivs (0., ep_data(:)%biomass, xdot, biomeq, loss, integrate) !Original, 0. was taken weird
@@ -225,15 +251,17 @@
   ! Now calculate final rate of change to set integration flags
   call calculateMaximumPoBRelatedValues(nvars, ep_data, es_data)
 !#ifdef _Ecospace_
-  lat = 0
-  lon = 0
+!  lat = 0
+!  lon = 0
+  FIRSTDERV = .FALSE.
 !  call derivs (1., ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon) !Original, 1. was taken weird
 !  call derivs (1D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate, lat, lon)
-  call derivs(nvars, ndetritus, vrows, vcols, nlon, nlat, &
-   imonth, lat, lon, 1D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate, &
+  call derivs(nvars, ndetritus, vrows, vcols, &
+   imonth, 1D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate, &
    ep_data, ep_detfate, flow2detritus, det_export_rate, es_data, es_vul, &
    arena, NutFree, NutTot, NutBiom, NutFreeBase, NutMin, &
-   detritus_no, boolFN, boolFPP, FirstTime, QperB, M2)
+   detritus_no, boolFN, boolFPP, FirstTime, dumQperB, dumM2,FIRSTDERV)
+  FIRSTDERV = .TRUE.
 !#else
 !!  call derivs (1., ep_data(:)%biomass, xdot, biomeq, loss, integrate) !Original, 1. was taken weird
 !  call derivs (1D0, ep_data(:)%biomass, xdot, biomeq, loss, integrate)

@@ -23,7 +23,7 @@ DietComp_fname    = "testcases/Cauca/Cauca_DC.csv"
 DetFate_fname     = "testcases/Cauca/Cauca_DetFate.csv"
 GrowthParam_fname = ""
 Results_fname     = "testcases/Cauca/Cauca.h5"
-HDF5_fname        = "testcases/Cauca/Cauca_EcopathInput.h5"
+HDF5_fname        = ""
 
 isASCIIinputFile  = .true.
 

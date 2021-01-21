@@ -45,6 +45,7 @@
 !  USE BIEF
 !  USE DECLARATIONS_TELEMAC2D
 !  USE DECLARATIONS_SPECIAL
+   USE DECLARATIONS_WAQTEL, ONLY: ECOAREA
 
 !#ifdef _Ecospace_
   use statevartypesecospace
@@ -152,7 +153,7 @@
        Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
        SpatialGrid_fname, SpatialDistribution_dirname, Advection_fname, &
        ncdfout_fname, SecondsPerMonth, StepsPerMonth, NutBaseFreeProp, &
-       NutPBmax, relaxeco
+       NutPBmax, relaxeco, ECOAREA
 !#else
 !  namelist /filenames/ HDF5_fname, GroupInfo_fname, Vulnerability_fname, &
 !       Forcing_fname, NutrientForcing_fname, PrimaryProdForcing_fname, &
@@ -243,7 +244,7 @@
 !  IF (MOD(TFTEL/))
 !  WRITE(*,*) "TSTEEEEEEP", tstep, noftsteps
 
-ALLOCATE(ECOSUI_GRID(nlat,nlon,nvars))
+! ! ALLOCATE(ECOSUI_GRID(nlat,nlon,nvars))
 
 !!!!!!!!!! END SECTION: SET SIMULATION PERIOD PARAMETERS !!!!!!!!!!!!!!!!
 

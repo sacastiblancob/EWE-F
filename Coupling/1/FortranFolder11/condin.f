@@ -63,7 +63,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! PART ADDED BY SERGIO
-      USE DECLARATIONS_WAQTEL, ONLY: RANKTR, ISECO,IND_ECO
+      USE DECLARATIONS_WAQTEL, ONLY: RANKTR, ISECO,IND_ECO, ECOAREA
       USE statevartypesecopath, ONLY: ep_data
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -172,7 +172,8 @@
         IF(ISECO) THEN
           DO ITRAC=1,NTRAC
             IF(ITRAC.EQ.RANKTR(IND_ECO(K))) THEN
-              CALL OS('X=C     ',X=T%ADR(ITRAC)%P,C=ep_data(K)%biomass)
+              CALL OS('X=C     ',X=T%ADR(ITRAC)%P,
+     &                 C=(ep_data(K)%biomass/ECOAREA))
               K = K + 1
             ELSE
               CALL OS('X=C     ',X=T%ADR(ITRAC)%P,C=TRAC0(ITRAC))

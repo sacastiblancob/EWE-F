@@ -18,20 +18,17 @@
 
 &filenames
 
-HDF5_fname            = "testcases/Lab/Lab.h5"
-GroupInfo_fname       = "testcases/Lab/Lab_Scenario.csv"
-Vulnerability_fname   = "testcases/Lab/Lab_vul.csv"
-Forcing_fname         = "testcases/Lab/Lab_F.csv"
-!NutrientForcing_fname = "testcases/Lab/Lab_NutForce.csv"
+HDF5_fname            = "testcases/Cauca/Cauca.h5"
+GroupInfo_fname       = "testcases/Cauca/Cauca_Scenario.csv"
+Vulnerability_fname   = "testcases/Cauca/Cauca_vul.csv"
+Forcing_fname         = "testcases/Cauca/Cauca_F.csv"
 NutrientForcing_fname = ""
-!PrimaryProdForcing_fname = "testcases/Lab/Lab_PrimaryProdForce.csv"
-PrimaryProdForcing_fname = ""
 
 ! number of years to simulate
 tf              = 2
 
 ! time steps per month
-StepsPerMonth   = 5
+StepsPerMonth   = 1
 
 ! base proportion of free nutrients
 NutBaseFreeProp = 0.9

@@ -302,7 +302,7 @@ program ecosim
                ((1 - ep_data(i)%EE) * ep_data(i)%PoB) + 0.0000000001D0), 4)
 #endif
       end if
-      WRITE(*,*) 'es_pred ', es_data(i)%pred
+      !WRITE(*,*) 'es_pred ', es_data(i)%pred, ep_data(i)%biomass
   end do
 
   call calculateLotkaVolterraEffectiveSearchRates (vrows, vcols)

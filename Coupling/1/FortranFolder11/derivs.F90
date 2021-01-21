@@ -20,16 +20,17 @@
 !========================================================================
 
                           subroutine derivs &
-  (nvars, ndetritus, vrows, vcols, nlon, nlat, imonth, lat, &
-   lon, time, biomass, xdot, biomeq, loss, integrate, &
+  (nvars, ndetritus, vrows, vcols, imonth, &
+   time, biomass, xdot, biomeq, loss, integrate, &
    ep_data, ep_detfate, flow2detritus, det_export_rate, es_data, es_vul, &
    arena, NutFree, NutTot, NutBiom, NutFreeBase, NutMin, &
-   detritus_no, boolFN, boolFPP, FirstTime, QperB, M2)
+   detritus_no, boolFN, boolFPP, FirstTime,dumQperB,dumM2,FIRSTDERV)
 
 !#ifdef isWithBFM
 !use global_mem
 !  use mem, ONLY: iiHigherTrophicLevels
 !#else
+  USE BIEF
   use statevartypesecopath, only: RLEN
 !#endif
 
@@ -59,8 +60,8 @@ use statevartypesecosim, only: ecosim_data, arena_data, NutrientForce
 implicit none
 
 ! variables inherited from ecopath model
-INTEGER, INTENT(IN) :: nvars, ndetritus, nlat, nlon, &
-                       imonth, vrows, vcols, lat, lon
+INTEGER, INTENT(IN) :: nvars, ndetritus, &!nlat, nlon, &
+                       imonth, vrows, vcols!, lat, lon
 real(RLEN), intent(in)         :: time
 real(RLEN), intent(in)         :: biomass(nvars)   ! array of initial cond.
 integer, intent(in)            :: integrate(nvars)
@@ -76,7 +77,9 @@ REAL(RLEN), INTENT(IN)         :: NutFreeBase(nvars)
 INTEGER, INTENT(IN)            :: detritus_no(ndetritus)
 LOGICAL, INTENT(IN)            :: boolFN, boolFPP
 LOGICAL, INTENT(INOUT)         :: FirstTime
-REAL(RLEN), INTENT(OUT), DIMENSION(nlat, nlon, nvars) :: QperB, M2
+!REAL(RLEN), INTENT(OUT), DIMENSION(nlat, nlon, nvars) :: QperB, M2
+DOUBLE PRECISION, INTENT(OUT), DIMENSION(nvars)  :: dumQperB, dumM2
+LOGICAL, INTENT(IN)            :: FIRSTDERV
 
 
 real(RLEN), intent(out) :: xdot(nvars)     ! results of state equations
@@ -212,16 +215,20 @@ do pred = 1, nvars
         es_data(pred)%qq = consumption + es_data(pred)%QBoutside * biomass(pred)
         es_data(pred)%EatenBy = es_data(pred)%qq
 !#ifdef _Ecospace_
-        if (lat > 0 .and. lon > 0) then
-            QperB(lat, lon, pred) = es_data(pred)%EatenBy / biomass(pred)
+        !if (lat > 0 .and. lon > 0) then
+        IF(FIRSTDERV) THEN
+            !QperB(lat, lon, pred) = es_data(pred)%EatenBy / biomass(pred)
+            dumQperB(pred) = es_data(pred)%EatenBy / biomass(pred)
         end if
 !#endif
     else
         es_data(pred)%qq = 0
         es_data(pred)%EatenBy = es_data(pred)%qq / biomass(pred)
 !#ifdef _Ecospace_
-        if (lat > 0 .and. lon > 0) then
-            QperB(lat, lon, pred) = 0
+        !if (lat > 0 .and. lon > 0) then
+        IF(FIRSTDERV) THEN
+            !QperB(lat, lon, pred) = 0
+            dumQperB(pred) = 0D0
         end if
 !#endif
     end if
@@ -270,8 +277,10 @@ do prey = 1, nvars
     es_data(prey)%M2 = M2_predation
     es_data(prey)%EatenOf = M2_predation
 !#ifdef _Ecospace_
-    if (lat > 0 .and. lon > 0) then
-        M2(lat, lon, prey) = es_data(prey)%EatenOf / biomass(prey)
+    !if (lat > 0 .and. lon > 0) then
+    IF(FIRSTDERV) THEN
+        !M2(lat, lon, prey) = es_data(prey)%EatenOf / biomass(prey)
+        dumM2(prey) = es_data(prey)%EatenOf / biomass(prey)
     end if
 !#endif
 end do
@@ -285,11 +294,36 @@ end do
 j = 0
 do var = 1, nvars
     if (ep_data(var)%org_type /= 0) then
-        loss(var) = es_data(var)%M0 + es_data(var)%M2 + es_data(var)%fishmort &
-          * biomass(var)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! PART MODIFIED BY SERGIO
+! ORIGINAL
+!        loss(var) = es_data(var)%M0 + es_data(var)%M2 + es_data(var)%fishmort &
+!          * biomass(var)
+! MODIFIED, WHERE ONLY PREDATION OVER ZOO AND PHY MUST BE ACCOUNTED M2
+        IF((var.EQ.vcols).OR.(ep_data(var)%org_type.EQ.1)) THEN
+          loss(var) = es_data(var)%M2
+        ELSE
+          loss(var) = es_data(var)%M0 + es_data(var)%M2 + es_data(var)%fishmort &
+            * biomass(var)
+        END IF
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     else
         j = j + 1
-        loss(var) = det_export_rate(j) * biomass(var) + es_data(var)%EatenOf
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! PART MODIFIED BY SERGIO
+! ORIGINAL
+!        loss(var) = det_export_rate(j) * biomass(var) + es_data(var)%EatenOf
+! MODIFIED, FOR NOT INCLUDE IN DETRITUS THE det_export_rate(j)
+        loss(var) = es_data(var)%EatenOf
     end if
 end do
 
@@ -297,8 +331,27 @@ end do
 j = 0
 do var = 1, nvars
     if (ep_data(var)%org_type == 2) then
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! PART MODIFIED BY SERGIO
+! ORIGINAL
+!        xdot(var) = (ep_data(var)%PoQ * es_data(var)%qq + biomass(var) &
+!          * es_data(var)%PoB_base) - loss(var)
+! MODIFIED
+! THE CASE OF ZOOPLANKTON, WHERE HERE ONLY CONSUMPTION OVER ZOO MUST BE
+! ACCOUNTED
+        IF(var.EQ.vcols) THEN
+        xdot(var) = - loss(var)
+        ELSE
         xdot(var) = (ep_data(var)%PoQ * es_data(var)%qq + biomass(var) &
           * es_data(var)%PoB_base) - loss(var)
+        END IF
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (loss(var) > 0 .and. biomass(var) > 0) then
             biomeq(var) = (ep_data(var)%PoQ * es_data(var)%qq + biomass(var) &
               * es_data(var)%PoB_base) / (loss(var) / biomass(var))
@@ -306,7 +359,23 @@ do var = 1, nvars
             biomeq(var) = 1.0E-20
         end if
     else if (ep_data(var)%org_type == 1) then
-        xdot(var) = es_data(var)%pp - loss(var)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! PART MODIFIED BY SERGIO
+! ORIGINAL
+!        xdot(var) = es_data(var)%pp - loss(var)
+! MODIFIED, WHERE ONLY CONSUMPTION OVER PHY SHOULD BE ACCOUNTED
+        IF(var.EQ.(nvars-1)) THEN
+            xdot(var) = - loss(var)
+        ELSE
+            xdot(var) = es_data(var)%pp - loss(var)
+        END IF
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (loss(var) > 0 .and. biomass(var) > 0) then
             biomeq(var) = es_data(var)%pp / (loss(var) / biomass(var))
         else
@@ -314,7 +383,19 @@ do var = 1, nvars
         end if
     else
         j = j + 1
-        xdot(var) = ep_data(detritus_no(j))%detritus_import + flow2detritus(j) - loss(var)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! PART MODIFIED BY SERGIO
+! ORIGINAL
+!        xdot(var) = ep_data(detritus_no(j))%detritus_import + flow2detritus(j) - loss(var)
+! MODIFEID, CHANGE TO NOT ACCOUNT FOR DETRITUS IMPORT
+        xdot(var) = flow2detritus(j) - loss(var)
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (loss(var) /= 0 .and. biomass(var) > 0 .and. &
           flow2detritus(j) > 0) then
             biomeq(var) = (ep_data(detritus_no(j))%detritus_import + flow2detritus(j)) &

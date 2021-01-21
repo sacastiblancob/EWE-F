@@ -37,7 +37,7 @@
 !  use statevartypesecosim, only: nvars, es_data
   use statevartypesecosim, only: ecosim_data
 !  use statevartypesecospace, only: nlat, nlon, grid, QperB, M2, BB_spatial, advection
-  USE statevartypesecospace, ONLY: ECOSUI_GRID
+!  USE statevartypesecospace, ONLY: ECOSUI_GRID
 
   implicit none
 
