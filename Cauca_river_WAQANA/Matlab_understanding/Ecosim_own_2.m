@@ -4,8 +4,8 @@
 % Sergio Castiblanco
 % Understanding Ecosim
 %
-% FIIIIIIIIRST APPROXIMATION WITHOUT VULNERABILITIES
-%
+% SECOOOOOOND APPROACH, WITH VULNERABILITIES
+% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ECOSIM DYNAMIC SYSTEM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -39,7 +39,7 @@
 %
 % dBi/dt = gi*sum_j(Cji) - sum_j(Cij) + Ii - (Mi + Fi + ei)Bi
 %
-%   gi: Net growth efficiency (which is nothing but (P/Q)_i
+%   gi: Net growth efficiency
 %   Ii: Biomass immigration rate
 %   Mi: non-predation mortality/metabolic rate
 %   Fi: Fishing mortality rate
@@ -51,9 +51,31 @@
 %
 %  Concept of Foragin Arenas inclusion
 %
-%   Qij = Cij = aij*Bi*Bj
+%   Cij = vij*aij*Bi*Bj/(vij + v'ij + aij*Bj)
 %
-%   aij: Qij/(Bi*Bj) ---> stimated from Ecopath results
+%   aij: rate of effective search for pool type i by predator j
+%   vij,v'ij, with default setting Vij=V'ij are prey behavioral exchange
+%       rate parameters.
+%
+%   Walters, Christensen, Pauly, 1997
+%   Structuring Dynamic Models of Exploited Ecosystem from Trophic
+%   Mass-balance Assessments
+%
+%   vij = xij*Qij/Bi;   where xij is the ratio of the maximum instantaneous
+%                       mortality rate
+%   Then,
+%
+%   aij = 2*Qij*vij/(vij*Bi*Bj-Qij*Bj)
+%
+%   Setting low ratios of values for the vulnerability ratios vij leads to
+%   "bottom-up" control of flow rates from prey to predators, such that
+%   increases in prey productivity will lead to prey biomass increases and 
+%   then to increased availability to predators. Setting high values for 
+%   vij leads to ‘top- down’ control and ‘trophic cascade’ effects 
+%   (Carpenter and Kitchell, 1993); increases in top predator abundance 
+%   can lead to depressed abundance of smaller forage fishes, and this in 
+%   turn to increases in abundance of invertebrates upon which these forage
+%   fishes depend.
 %
 %   OWN BUILD
 %
@@ -123,6 +145,7 @@ es_Ftime_max = es_conf(:,3);
 es_Ftime_adjust = es_conf(:,4);
 es_M0_pred = es_conf(:,5);
 es_risk_time = es_conf(:,6);
+es_risk_time(es_risk_time==-999) = 0;
 es_Q_maxoQ_0 = es_conf(:,7);
 es_QB_maxoQB_0 = es_conf(:,8);
 es_switch_power = es_conf(:,9);
@@ -140,7 +163,7 @@ B = ep_biomass;
 % dt = 60;              %segundos
 to = 0;               %años
 tf = 2;         %años
-dt = 0.000001;              %años
+dt = 0.001;              %años
 time = to:dt:tf;
 tsteps = length(time);
 
@@ -148,7 +171,8 @@ tsteps = length(time);
 RES = zeros(length(ep_biomass),tsteps);
 
 %Net growth efficiency gi
-g = 0.5*ones(nvars,1);
+%g = 0.5*ones(nvars,1);
+% g = P/Q
 
 %initial storing
 k=1;
@@ -166,19 +190,35 @@ for i=1:nvars
         f(i) = (es_rel_PoB_max(i)*ep_biomass(i))/(1 + ep_biomass(i)*h(i));
     end
 end
+
 a = zeros(nvars,numpred);
+v = zeros(nvars,numpred);
 % Computing a_ij
 for i=1:nvars
     for j=1:numpred
-        a(i,j) = (ep_QoB(j)*ep_biomass(j)*ep_diet(i,j))/(ep_biomass(i)*ep_biomass(j));
+        if (ep_diet(i,j)~= 0)
+            v(i,j) = (ep_QoB(j)*ep_biomass(j)*ep_diet(i,j)*vul(i,j))/ep_biomass(i);
+            a(i,j) = (2*ep_QoB(j)*ep_biomass(j)*ep_diet(i,j)*v(i,j))/...
+              (v(i,j)*ep_biomass(i)*ep_biomass(j) - ...
+              ep_QoB(j)*ep_biomass(j)*ep_diet(i,j)*ep_biomass(j));
+        else
+            a(i,j) = 0;
+        end
+        
     end
 end
+
 C = zeros(nvars,numpred);
 for t = to+dt:dt:tf
    % Computing consumption as C_ij = a_ij*B_i*B_j
     for i=1:nvars
         for j=1:numpred
-            C(i,j) = a(i,j)*ep_biomass(i)*ep_biomass(j);
+            if(ep_diet(i,j) ~= 0)
+                C(i,j) = a(i,j)*v(i,j)*ep_biomass(i)*ep_biomass(j)/...
+                 (2*v(i,j) + a(i,j)*ep_biomass(j));
+            else
+                C(i,j) = 0;
+            end
         end
     end
         
@@ -213,7 +253,7 @@ for t = to+dt:dt:tf
 end
 
 plot(time,RES)
-ylim([-1,40])
+ylim([-1,110])
 title('Biomass vs Time')
 xlabel('Time(years)')
 ylabel('Biomass')
