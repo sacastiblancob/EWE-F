@@ -72,3 +72,7 @@ Modified EWE-F for Telemac coupling purposes
 
 - Se usarán las subrutinas desarrolladas por el profesor Ekin para calcular los términos de mano derecha de las ecuaciones diferenciales.
 
+#Proyecto de acople revocado por falta de apoyo teórico de parte de los biólogos. Se procede a introducir completamente EwE dentro de Telemac-Mascaret
+
+
+
