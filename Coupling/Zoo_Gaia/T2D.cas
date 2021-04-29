@@ -171,9 +171,9 @@ INITIAL TIME SET TO ZERO        = YES
 
 GEOMETRY FILE            = 'Geometry/geometry.slf'
 
-/FORTRAN FILE             = 'FortranFolder1'
+FORTRAN FILE             = 'FortranFolder'
 /FORTRAN FILE             = 'FortranFolder_v8p1'
-FORTRAN FILE             = 'FortranFolder_v8p2'
+/FORTRAN FILE             = 'FortranFolder_v8p2'
 
 /
 /----------------------------------------------------------------------------------
@@ -189,8 +189,7 @@ LISTING PRINTOUT PERIOD  = 1000
 /LISTING PRINTOUT PERIOD  = 1
 
 VARIABLES FOR GRAPHIC PRINTOUTS =
-U,V,H,S,B,F,L,Q,M,US,T*,GRUF1
-/U,V,H,S,B,F,L,Q,M,US,T*
+U,V,H,S,B,F,L,Q,M,US,T*
 /   U: Velocity along x axis (m/s)
 /   V: Velocity along y axis (m/s)
 /   C: Wave celerity (m/s)
