@@ -1,0 +1,195 @@
+/---------------------------------------------------------------------
+/ GAIA Version v8p1 25 de Abril 2021
+/---------------------------------------------------------------------
+
+/---------------------------------------------------------------------/
+/       COMPUTER INFORMATIONS                                         /
+/---------------------------------------------------------------------/
+/                                     /SOLVER FOR SUSPENSION
+GEOMETRY FILE                 ='Geometry/geometry.slf'
+RESULTS FILE                  ='Results/Results_T2D_gai.slf'
+STEERING FILE                 ='T2D.cas'
+BOUNDARY CONDITIONS FILE      ='BoundaryConditions/BOTTOM_BC.cli'
+/(deprecated) LIQUID BOUNDARIES FILE        ='BoundaryConditions/LB_SED.txt'
+/
+/---------------------------------------------------------------------/
+/        GENERAL INFORMATIONS                                         /
+/---------------------------------------------------------------------/
+/
+TITLE  = 'Sediment Model 1'
+VARIABLES FOR GRAPHIC PRINTOUTS='U,V,S,B,H,MU,M,E,CS*,QSBL'
+ZERO                                           =1E-12
+MASS-BALANCE = YES 
+
+/---------------------------------------------------------------------/
+/       INITIAL CONDITIONS                                            /
+/---------------------------------------------------------------------/
+
+/COMPUTATION CONTINUED = YES
+
+/PREVIOUS SEDIMENTOLOGICAL COMPUTATION FILE = 'HotStart/Hot_sed.slf'
+
+/INITIAL VALUES FOR SUSPENSION CONCENTRATION
+/INITIAL SUSPENDED SEDIMENTS CONCENTRATION VALUES   = 0.1
+
+/---------------------------------------------------------------------/
+/       BED SEDIMENT TRANSPORT                                        /
+/---------------------------------------------------------------------/
+/
+BED LOAD FOR ALL SANDS                       = NO
+
+MORPHOLOGICAL FACTOR ON BED EVOLUTION        = 1.0
+
+MORPHOLOGICAL FACTOR ON TIME SCALE           = 1.0
+
+/---------------------------------------------------------------------/
+/SUSPENSION SEDIMENT TRANSPORT                                        /
+/---------------------------------------------------------------------/
+/IF NOT SUSPENSION TRANSPORT IS NOT COMPUTED
+SUSPENSION FOR ALL SANDS        = YES
+
+/CLASS OF SEDIMENTS (CO = COHESIVE, NCO = NON-COHESIVE)
+CLASSES TYPE OF SEDIMENT        = NCO
+
+/DENSITY FOR SEDIMENT CLASSES
+CLASSES SEDIMENT DENSITY        = 2650.0
+
+/DIAMETERS IN METERS OF SEDIMENT CLASSES
+CLASSES SEDIMENT DIAMETERS      = 0.0000150
+
+/D90 DIAMETER, IF ONLY ONE CLASS OF SEDIMENTS
+/ USED IN FORMULAS WITH D90 INSTEAD OF D50
+D90 SAND DIAMETER FOR ONLY ONE CLASS = 0.0005
+
+/SETTLING VELOCITIES GIVEN BY THE USER IF ANY
+CLASSES SETTLING VELOCITIES     = 0.0
+
+/SET YES FOR SET EQUILIBRIUM INFLOW CONCENTRATIONS (DEFAULT = YES)
+EQUILIBRIUM INFLOW CONCENTRATION = NO
+
+SUSPENSION TRANSPORT FORMULA FOR ALL SANDS = 1
+/1 : Zysderman and Fredsoe, equilibrium formula
+/2: Bijker method. The near bed concentration
+/is related to the bedload . This option cannot be used
+/without bedload transport
+/3: Van Rijn formula
+/4: Soulsby\_van Rijn formula'
+
+/COEFFICIENT FOR DIFFUSION OF SUSPENDED SEDIMENTS = 1E-6
+/DEFAULT = 1E-6
+
+CORRECTION ON CONVECTION VELOCITY          = YES       /Default=NO
+
+SOLVER FOR DIFFUSION OF SUSPENSION         = 1
+/1: CG, 2:..., SAME SOLVERS EVERYWHERE
+
+/SOLVER OPTION FOR DIFFUSION OF SUSPENSION  = 2
+/LENGTH OF KRYLOV SPACE IF GMRES
+
+/PRECONDITIONING FOR DIFFUSION OF SUSPENSION = 2
+/'0="no preconditioning"';
+/'2="diagonal"' (DEFAULT);
+/'3="diagonal condensed"';
+/'5="diagonal with absolute values"';
+/'7="Crout"';
+/'11="Gauss-Seidel EBE"';
+/'13="Matrix defined by the user"';
+/'14="diagonal and Crout"';
+/'17="direct solver on the vertical"';
+/'21="diagonal condensed and Crout"';
+/'34="diagonal and direct solver on the vertical"'
+
+/MAXIMUM NUMBER OF ITERATIONS FOR SOLVER FOR SUSPENSION = 60
+/ DEFAULT = 60
+
+/ACCURACY FOR DIFFUSION OF SUSPENSION      = 1E-8
+/ ACCURACY OF RESIDUAL, DEFAULT = 1E-8
+
+/SCHEME FOR ADVECTION OF SUSPENDED SEDIMENTS = 5
+/'0="NO ADVECTION"';
+/'1="CHARACTERISTICS"';
+/'2="EXPLICIT + SUPG"';
+/'3="EXPLICIT LEO POSTMA"';
+/'4="EXPLICIT + MURD SCHEME N"';
+/'5="EXPLICIT + MURD SCHEME PSI"';
+/'13="N-SCHEME FOR TIDAL FLATS LP"';
+/'14="N-SCHEME FOR TIDAL FLATS"';
+/'15="ERIA SCHEME - ONLY IN 2D"'
+
+/
+/---------------------------------------------------------------------/
+/       SLOPE                                                         /
+/---------------------------------------------------------------------/
+/
+/IF YOU WANT TO CONSIDER SLOPE EFFECTS = YES
+SLOPE EFFECT               = YES
+
+FORMULA FOR SLOPE EFFECT   = 1 
+/'1 : formula of Koch et Flokstra, modification of bed load
+/             linked keyword : BETA
+/2 : formula of Soulsby, modification critical shear stress,
+/             can only be used with a threshold fomula
+/             linked keyword : FRICTION ANGLE OF THE SEDIMENT'i
+
+/FRICTION ANGLE OF THE SEDIMENT = 40
+/(IN DEGREES) DEFAULT = 40
+
+FORMULA FOR DEVIATION			 = 2
+/'1: Koch and Flokstra
+/	 2: formula of Talmon et al. 1995, JHR 33(4) formulas (1) and
+/(17) linked keyword : BETA2'
+
+/PARAMETER FOR DEVIATION		 = 0.85
+/ALSON KNOWN AS BETA2 for Talmon et al., DEFAULT = 0.85
+
+/BETA                       = 1.3
+/ALSO KNOWN AS BETA FOR Koch and Flokstra, DEFAULT = 1.3
+
+/---------------------------------------------------------------------
+/ EQUATIONS, BOUNDARY CONDITIONS
+/---------------------------------------------------------------------
+
+/PRESCRIBED SOLID DISCHARGES             = 0;0
+
+/PRESCRIBED SUSPENDED SEDIMENTS CONCENTRATION VALUES   = 0.2;0.2
+
+/TIDAL FLATS                             = YES
+/DEFAULT = YES
+
+/OPTION FOR THE TREATMENT OF TIDAL FLATS = 1
+/1 : EQUATIONS SOLVED EVERYWHERE WITH CORRECTION ON TIDAL FLATS (DEFAU.)
+/2 : DRY ELEMENTS FROZEN
+
+MINIMAL VALUE OF THE WATER HEIGHT       = 0.01
+/DEFAULT = 1E-3
+
+/---------------------------------------------------------------------
+/ FRICTION
+/---------------------------------------------------------------------
+
+/ (DEPRECATED) LAW OF BOTTOM FRICTION =4
+
+/ (DEPRECATED) FRICTION COEFFICIENT   =0.0412
+
+/
+/---------------------------------------------------------------------/
+/	SECONDARY CURRENTS EFFECTS                                    /
+/---------------------------------------------------------------------/
+/
+SECONDARY CURRENTS                               = YES
+/DEFAULT = NO
+
+/SECONDARY CURRENTS FILE                      =
+/USE IF ANY
+
+/SECONDARY CURRENTS ALPHA COEFFICIENT	         =1
+/DEFAULT = 1
+
+/SKIN FRICTION CORRECTION		                 =1
+/DEFAULT = 1
+
+/RATIO BETWEEN SKIN FRICTION AND MEAN DIAMETER    = 3
+/DEFAULT = 3.0
+
+
+

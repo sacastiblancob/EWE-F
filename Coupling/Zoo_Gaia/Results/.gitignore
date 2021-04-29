@@ -1,0 +1,17 @@
+*.rar
+*.PNG
+*.o
+*~
+*.ods
+*.swp
+*.out
+*.mod
+.~lock*
+*.nc
+*.dat
+*.xml
+.DS_Store
+*.bk
+*.mat
+*.slf
+Makefile

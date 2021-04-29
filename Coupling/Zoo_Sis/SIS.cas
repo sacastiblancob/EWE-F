@@ -1,0 +1,108 @@
+/---------------------------------------------------------------------
+/ SISYPHE Version v8p1 20 de Marzo 2021
+/ SISYPHE-SITO_DE_PRESA_CAUCASIA_CALIBRACION_MORFODINAMICA
+/---------------------------------------------------------------------
+
+/---------------------------------------------------------------------/
+/       COMPUTER INFORMATIONS                                         /
+/---------------------------------------------------------------------/
+/                                     /SOLVER FOR SUSPENSION
+GEOMETRY FILE                 ='Geometry/geometry.slf'
+RESULTS FILE                  ='Results/Results_T2D_sed.slf'
+STEERING FILE                 ='T2D.cas'
+BOUNDARY CONDITIONS FILE      ='BoundaryConditions/BOTTOM_BC.cli'
+/LIQUID BOUNDARIES FILE        ='BoundaryConditions/LB.txt'
+/
+/---------------------------------------------------------------------/
+/        GENERAL INFORMATIONS                                         /
+/---------------------------------------------------------------------/
+/
+TITLE  = 'Sediment Model 1'
+VARIABLES FOR GRAPHIC PRINTOUTS='U,V,S,B,H,MU,M,E,QSSUSP,CS*,QSBL'
+ZERO                                           =1E-12
+TETA                                           =0.5
+CRITICAL EVOLUTION RATIO                       =1
+/
+/----------------------------------------------------------------------/ 
+/            NUMERICAL PARAMETERS                                      / 
+/----------------------------------------------------------------------/
+MASS-BALANCE = YES 
+SOLVER ACCURACY = 1.E-2 
+MASS-LUMPING = YES 
+MASS CONCENTRATION = YES
+
+/---------------------------------------------------------------------/
+/       BED SEDIMENT TRANSPORT                                        /
+/---------------------------------------------------------------------/
+/
+BED LOAD                                      = NO
+BED-LOAD TRANSPORT FORMULA                    = 1   
+MPM COEFFICIENT                               = 8        
+/SEDIMENT DIAMETERS                            = 0.0445
+/SEDIMENT DIAMETERS                            = 0.00005
+/D90                                           = 0.0005
+SHIELDS PARAMETERS                            = 0.047    /Default
+NON COHESIVE BED POROSITY                     = 0.375    /Default
+
+/MORPHOLOGICAL FACTOR                          = 0.001
+
+/---------------------------------------------------------------------/
+/SUSPENSION SEDIMENT TRANSPORT                                        /
+/---------------------------------------------------------------------/
+SETTLING VELOCITIES                          = 0.0D0
+EQUILIBRIUM INFLOW CONCENTRATION           = NO
+SUSPENSION                                 = YES
+INITIAL SUSPENSION CONCENTRATIONS          = 0.0001
+CONCENTRATION PER CLASS AT BOUNDARIES      = 0.0;0.0001
+/REFERENCE CONCENTRATION FORMULA           = 1   /Default
+SOLVER FOR SUSPENSION                      = 1
+DIFFUSION                                  = YES                            
+OPTION FOR THE DISPERSION                  = 1          
+CORRECTION ON CONVECTION VELOCITY          = YES       /Default=NO
+/TYPE OF ADVECTION                         = 1          /Default
+MEAN DIAMETER OF THE SEDIMENT              = 0.00005
+
+/
+/---------------------------------------------------------------------/
+/       SLOPE                                                         /
+/---------------------------------------------------------------------/
+/
+SLOPE EFFECT               = YES
+FORMULA FOR SLOPE EFFECT   = 1 
+/ Koch and Flokstra
+FORMULA FOR DEVIATION			 =2
+PARAMETER FOR DEVIATION		 =0.6
+BETA                       = 0
+
+/---------------------------------------------------------------------
+/ EQUATIONS, BOUNDARY CONDITIONS
+/---------------------------------------------------------------------
+
+PRESCRIBED SOLID DISCHARGES= 0;0
+
+TIDAL FLATS                             =yes
+
+MINIMAL VALUE OF THE WATER HEIGHT       =0
+
+OPTION FOR THE TREATMENT OF TIDAL FLATS =1
+
+
+
+/---------------------------------------------------------------------
+/ FRICTION
+/---------------------------------------------------------------------
+
+LAW OF BOTTOM FRICTION =4
+
+FRICTION COEFFICIENT   =0.0412
+
+
+/
+/---------------------------------------------------------------------/
+/	SECONDARY CURRENTS EFFECTS                                    /
+/---------------------------------------------------------------------/
+/
+SECONDARY CURRENTS                               = YES
+SECONDARY CURRENTS ALPHA COEFFICIENT	         =1
+SKIN FRICTION CORRECTION		                 =1
+RATIO BETWEEN SKIN FRICTION AND MEAN DIAMETER    = 3
