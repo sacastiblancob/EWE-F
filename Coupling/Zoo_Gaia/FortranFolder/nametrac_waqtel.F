@@ -316,10 +316,24 @@
 !
 !       1. ~~> PHYTO BIOMASS
         IF( IND_PHY.EQ.0 ) THEN
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+! ORIGINAL
+!          CALL ADDTRACER(NAMETRAC,NTRAC,
+!     &      IND_PHY,.TRUE.,
+!     &      'BIOMASSE PHYTO  ','PHYTO BIOMASS   ',' micro_g/l      ')
+!          WAQTR = WAQTR + 1
+! MODIFIED
           CALL ADDTRACER(NAMETRAC,NTRAC,
      &      IND_PHY,.TRUE.,
-     &      'BIOMASSE PHYTO  ','PHYTO BIOMASS   ',' micro_g/l      ')
+     &      'BIOMASSE PHYTO  ','PHYTO BIOMASS   ','   mg/l         ')
           WAQTR = WAQTR + 1
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
           RANKTR(WAQTR) = IND_PHY
         ENDIF
         RANK_EUTRO(1) = IND_PHY
@@ -402,7 +416,7 @@
         IF( IND_ZOO.EQ.0 ) THEN
           CALL ADDTRACER(NAMETRAC,NTRAC,
      &      IND_ZOO,.TRUE.,
-     &      'BIOMASS ZOO     ','ZOO BIOMASS     ',' micro_g/l      ')
+     &      'BIOMASS ZOO     ','ZOO BIOMASS     ','   mg/l         ')
           WAQTR = WAQTR + 1
           RANKTR(WAQTR) = IND_ZOO
         ENDIF

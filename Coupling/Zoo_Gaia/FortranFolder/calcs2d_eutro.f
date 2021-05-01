@@ -86,7 +86,7 @@
 !      DOUBLE PRECISION, PARAMETER :: BETAPC = 0D0
 !
 !     TRANSFER COEFFICIENT FROM CUBIC METERS TO LITER, FOR VARIOUS
-      DOUBLE PRECISION, PARAMETER :: BETAM3L = 0.001D0
+!      DOUBLE PRECISION, PARAMETER :: BETAM3L = 0.001D0
 !
 !     STOICHIOMETRIC TRANSFER COEFFICIENT FROM mgC TO mgN, FOR NH4
 !     (mgC/mgN)
@@ -97,6 +97,23 @@
 !     (mgO2/mgN)
       DOUBLE PRECISION, PARAMETER :: BETAO2C = 2.67D0
 !      DOUBLE PRECISION, PARAMETER :: BETAO2C = 0D0
+!
+!     RELATION BETWEEN SST AND CONCENTRATION OF SUSPENDED SEDIMENTS
+!
+      DOUBLE PRECISION :: SST_SED = 1.1D0
+!
+!     CONSTANT OF INCLUSION OF SST INTO COMPUTING OF KE (FOR PHYTO)
+!     (KSSI)
+!
+      DOUBLE PRECISION :: KSSI = 0.002D0
+!
+!     TRANSFORMATION FROM g/L TO mg/L
+!
+      DOUBLE PRECISION :: GLTOMGL = 1000.0D0
+!
+!     SETTLING VELOCITY OF PHYTOPLANKTON (M/DIA)
+!
+      DOUBLE PRECISION :: WG_PHY = 0.1
 !
 !     ASSIMILATION FEEDING OF ZOOPLANKTON FROM PHYTOPLANKTON, ZOOPLANKTO
 !     N AND ORGANIC LOAD
@@ -118,7 +135,202 @@
       END MODULE DECLARATIONS_ECOPLANKTON
 !
 !-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!                   ***********************
+                    SUBROUTINE RAY_EFFECT_2
+!                   ***********************
 !
+!-----------------------------------------------------------------------
+! ORIGINAL
+!     &(SECCHI,TRR,NPOIN,MEXT,I0,IK,KPE,EFF,H,T1,T2)
+! MODIFIED
+     &  (SECCHI,TRR,TRRS,NPOIN,MEXT,I0,IK,KPE,EFF,H,T1,T2)
+!
+!***********************************************************************
+! WAQTEL   V8P1
+!***********************************************************************
+!
+!brief    COMPUTES RAY EFFECT: COEFFICIENT OF SUNSHINE ON
+!                              THE GROWTH OF ALGAE
+!
+!history  R. ATA (LNHE)
+!+        02/09/2015
+!+        V7P1
+!+
+!
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!| EFF            |<--| SUNSHINE EFFECT ON ALGAE GROWTH
+!| H              |-->| WATER DEPTH ON ALL MESH NODES
+!| KPE            |-->| COEFFICIENT OF VEGETAL TURBIDITY WITHOUT
+!|                |   | PHYTOPLANKTON
+!| I0             |-->| PARAMETER FOR THE CALIBRATION OF SMITH FORMULA
+!| IK             |-->| PARAMETER FOR THE CALIBRATION OF SMITH FORMULA
+!| MEXT           |-->| METHOD OF RAY EXTINCTION
+!| NPOIN          |-->| TOTAL NUMBER OF MESH NODES
+!| SECCHI         |-->| SECCHI DEPTH
+!| TRR            |-->| TRACER (CAN BE PHY: PHYTOPLAKTONIC BIOMASS)
+!-----------------------------------------------------------------------
+!| TRRS           |-->| TRACER WITH SUSPENSION SEDIMENT CONCENTRATIONS
+!-----------------------------------------------------------------------
+!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!
+      USE BIEF
+      USE DECLARATIONS_SPECIAL
+      USE DECLARATIONS_WAQTEL, ONLY : EXTINC
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+! ADDED PART BY SERGIO
+      USE DECLARATIONS_ECOPLANKTON, ONLY: SST_SED,KSSI,GLTOMGL
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!      USE INTERFACE_WAQTEL, EX_RAY_EFFCT => RAY_EFFECT
+!
+      IMPLICIT NONE
+!
+!+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+!
+      INTEGER         , INTENT(IN)    :: NPOIN,MEXT
+      DOUBLE PRECISION, INTENT(IN)    :: KPE,I0,IK,SECCHI
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+! MODIFED PART BY SERGIO
+! ORIGINAL
+!      TYPE(BIEF_OBJ)  , INTENT(IN)    :: H,TRR
+! MODIFIED
+      TYPE(BIEF_OBJ)  , INTENT(IN)    :: H,TRR,TRRS
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+      TYPE(BIEF_OBJ)  , INTENT(INOUT) :: EFF,T1,T2
+!   LOCAL VARIABLES
+      INTEGER                    :: KK
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+! ADDED PART BY SERGIO
+      DOUBLE PRECISION           :: KMULSST
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+      DOUBLE PRECISION, PARAMETER:: EPS=1.E-6
+      DOUBLE PRECISION, PARAMETER:: MOSS=0.015D0
+      DOUBLE PRECISION           :: CC,IK2,I02,CNUM
+      INTRINSIC MAX,SQRT,LOG,EXP
+!
+!+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+!
+!     PRELIMINARIES
+!
+      IK2=IK**2
+      I02=I0**2
+      CNUM=I0+SQRT(I02+IK2)
+!
+!+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+!
+!     INITIALISATION
+!
+      CALL OS( 'X=0     ' ,X=EFF)
+!
+!     COMPUTE KE AND PUT IT IN T1
+!
+      IF(MEXT.EQ.1)THEN
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+! MODIFIED PART BY SERGIO (METHOD 1 = MOSS + SST)
+! ORIGINAL
+!!       ATKINS METHOD
+!        CC=1.7D0/MAX(SECCHI,EPS)
+!        CALL OS( 'X=C     ' ,X=T1,       C=CC  )
+! MODIFIED
+!       MOSS + SST
+        CALL OS( 'X=CY     ' ,X=T1,Y=TRR,C=MOSS)
+        CALL OS( 'X=X+C    ' ,X=T1,      C=KPE )
+        KMULSST = SST_SED*KSSI*GLTOMGL
+        CALL OS( 'X=X+CY   ' ,X=T1,Y=TRRS,C=KMULSST)
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+      ELSEIF(MEXT.EQ.2)THEN
+!       MOSS METHOD
+        CALL OS( 'X=CY     ' ,X=T1,Y=TRR,C=MOSS)
+        CALL OS( 'X=X+C    ' ,X=T1,      C=KPE )
+      ELSEIF(MEXT.EQ.3)THEN
+!       GIVEN CONSTANT
+        CALL OS( 'X=C      ' ,X=T1,      C=EXTINC )
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+! ADDED PART BY SERGIO (MOSS+SST OPTION)
+!      ELSEIF(MEXT.EQ.4)THEN
+!!       MOSS + SST
+!        CALL OS( 'X=CY     ' ,X=T1,Y=TRR,C=MOSS)
+!        CALL OS( 'X=X+C    ' ,X=T1,      C=KPE )
+!        KMULSST = SST_SED*KSSI*GLTOMGL
+!        CALL OS( 'X=X+CY   ' ,X=T1,Y=TRRS,C=KMULSST)
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+      ELSE
+        WRITE(LU,101) MEXT
+        CALL PLANTE(1)
+        STOP
+      ENDIF
+!
+!     COMPUTE Ih: STOCKED IN T2
+!
+      DO KK=1,NPOIN
+        T2%R(KK)=I0*EXP(-T1%R(KK)*MAX(H%R(KK),0.D0))
+      ENDDO
+!
+!     RAY EFFECT IS READY TO BE COMPUTED
+!
+!     warning: the formula of smith is depth integrated, here after a tentative
+!              generalization, to be investigated later.
+      DO KK=1,NPOIN
+        CC=H%R(KK)*T1%R(KK)
+        IF(CC.GT.EPS)THEN
+          EFF%R(KK)=LOG(CNUM/(T2%R(KK)+SQRT(IK2+T2%R(KK)**2)))/CC
+        ENDIF
+      ENDDO
+!
+101    FORMAT(1X,'RAY_EFFECT: METHOD OF COMPUTATION OF THE COEFFICIENT',
+     &      /,1X,'OF EXTINCTION OF SUN RAY NOT IMPLEMENTED YET :',I6/)
+!
+!-----------------------------------------------------------------------
+!
+      RETURN
+      END
+!
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
 !                     ************************
                       SUBROUTINE CALCS2D_EUTRO
 !                     ************************
@@ -233,7 +445,6 @@
 ! !  ZOOBK    ! R  !    ! SEMI-SATURATION CONSTANT BY FOOD IN ZOO GROWT!
 ! !  ZOOG     ! R  !    ! MAXIMUM ZOOPLANKTON GRAZING RATE             !
 ! !  BETAPC   ! R  !    ! TRANSFER COEFF. FROM mgC TO mgP              !
-! !  BETAM3L  ! R  !    ! TRANSFER COEFF. FROM m^3 TO LITER            !
 ! !  BETANC   ! R  !    ! TRANSFER COEFF. FROM mgC TO mgN, FOR NH4     !
 ! !  BETAO2C  ! R  !    ! TRANSFER COEFFICIENT FROM mgC TO mgO2        !
 ! !  ZOOGS1,2.! R  !    ! FEEDING RATES OF ZOO FROM PHYTO, ZOO AND ORG.!
@@ -256,6 +467,7 @@
 ! PART ADDED BY SERGIO
 ! USING DECLARATIONS_ECOPLANKTON
       USE DECLARATIONS_ECOPLANKTON
+      USE DECLARATIONS_TELEMAC2D, ONLY: IND_SED
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -359,8 +571,21 @@
 !
 !     RAYEFF WITH SMITH FORMULA
 !
-      CALL RAY_EFFECT(ZSD,TN%ADR(IND_PHY)%P,NPOIN,MEXTINC,I0,IK,KPE,
-     &                RAYEFF,HPROP,T3,T4)
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+! MODIFIED PART BY SERGIO
+! ORIGINAL
+!      CALL RAY_EFFECT(ZSD,TN%ADR(IND_PHY)%P,NPOIN,MEXTINC,I0,IK,KPE,
+!     &                RAYEFF,HPROP,T3,T4)
+! MODIFIED
+      CALL RAY_EFFECT_2(ZSD,TN%ADR(IND_PHY)%P,TN%ADR(IND_SED)%P,NPOIN,
+     &    MEXTINC,I0,IK,KPE,RAYEFF,HPROP,T3,T4)
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
+!-----------------------------------------------------------------------
 !
       IF(DEBUG.GT.0)WRITE(LU,*)'IN EUTRO, STEP 2'
 !
@@ -422,7 +647,7 @@
 ! ZOOPLANKTON CALCULATIONS ARE COMPUTED HERE
       CALL ZOO_CALCS(ZOOT1,ZOOT2,ZOOGS1,ZOOGS2,ZOOGS3,ZOOBK,ZOORHOS,
      & ZOOOME, TN%ADR(IND_PHY)%P,TN%ADR(IND_OL)%P,TN%ADR(IND_ZOO)%P,
-     & NPOIN, GAMMAZ,MUZ,BETAM3L,ZOOG)
+     & NPOIN, GAMMAZ,MUZ,ZOOG)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -451,10 +676,15 @@
 !  CP - DP
       CALL OS( 'X=Y-Z   ' ,X=T1                 ,Y=T7,Z=T4)
 !  (CP - DP)*PHY
-      CALL OS( 'X=XY    ' ,X=T1,Y=TEXP%ADR(IND_PHY)%P)
+      CALL OS( 'X=XY    ' ,X=T1,Y=TN%ADR(IND_PHY)%P)
 !  (CP - DP)*PHY - Gs1*ZOO
       CALL OS( 'X=X-YZ  ' ,X=T1,Y=ZOOGS1,Z=TN%ADR(IND_ZOO)%P        )
-!  ((CP - DP)*PHY - Gs1*ZOO)*SECTODAY
+!  (PHY*WG/H)
+      CALL OVD('X=CY/Z  ' ,T3%R,TN%ADR(IND_PHY)%P%R,HPROP%R,WG_PHY,
+     &         NPOIN ,2,0.D0,EPS )
+!  ((CP - DP)*PHY - Gs1*ZOO - PHY*WG/H)
+      CALL OS( 'X=X-Y   ' ,X=T1,Y=T3)
+!  ((CP - DP)*PHY - Gs1*ZOO - PHY*WG/H)*SECTODAY
       CALL OS( 'X=X+CY  ' ,X=TEXP%ADR(IND_PHY)%P,Y=T1,C=SECTODAY)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -483,8 +713,10 @@
 !      CALL OS( 'X=X+Y   ' ,X=T1,Y=T3                                )
 !      CALL OS( 'X=X+CY  ' ,X=TEXP%ADR(IND_PO4)%P,Y=T1   ,C=SECTODAY )
 ! MODIFIED
-      DUMMY = GAMMAZ*BETAPC*BETAM3L
+      DUMMY = GAMMAZ*BETAPC
+!  k320*g2*POR + gammaz*ZOO*betaPC
       CALL OS( 'X=X+CY  ' ,X=T3,Y=TN%ADR(IND_ZOO)%P     ,C=DUMMY    )
+!  fp(dtp*DP - CP)*PHY + k320*g2*POR + gammaz*ZOO*betaPC
       CALL OS( 'X=X+Y   ' ,X=T1,Y=T3                                )
       CALL OS( 'X=X+CY  ' ,X=TEXP%ADR(IND_PO4)%P,Y=T1   ,C=SECTODAY )
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -538,6 +770,7 @@
 !
 !     IMPLICIT PART
 !      CALL OS( 'X=CYZ   ' ,X=TIMP%ADR(IND_NH4)%P,Y=T6,Z=HPROP,C=-K520)
+!  (1/86400)*(-k520*g2*NH4)
       CALL OS( 'X=X+CYZ ' ,X=TIMP%ADR(IND_NH4)%P,
      &                     Y=T6,Z=HPROP,   C=-K520*SECTODAY)
 !     EXPLICIT PART
@@ -561,9 +794,12 @@
 !      CALL OS( 'X=X+Y   ' ,X=T1,Y=T3                                )
 !      CALL OS( 'X=X+CY  ' ,X=TEXP%ADR(IND_NH4)%P,Y=T1   ,C=SECTODAY )
 ! MODIFIED
-      DUMMY = GAMMAZ*BETANC*BETAM3L
+      DUMMY = GAMMAZ*BETANC
+! k620*g2*NOR + gammaz*ZOO*betaNC
       CALL OS( 'X=X+CY  ' ,X=T1,Y=TN%ADR(IND_ZOO)%P     ,C=DUMMY    )
+! fn*(dtn*DP - Rn*CP)*PHY + k620*g2*NOR + gammaz*ZOO*betaNC
       CALL OS( 'X=X+Y   ' ,X=T1,Y=T3                                )
+! (1/86400)*(fn*(dtn*DP - Rn*CP)*PHY + k620*g2*NOR + gammaz*ZOO*betaNC)
       CALL OS( 'X=X+CY  ' ,X=TEXP%ADR(IND_NH4)%P,Y=T1   ,C=SECTODAY )
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -576,6 +812,7 @@
 !
 !     IMPLICIT PART
 !      CALL OS( 'X=CYZ   ' ,X=TIMP%ADR(IND_OL)%P,Y=T11,Z=HPROP,C=-K120)
+!  (1*86400)*(-k120*g3*L)
       CALL OS( 'X=X+CYZ ' ,X=TIMP%ADR(IND_OL)%P,
      &                     Y=T11,Z=HPROP,C=-K120*SECTODAY )
 !     EXPLICIT PART
@@ -585,6 +822,7 @@
       CALL OVD('X=CY/Z  ' ,T3%R,TN%ADR(IND_OL)%P%R,HPROP%R,WLOR,
      &          NPOIN ,2,0.D0,EPS                                    )
 !      CALL OS( 'X=Y-Z   ' ,X=TEXP%ADR(IND_OL)%P,Y=T1,Z=T3            )
+!  f*MP*PHY - FLOR/H
       CALL OS( 'X=X-Y   ' ,X=T1,Y=T3                                 )
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -594,7 +832,9 @@
 ! ORIGINAL
 !      CALL OS( 'X=X+CY  ' ,X=TEXP%ADR(IND_OL)%P,Y=T1   ,C=SECTODAY   )
 ! MODIFIED
-      CALL OS( 'X=X+CYZ ' ,X=T1,Y=ZOOT2,Z=TN%ADR(IND_ZOO)%P,C=BETAM3L)
+!  f*MP*PHY - FLOR/H + ZOO*f1*(muz + (1-om1)Gs1 + (1-om3)Gs2 - om4*Gs3)
+      CALL OS( 'X=X+CYZ ' ,X=T1,Y=ZOOT2,Z=TN%ADR(IND_ZOO)%P,C=1.0D0)
+! (1/86400)*ans
       CALL OS( 'X=X+CY  ' ,X=TEXP%ADR(IND_OL)%P,Y=T1   ,C=SECTODAY   )
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -648,7 +888,7 @@
 ! ORIGINAL
 !      CALL OS( 'X=X+CY  ' ,X=TEXP%ADR(IND_O2)%P,Y=T4,C=SECTODAY      )
 ! MODIFIED
-      DUMMY = -1D0*GAMMAZ*BETAO2C*BETAM3L
+      DUMMY = -1D0*GAMMAZ*BETAO2C
       CALL OS( 'X=X+CY  ' ,X=T4,Y=TN%ADR(IND_ZOO)%P,C=DUMMY)
       CALL OS( 'X=X+CY  ' ,X=TEXP%ADR(IND_O2)%P,Y=T4,C=SECTODAY      )
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

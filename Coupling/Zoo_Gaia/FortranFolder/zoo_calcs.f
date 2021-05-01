@@ -3,7 +3,7 @@
 !                    **********************
 !
      & (ZOOT1,ZOOT2,ZOOGS1,ZOOGS2,ZOOGS3,ZOOBK,ZOORHOS,ZOOOME,
-     &  PHYB,OLB,ZOOB,NPOIN,GAMMAZ,MUZ,BETAM3L,ZOOG)
+     &  PHYB,OLB,ZOOB,NPOIN,GAMMAZ,MUZ,ZOOG)
 !
 !***********************************************************************
 ! TELEMAC2D   V8P1R0
@@ -29,7 +29,6 @@
 !| ZOOB           |-->| ZOOPLANKTON
 !| GAMMAZ         |-->| SPECIFIC RATE OF ZOOPLANKTON METABOLIC EXCR.
 !| MUZ            |-->| SPECIFIC MORTALITY RATE OF THE ZOOPLAKNTON
-!| BETAM3L        |-->| CONVERSION FROM CUBIC METER TO LITER
 !| ZOOG           |-->| MAXIMUM ZOOPLANKTON GRAZING RATE
 !~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !
@@ -41,7 +40,7 @@
 !+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 !
       INTEGER,          INTENT(IN) :: NPOIN
-      DOUBLE PRECISION, INTENT(IN) :: ZOOBK,GAMMAZ,MUZ,BETAM3L,ZOOG
+      DOUBLE PRECISION, INTENT(IN) :: ZOOBK,GAMMAZ,MUZ,ZOOG
       DOUBLE PRECISION, INTENT(IN), DIMENSION(3) :: ZOORHOS,ZOOOME
       TYPE(BIEF_OBJ),   INTENT(IN) :: PHYB,OLB,ZOOB
       TYPE(BIEF_OBJ),   INTENT(INOUT) :: ZOOGS1,ZOOGS2,ZOOGS3
@@ -74,18 +73,18 @@
         ELSE
           ! COMPUTING SUMMATION OF BIOMASi TIMES RHOi
           RHOB = ZOORHOS(1)*PHYB%R(KK) + ZOORHOS(2)*ZOOB%R(KK) +
-     &      ZOORHOS(3)*OLB%R(KK)*(1/BETAM3L)
+     &      ZOORHOS(3)*OLB%R(KK)
           ! COMPUTING BIOMASS RELATIONS Pj OR Pk
           ZOOPES(1) = ZOORHOS(1)*PHYB%R(KK)/RHOB
           ZOOPES(2) = ZOORHOS(2)*ZOOB%R(KK)/RHOB
-          ZOOPES(3) = ZOORHOS(3)*OLB%R(KK)*(1/BETAM3L)/RHOB
+          ZOOPES(3) = ZOORHOS(3)*OLB%R(KK)/RHOB
           ! COMPUTING SUMMATION OF Pj's OR Pk's
           SUMPB = ZOOPES(1) + ZOOPES(2) + ZOOPES(3)
           ! COMPUTING FEEDING RATES
           ZOOGS1%R(KK) = ZOOG*ZOORHOS(1)*PHYB%R(KK)/(ZOOBK + SUMPB)
           ZOOGS2%R(KK) = ZOOG*ZOORHOS(2)*ZOOB%R(KK)/(ZOOBK + SUMPB)
           ZOOGS3%R(KK) = ZOOG*ZOORHOS(3)*OLB%R(KK)
-          ZOOGS3%R(KK) = ZOOGS3%R(KK)*(1/BETAM3L)/(ZOOBK + SUMPB)
+          ZOOGS3%R(KK) = ZOOGS3%R(KK)/(ZOOBK + SUMPB)
         ENDIF
       ENDDO
 !
@@ -111,7 +110,7 @@
         ELSE
           ZOOT2%R(KK) = ((1D0 - ZOOOME(1))*ZOOGS1%R(KK) +
      &     (1D0 - ZOOOME(2))*ZOOGS2%R(KK) - ZOOOME(3)*ZOOGS3%R(KK) + 
-     &      MUZ)*BETAM3L
+     &      MUZ)
         ENDIF
       ENDDO
 !   

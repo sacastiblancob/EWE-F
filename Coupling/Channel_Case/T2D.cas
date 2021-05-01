@@ -1,0 +1,430 @@
+/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/----------------------------------------------------------------------
+/--------- CONFIGURATION FILE FOR TELEMAC-2D (HYDRODYNAMICS) ----------
+/----------------------------------------------------------------------
+/----------------------------------------------------------------------
+/----- WARNING!, remember that each line is limited to 72 columns -----
+/----------------------------------------------------------------------
+/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+
+/ This CAS file was organized by NEC :P
+/ Most of the comments you will find here are extracted from Telemac 2D
+/ official documentation. However, you may also find my own comments as
+/ well, but they will be indicated as such.
+
+/~---------------------------------------------------------------------
+/------------ EQUATIONS, SCHEMES AND NUMERICAL PARAMETERS -------------
+/--------------------------------------------------------------------~/
+
+EQUATIONS = 'SAINT-VENANT FE'
+/Can take the following values:
+/  ‘SAINT-VENANT FE’ (default value)
+/  ‘SAINT-VENANT FV’
+/  ‘BOUSSINESQ’
+
+TREATMENT OF THE LINEAR SYSTEM = 2
+/It is possible to replace the original equations by a generalized wave
+/equation, that is obtained by eliminating the velocity from continuity
+/equation using a value obtained from momentum equation. This technique
+/increases calculation speed ,but has the disadvantage of smoothing the
+/model results. It is important to stress that choosing option 2 will
+/automatically select a number of other options: use of mass lumping on
+/depth and velocities, and use of explicit velocity diffusion.
+/  1: coupled
+/  2: wave equation
+
+/TYPE OF ADVECTION = 1;5;1;1
+/Choice of advection schemes for every variable
+/Coefficients are applied respectively to: U and V, H, T, K-EPSILON.
+/NOTES: Schemes 3 and 4 on one hand, and 13 and 14 on the other hand, are
+/equal in 2 dimensions (they are not equal in 3D) and correspond to the
+/so called NERD scheme. The stability of the N and PSI schemes (4 and 5)
+/is conditioned by a Courant number lower than 1.
+/ THIS KEY-WORD HAS BEEN REPLACED COMPLETELY BY NEW SEPARATED KEW-WORDS
+/ (ALTHOUGH IT STILL WORKS...). THOSE NEW KEW-WORDS ARE LISTED BELOW.
+/  1: Characteristics;
+/  2: Centred semi implicit scheme + SUPG;
+/  3: Upwind explicit finite volume;
+/  4: Conservative N distributive scheme;
+/  5: Conservative PSI distributive scheme;
+/ 13: Edge-based implementation of 3 (Upwind);
+/ 14: Edge-based implementation of 4 (N-scheme);
+/ 15: ERIA scheme. Second integer must be 5.
+
+SUPG OPTION = 2;0;2;2
+/  0: No upwinding
+/  1: Classical SUPG
+/  2: Modified SUPG
+
+SCHEME FOR ADVECTION OF VELOCITIES        = 1
+/ Choice of advection schemes for velocities. This key-word replaces the
+/ 'TYPE OF ADVECTION' key-word. But options list can be read from there.
+
+SCHEME FOR ADVECTION OF TRACERS           = 5;5;5;5;5;5;5;5;5;5;5
+/ Choice of advection schemes for tracers. This key-word replaces the
+/ 'TYPE OF ADVECTION' key-word. But options list can be read from there.
+/ (NEC comment:)
+/ The number of options must be just right, otherwise it might not work
+/ (end of NEC comment)
+
+/SCHEME OPTION FOR ADVECTION OF K-EPSILON  = 5
+/ Choice of advection schemes for K-EPSILON. This key-word replaces the
+/ 'TYPE OF ADVECTION' key-word. But options list can be read from there.
+
+/SCHEME OPTION FOR ADVECTION OF VELOCITIES     = 4
+/ Used to deal with time dependent problems. If present replaces and has
+/ priority over: OPTION FOR CHARACTERISTICS SUPG OPTION if N or PSI SCHEME.
+/  1: Explicit scheme (default value);
+/  2: First order predictor-corrector scheme;
+/  3: Second order predictor-corrector scheme;
+/  4: Locally semi-implicit predictor-corrector scheme (for tidal flats): LIPS.
+
+SCHEME OPTION FOR ADVECTION OF TRACERS        = 4;4;4;4;4;4;4;4;4;4;4
+/ Used to deal with time dependent problems. If present replaces and has
+/ priority over: OPTION FOR CHARACTERISTICS SUPG OPTION if N or PSI SCHEME.
+/  1: Explicit scheme (default value);
+/  2: First order predictor-corrector scheme;
+/  3: Second order predictor-corrector scheme;
+/  4: Locally semi-implicit predictor-corrector scheme (for tidal flats): LIPS.
+/ (NEC comment:)
+/ The number of options must be just right, otherwise it might not work
+/ (end of NEC comment)
+
+/NUMBER OF CORRECTIONS OF DISTRIBUTIVE SCHEMES = 3
+/ The predictor-corrector schemes need this additional parameter. For
+/ unsteady flows, it is suggested to set the keyword to (at least) 2,
+/ increasing the number of corrections the scheme is more accurate but
+/ the CPU time rapidly increases.
+
+/NUMBER OF SUB-STEPS OF DISTRIBUTIVE SCHEMES   = 2
+/ This key-word can be activated only for the locally semi-implicit
+/ predictor-corrector schemes.
+
+/OPTION FOR THE DIFFUSION OF VELOCITIES   = 1
+/There is two possibilities for processing the diffusion term:
+/  1: Diffusion in the form div(nu grad(U)) (default value).
+/  2: Diffusion in the form 1/h div(h nu grad(U)). This is the only
+/     option offering good mass conservation, but difficulties may
+/     occur with tidal flats.
+
+FREE SURFACE GRADIENT COMPATIBILITY      = 0.9
+/ Values less than 1 are intended to suppress spurious oscillations.
+
+SOLVER                                   = 1
+/ The solver used for solving the systems of equations may be selected
+/ for the hydrodynamic propagation step. Options 1 to 6 are all related
+/ to the conjugate gradient method. If the generalized wave equation is
+/ used (i.e. TREATMENT OF LINEAR SYSTEM =2), SOLVER =1 is recommended.
+/  1: Conjugate gradient method;
+/  2: Conjugate residual method;
+/  3: Conjugate gradient on normal equation method (default value);
+/  4: Minimum error method;
+/  5: Squared conjugate gradient method;
+/  6: BICGSTAB (stabilised biconjugate gradient) method;
+/  7: GMRES (Generalised Minimum RESidual) method;
+/  8: Direct solver (YSMP), doesn’t work in parallel mode;
+/  9: MUMPS (requires the installation of extra libraries).
+
+SOLVER ACCURACY                          = 5.0E-5
+/ Default value = 1.E-4
+
+MAXIMUM NUMBER OF ITERATIONS FOR SOLVER  = 120
+/ Default value = 100
+
+CONTINUITY CORRECTION                    = YES
+/ Correction of the velocities on points with a prescribed elevation, so
+/ that the overall continuity is verified. This correction has enabled
+/ the error to be divided by as much as 1000.
+
+TIDAL FLATS                              = YES
+
+OPTION FOR THE TREATMENT OF TIDAL FLATS  = 1
+/  1: The tidal flats are detected and the free surface gradient is corrected.
+/  2: The tidal flat areas are removed from computations. Exposed elements still
+/     form part of the mesh, but any contributions they make to the computations
+/     are cancelled (by a so-called "masking" table). The data structure and the
+/     computations are thus formally the same to within the value of the masking
+/     coefficient. However, conservation of mass may be slightly altered in this
+/     case.
+/  3: Processing is done in almost the same way as in the first case, but with a
+/     porosity term added to half-dry elements. Consequently, the water quantity
+/     is changed, so it is no longer equal to the depth integral over the entire
+/     domain but to the depth integral multiplied by that porosity. The user can
+/     modify the porosity value, determined by the processing in the USER_CORPOR
+/     subroutine.
+
+TREATMENT OF NEGATIVE DEPTHS             = 2
+/  0: No treatment
+/  1: Smoothing the negative depths in a conservative way (default value).
+/  2: Flux limitation that ensures strictly positive depths (only possible since
+/     release 6). Must be preferably coupled with advection schemes able to cope
+/     with tidal flats. This option is recommended when conservative tracers are
+/     modelled using distributive schemes (i. e. SCHEME FOR ADVECTION OF TRACERS
+/     4 or 5), as it allows to obtain a "perfect mass balance".
+
+MASS-LUMPING ON H                        = 1
+/ (NEC comment):
+/ I do not fully understand why, but when treatment of negative depths
+/ is set to 2, it requires mass lumping to be set to 1.
+/ (end of NEC comment)
+
+MAXIMUM NUMBER OF ITERATIONS FOR ADVECTION SCHEMES = 50
+
+/~---------------------------------------------------------------------
+/------------------------------ FRICTION ------------------------------
+/--------------------------------------------------------------------~/
+
+LAW OF BOTTOM FRICTION                 = 4
+LAW OF FRICTION ON LATERAL BOUNDARIES  = 4
+/  0: no friction against bottom
+/  1: Haaland's formula
+/  2: Chezy's formula
+/  3: Strickler's formula
+/  4: Manning's formula
+/  5: Nikuradse's formula
+
+FRICTION COEFFICIENT                   = 0.022
+
+/ROUGHNESS COEFFICIENT OF BOUNDARIES    = 0.1
+
+
+/~---------------------------------------------------------------------
+/------------------------- TURBULENCE OPTIONS -------------------------
+/--------------------------------------------------------------------~/
+
+TURBULENCE MODEL             = 1
+/  1: Constant viscosity (Default value, when this option is chosen, it
+/     should be kept in mind that the 'viscosity coefficient' has to be
+/     ajusted through the keyword VELOCITY DIFFUSIVITY).
+/  2: Elder's model. When this option is chosen, the two values of the
+/     keyword NON-DIMENSIONAL DISPERSION COEFFICIENTS are used).
+/  3: k-epsilon model.
+
+/VELOCITY DIFFUSIVITY                     = 1E-3
+/ Sets the value of the viscosity coefficient (molecular+turbulent when
+/ constant viscosity model is used, or just molecular when Elder Model)
+/ is used. This coefficient is imposed in an even way and for the whole
+/ computational domain. This value may have a significant effect on the
+/ shapes and sizes of recirculation zones. The default value is 1.E-6.
+
+/NON-DIMENSIONAL DISPERSION COEFFICIENTS = 6.0;0.6
+/  Longitudinal and transversal coefficients (a_l;a_t) in Elder formula.
+/  Used only with turbulence model number 2 (Elder's model).
+/  nu_l = (a_l)(U*)(h)    and    nu_t = (a_t)(U*)(h)
+
+
+/~---------------------------------------------------------------------
+/-------------------- TIME-RELATED CONFIGURATIONS ---------------------
+/--------------------------------------------------------------------~/
+
+DURATION                                 = 3600
+
+ORIGINAL DATE OF TIME                    = 2021;01;01
+
+ORIGINAL HOUR OF TIME                    = 0;0;0
+
+TIME STEP                                = 5.0
+
+VARIABLE TIME-STEP                       = YES
+
+DESIRED COURANT NUMBER                   = 1.0
+
+
+/~---------------------------------------------------------------------
+/------------------------- INITIAL CONDITIONS -------------------------
+/--------------------------------------------------------------------~/
+
+COMPUTATION CONTINUED           = YES
+
+PREVIOUS COMPUTATION FILE       = 'HotStart/HotStart.slf'
+
+INITIAL TIME SET TO ZERO        = YES
+/ If set to NO (default), the initial time of the new computation is equal
+/ to the time value of the last time step in the previous computation file
+/ used for continuation (this must be considered when giving time series
+/ in the liquid boundaries file).
+
+/INITIAL CONDITIONS = 'CONSTANT ELEVATION'
+/  ZERO ELEVATION: ........ Initializes the free surface elevation to 0. The initial
+/                           water depths are then found by computing the difference
+/                           between the free surface and the bottom.  
+/  CONSTANT ELEVATION: .... Initializes the water elevation to the value given by
+/                           the keyword 'INITIAL ELEVATION'. The initial water depths
+/                           are computed as in the previous case.
+/  ZERO DEPTH: ............ Initializes the water depths to 0.
+/  CONSTANT DEPTH: ........ Initializes the water depths to the value given by the
+/                           key-word 'INITIAL DEPTH'.
+/  SPECIAL: ............... The initial conditions with the water depth should be
+/                           started in the CONDIN subroutine.
+/  TPXO SATELITE ALTIMETRY: The initial conditions on the free surface and
+/                           velocities are established from the TPXO satellite
+/                           program data, the harmonic constituents of which are
+/                           stored in the TIDE DATA BASE file.
+
+/INITIAL ELEVATION	 = 10.5
+
+
+/~---------------------------------------------------------------------
+/------------------------ BOUNDARY CONDITIONS -------------------------
+/--------------------------------------------------------------------~/
+
+BOUNDARY CONDITIONS FILE      = 'BoundaryConditions/BOTTOM_BC.cli'
+/ If using WAQTEL coupling remember to change those file names as well.
+
+LIQUID BOUNDARIES FILE        = 'BoundaryConditions/LB.txt'
+
+VELOCITY PROFILES             = 5;5
+/  1: constant normal profile.
+/  2: u and v given in the conlim file.
+/  3: normal velocity given in ubor in the conlim file.
+/  4: sqrt(depth) profile.
+/  5: sqrt(depth) profile, variant.
+
+/PRESCRIBED FLOWRATES          = 0;1.5
+
+/PRESCRIBED ELEVATIONS	       = 0.9;0
+
+/MAXIMUM NUMBER OF BOUNDARIES  = 320
+
+/ASCII ATMOSPHERIC DATA FILE   = 'BoundaryConditions/meteo_thermic.txt'
+
+
+/~---------------------------------------------------------------------
+/------------------------- OTHER INPUT FILES --------------------------
+/--------------------------------------------------------------------~/
+
+GEOMETRY FILE         = 'Geometry/geometry.slf'
+/ If using WAQTEL coupling remember to change those file names as well.
+
+FORTRAN FILE          = 'FortranFolder'
+
+
+/~---------------------------------------------------------------------
+/------------------ OUTPUT FILES AND CONFIGURATIONS -------------------
+/--------------------------------------------------------------------~/
+
+RESULTS FILE             = 'Results/RT2D.slf'
+ 
+GRAPHIC PRINTOUT PERIOD  = 50
+
+LISTING PRINTOUT PERIOD  = 50
+
+VARIABLES FOR GRAPHIC PRINTOUTS = U,V,C,H,S,B,F,Q,M,W,L,US,T*
+/U,V,H,S,B,F,L,Q,M,US,T*,IDX0,IDX1,IDX2,IDX3,IDX
+/   U: Velocity along x axis (m/s)
+/   V: Velocity along y axis (m/s)
+/   C: Wave celerity (m/s)
+/   H: Water depth (m)
+/   S: Free surface elevation (m)
+/   B: Bottom elevation (m)
+/   F: Froude number
+/   Q: Scalar flowrate of fluid (m2/s)
+/   I: Flowrate along x axis (m2/s)
+/   J: Flowrate along y axis (m2/s)
+/   M: Scalar velocity (m/s)
+/   X: Wind along x axis (m/s)
+/   Y: Wind along y axis (m/s)
+/   W: Friction coefficient
+/   L: Courant number
+/MAXZ: Maximum elevation
+/TMXZ: Time of maximum elevation
+/MAXV: Maximum velocity
+/TMXV: Time of maximum velocity
+/  US: Friction velocity (m/s)
+
+
+/~---------------------------------------------------------------------
+/------------------------------ COUPLING ------------------------------
+/--------------------------------------------------------------------~/
+
+COUPLING WITH            = 'GAIA;WAQTEL'
+/  GAIA: internal coupling with Gaia
+/  WAQTEL: internal coupling with Waqtel
+/  SISYPHE: internal coupling with Sisyphe
+/  TOMAWAC: internal coupling with Tomawac
+/  DELWAQ: will yield results file for Delwaq
+
+WAQTEL STEERING FILE   = 'eutro.cas'
+/SISYPHE STEERING FILE  = 'SIS.cas'
+GAIA STEERING FILE     = 'gai.cas'
+
+WATER QUALITY PROCESS  = 55
+/55
+/ Defined as a multiplicative combination of prime numbers with "0" and
+/ "1" having a special role. For example: 110=2x5x11 activate O2, EUTRO
+/ and THERMIC together. It is noted that AED2 is not available in 2D so far.
+/  0: all
+/  1: none
+/  2: O2 process
+/  3: BIOMASS process
+/  5: EUTRO process
+/  7: MICROPOL process
+/ 11: THERMIC process
+/ 13: AED2 library
+/ 17: Degradation law
+/ 19: Ghost process in waiting to merge with ice modelling
+
+/ Initial values of         T;PHY;PO4;POR;NO3;NOR;NH4;L;O2;ZOO
+INITIAL VALUES OF TRACERS = 
+20;46.49;0.0018;2.85;0.918;2.82;0.397;1.04;7.0;1.0
+
+/ Prescribed values of         T;PHY;PO4;POR;NO3;NOR;NH4;L;O2;ZOO;SED
+PRESCRIBED TRACERS VALUES =
+10;36.49;0.0008;1.85;0.518;1.82;0.197;0.04;6.0;12.3;1.1;
+10;36.49;0.0008;1.85;0.518;1.82;0.197;0.04;6.0;12.3;1.1
+
+/~---------------------------------------------------------------------
+/------------------------- PARTICLE TRACKING --------------------------
+/--------------------------------------------------------------------~/
+
+/DROGUES FILE                 = 'Results/PT_test.dat'
+
+/NUMBER OF DROGUES            = 500
+
+/PRINTOUT PERIOD FOR DROGUES  = 50
+
+/STOCHASTIC DIFFUSION MODEL   = 1
+/ When setting the key-word STOCHASTIC DIFFUSION MODEL =1 (default = 0)
+/ a stochastic model will compute (stochastically) a diffusion coefficient
+/ using the turbulent viscosity. When turbulence is not activated, the
+/ stochastic diffusion is not considered during the particle transport.
+
+
+/~---------------------------------------------------------------------
+/------------------------------- OTHERS -------------------------------
+/--------------------------------------------------------------------~/
+
+/PARALLEL PROCESSORS = 6
+/ (NEC comment):
+/ Under some circumstances this option doesn't work properly inside the
+/ CAS file. I'd rather specify the number of processors in the terminal
+/ (when sending the jobs) with the flag '--ncsize=number_of_processors'
+/ (end of NEC comment)
+
+MASS-BALANCE                = YES
+/ If set to YES (Default =NO) The user will get information on the mass
+/ fluxes (or rather volumes) in the domain at each printed time step or
+/ not. This decides whether a check of the mass-balance over the domain
+/ is made, the procedures computes the following at each time step: the
+/ domain inflows and outflows, the overall flow across all boundaries and
+/ the relative error in the mass for that time step. The relative error
+/ in the mass over the whole computation can be found at the end of the
+/ listing.
+
+/CONTROL SECTIONS          = 1223;1068
+
+/VERTICAL STRUCTURES        = YES
+
+/DEBUGGER                  = 1
+
+
+/~---------------------------------------------------------------------
+/---------------------- TESTS WITH NEW VARIABLES ----------------------
+/--------------------------------------------------------------------~/
+
+/NUMBER OF PRIVATE ARRAYS = 4
+/ (NEC comment):
+/ This key-word doesn’t seem to be necessary, all the private variables
+/ work regardless of whether this is present or not in the CAS file...
+/ perhaps I am missing something? We'll never know... or will we?
+/ (end of NEC comment)
